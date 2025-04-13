@@ -1,0 +1,26 @@
+{
+  "private": true,
+  "scripts": {
+    "prebuild": "npm run clean",
+    "build": "latexmk -interaction=nonstopmode -file-line-error -pdf -halt-on-error -outdir=build main",
+    "postbuild": "npx shx cp ./build/main.pdf ./Tonini_Isaia_Informatica_2024-25.pdf",
+    "check": "npx npm-run-all --npm-path npm check:*",
+    "check:format": "npx prettier --check .",
+    "check:spell": "npx cspell lint --config cspell.json --no-progress --show-context \"**\"",
+    "clean": "npx shx rm -rf ./build ./Tonini_Isaia_Informatica_2024-25.pdf",
+    "fix": "npx npm-run-all --npm-path npm fix:*",
+    "fix:format": "npx prettier --write ."
+  },
+  "devDependencies": {
+    "@cspell/dict-en_us": "^4.4.0",
+    "@cspell/dict-it-it": "^3.1.4",
+    "@cspell/dict-latex": "^4.0.3",
+    "@cspell/dict-markdown": "^2.0.10",
+    "@cspell/dict-npm": "^5.1.34",
+    "cspell": "^8.18.1",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^3.5.3",
+    "prettier-plugin-latex": "^2.0.1",
+    "shx": "^0.4.0"
+  }
+}
