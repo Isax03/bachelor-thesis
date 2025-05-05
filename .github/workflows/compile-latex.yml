@@ -35,10 +35,9 @@ jobs:
         run: pnpm install
 
       - name: Install TeXLive
-        uses: awalsh128/cache-apt-pkgs-action@latest
-        with:
-          packages: texlive texlive-latex-extra texlive-fonts-recommended texlive-lang-italian latexmk
-          version: 1.0
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y texlive-full latexmk
 
       - name: Get current date
         id: date
