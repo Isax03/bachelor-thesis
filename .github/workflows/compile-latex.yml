@@ -30,16 +30,14 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Install LaTeX
-        uses: xu-cheng/latex-action@v3
+      - name: Install TeXLive
+        uses: awalsh128/cache-apt-pkgs-action@latest
         with:
-          root_file: main.tex
-          latexmk_use_lualatex: false
-          latexmk_use_xelatex: false
-          latexmk_shell_escape: true
+          packages: texlive texlive-latex-extra texlive-fonts-recommended texlive-lang-italian latexmk
+          version: 1.0
 
-      - name: Copy compiled PDF
-        run: pnpm exec shx cp ./build/main.pdf ./Tonini_Isaia_Informatica_2024-25.pdf
+      - name: Compile LaTeX document
+        run: pnpm build
 
       - name: Upload compiled thesis PDF
         uses: actions/upload-artifact@v4
