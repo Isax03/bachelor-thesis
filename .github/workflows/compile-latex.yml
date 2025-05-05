@@ -7,7 +7,11 @@ on:
       - "**.tex"
       - "bibliography.bib"
       - "images/**"
-  workflow_dispatch: # Allows manual triggering of the workflow
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Nome della versione (es. v24-05-01)"
+        required: false
 
 jobs:
   build:
@@ -36,12 +40,19 @@ jobs:
           packages: texlive texlive-latex-extra texlive-fonts-recommended texlive-lang-italian latexmk
           version: 1.0
 
+      - name: Get current date
+        id: date
+        run: echo "today=v$(date +'%y-%m-%d')" >> "$GITHUB_OUTPUT"
+
       - name: Compile LaTeX document
         run: pnpm build
 
-      - name: Upload compiled thesis PDF
-        uses: actions/upload-artifact@v4
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v1
         with:
-          name: Tonini_Isaia_Informatica_2024-25
-          path: Tonini_Isaia_Informatica_2024-25.pdf
-          if-no-files-found: error
+          tag_name: ${{ github.event.inputs.version || steps.date.outputs.today }}
+          name: Versione ${{ github.event.inputs.version || steps.date.outputs.today }}
+          files: Tonini_Isaia_Informatica_2024-25.pdf
+          generate_release_notes: true
+          draft: false
+          prerelease: false
