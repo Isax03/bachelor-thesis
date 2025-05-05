@@ -1,0 +1,47 @@
+name: Compile LaTeX Thesis
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "**.tex"
+      - "bibliography.bib"
+      - "images/**"
+  workflow_dispatch: # Allows manual triggering of the workflow
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: latest
+          run_install: false
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Install LaTeX
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: main.tex
+          latexmk_use_lualatex: false
+          latexmk_use_xelatex: false
+          latexmk_shell_escape: true
+          post_compile: "pnpm exec shx cp ./build/main.pdf ./Tonini_Isaia_Informatica_2024-25.pdf"
+
+      - name: Upload compiled thesis PDF
+        uses: actions/upload-artifact@v4
+        with:
+          name: Tonini_Isaia_Informatica_2024-25
+          path: Tonini_Isaia_Informatica_2024-25.pdf
+          if-no-files-found: error
