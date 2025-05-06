@@ -1,45 +1,79 @@
-\chapter{Examples}
-\label{cha:examples}
+% Website
+% Required fields: 'title' | 'author' | 'howpublished' | 'note'
+% Optional fields: 'month' | 'year'
+@misc{misc,
+  title = {{Title}},
+  author = {{Name Surname, Name Surname and Name Surname}},
+  howpublished = {\url{https://www.google.com}},
+  note = {{Accessed 31/01/2000}}
+}
 
-\section{Citations}
-\label{cha:examples_citations}
+% Book
+% Required fields: 'author' or 'editor' | 'title' | 'publisher' | 'year'.
+% Optional fields: 'volume' or 'number' | 'series' | 'address' | 'edition' | 'month' | 'note'
+@book{book,
+  author = {{Name Surname, Name Surname and Name Surname}},
+  title = {{Title}},
+  publisher = {{University of Trento}},
+  year = 1994,
+  edition = 2
+}
 
-\texttt{@misc}\cite{misc} \\ %
-\texttt{@book}\cite{book} \\ %
-\texttt{@conference}\cite{conference} \\ %
-\texttt{@article}\cite{article} \\ %
-\texttt{@article}\cite{slammer_worm} \\ %
-\texttt{@article}\cite{meaning_memory_safety} \\ %
+% Conference
+% Required fields: 'author' | 'title' | 'booktitle' | 'year'
+% Optional fields: 'editor' | 'volume' or 'number' | 'series' | 'pages' | 'address' | 'month' | 'organization' | 'publisher' | 'note'
+@conference{conference,
+  author = {{Name Surname, Name Surname and Name Surname}},
+  title = {{Title}},
+  booktitle = {{University of Trento}},
+  address = {{Trento | ITA}},
+  year = 2005,
+  month = jun,
+  pages = {886-893}
+}
 
-\section{Figures}
-\label{cha:examples_figures}
+% Article
+% Required fields: 'author' | 'title' | 'journal' | 'year'
+% Optional fields: 'volume' | 'number' | 'pages' | 'month' | 'note'
+@article{article,
+  author = {{Name Surname, Name Surname and Name Surname}},
+  title = {{Title}},
+  journal = {{University of Trento}},
+  volume = 52,
+  number = 4,
+  pages = {1289-1306},
+  year = 2006
+}
 
-\begin{figure}[htbp]
-  \centering
-  \def\stackalignment{r}\stackunder{ \includegraphics[width=.5\linewidth]{images/logo/logo.pdf} } %
-  {\scriptsize Source: \url{https://www.unitn.it} }
-  \caption{University of Trento logo}
-  \label{fig:unitn}
-\end{figure}
+% Slammer Worm in IEEE Security & Privacy - Casi reali bug memory unsafe
+@article{slammer_worm,
+  author = {{David Moore and Vern Paxson and Stefan Savage and Colleen Shannon and Stuart Staniford and Nicholas Weaver}},
+  title = {{Inside the Slammer Worm}},
+  journal = {{IEEE Security \& Privacy}},
+  volume = 1,
+  number = 4,
+  pages = {33-39},
+  year = 2003,
+}
 
-\begin{wrapfigure}
-  {r}{.25\textwidth} %
-  \centering
-  \def\stackalignment{r}\stackunder{ \includegraphics[width=\linewidth]{images/logo/logo.pdf} } %
-  {\scriptsize \parbox[t]{\linewidth}{ Source: \url{https://www.unitn.it}} }
-  \caption{University of Trento logo}
-  \label{fig:unitn_wrapfigure_right}
-\end{wrapfigure}
+% Slammer Worm in IEEE Security & Privacy - Casi reali bug memory unsafe
+@article{meaning_memory_safety,
+  author    = {Arthur Azevedo de Amorim and Cătălin Hriţcu and Benjamin C. Pierce},
+  title     = {The Meaning of Memory Safety},
+  booktitle = {Principles of Security and Trust},
+  editor    = {Gilles Barthe and Cătălina Cămara and David Pichardie},
+  publisher = {Springer International Publishing},
+  series    = {Lecture Notes in Computer Science},
+  volume    = {10804},
+  pages     = {79--105},
+  year      = {2018},
+  doi       = {10.1007/978-3-319-89722-6_4},
+  note      = {ISBN 978-3-319-89721-9},
+}
 
-TESTO DI ESEMPIO, FITTIZIO ... \\
-
-\begin{wrapfigure}
-  {l}{.25\textwidth} %
-  \centering
-  \def\stackalignment{l}\stackunder{ \includegraphics[width=\linewidth]{images/logo/logo.pdf} } %
-  {\scriptsize \parbox[t]{\linewidth}{ Source: \url{https://www.unitn.it}} }
-  \caption{University of Trento logo}
-  \label{fig:unitn_wrapfigure_left}
-\end{wrapfigure}
-
-TESTO DI ESEMPIO, FITTIZIO ...
+% Website "The Memory Safety Continuum"
+@misc{memory_safety_continuum,
+  title = {{The Memory Safery Continuum}},
+  author = {{Nell Shamrell-Harrington, Avishay Balter, Gabriel Dos Reis, David Edelsohn, Charles C Palmer, Joshua J. Drake, David A. Wheeler, Andrew Fryer, Rich Lander}},
+  howpublished = {\url{https://memorysafety.openssf.org/memory-safety-continuum/}}
+}

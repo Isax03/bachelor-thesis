@@ -34,15 +34,19 @@
 % List
 \usepackage{enumitem}
 
+% TODO - START: DELETE ME
+\usepackage{lipsum}
+% TODO - END: DELETE ME
+
 % Document
 \begin{document}
   % Cover
   \pagenumbering{gobble}
-  \input{etc/copertina.tex}
+  \input{etc/cover}
   \clearpage
 
   % Acknowledgements
-  \input{etc/ringraziamenti.tex}
+  \input{etc/acknowledgements}
   \clearpage
   \pagestyle{plain}
 
@@ -67,13 +71,18 @@
   \titlespacing*{\subsubsection}{0pt}{0.05in}{0.02in}
 
   % Abstract
-  \input{etc/sommario.tex}
+  \input{etc/abstract.tex}
 
   % Chapters
-  \input{chapters/examples.tex}
+  
+  % \input{chapters/examples}
+
+  \input{chapters/introduction.tex}
+
+  \input{chapters/background.tex}
 
   % Conclusions
-  \input{etc/conclusioni.tex}
+  \input{etc/conclusions.tex}
 
   \endgroup
 
