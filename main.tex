@@ -34,6 +34,9 @@
 % List
 \usepackage{enumitem}
 
+% Citation as superscript (replaces [N] notation)
+\usepackage[superscript]{cite}
+
 % TODO - START: DELETE ME
 \usepackage{lipsum}
 % TODO - END: DELETE ME
@@ -74,12 +77,16 @@
   \input{etc/abstract.tex}
 
   % Chapters
-  
+
   % \input{chapters/examples}
 
   \input{chapters/introduction.tex}
 
-  \input{chapters/background.tex}
+  \input{chapters/background/background.tex}
+
+  \input{chapters/sdlc/sdlc.tex}
+
+  \input{chapters/real_case.tex}
 
   % Conclusions
   \input{etc/conclusions.tex}
