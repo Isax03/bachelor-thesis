@@ -1,5 +1,108 @@
 \section{Fasi preliminari}
 \label{sec:preliminary_stages}
 
+Le fasi preliminari del \textit{Software Development Life Cycle} (SDLC)
+comprendono l'analisi dei requisiti, la pianificazione e il design del software.
+Sebbene queste attività non prevedano ancora la scrittura effettiva del codice, rivestono
+un ruolo cruciale nella definizione delle proprietà di sicurezza dell'intero sistema,
+incluse le garanzie di \textit{memory safety}.
+
+Una corretta impostazione in queste fasi consente di identificare precocemente i
+rischi legati all'uso della memoria e di predisporre adeguate strategie di mitigazione.
+Ad esempio, in un progetto che prevede l'implementazione di algoritmi crittografici,
+è fondamentale orientare le scelte tecniche (come linguaggi e librerie) verso
+strumenti che riducano al minimo la possibilità di errori di memoria. Una gestione
+errata in questo ambito può esporre l'applicazione a vulnerabilità gravi, come
+la possibilità di decrittare dati sensibili o di compromettere l'integrità del
+sistema.
+
+In particolare, già in fase di progettazione è possibile (e raccomandabile) condurre
+un'analisi dei requisiti di sicurezza, esplicitando obiettivi orientati alla
+\textit{memory safety}. Analogamente, durante la fase di pianificazione, è utile
+prevedere misure difensive trasversali all'intero ciclo di vita, come l'uso di ambienti
+\textit{sandbox} durante il deployment per limitare i danni derivanti da
+eventuali vulnerabilità di memoria. Questi requisiti e decisioni guideranno poi tutte
+le fasi successive dello sviluppo.
+
 \subsection{Scelta del Linguaggio}
 \label{sec:linguaggio}
+
+La scelta del linguaggio di programmazione rappresenta una delle decisioni
+fondamentali nelle fasi preliminari dello sviluppo software. Essa influenza in modo
+diretto la qualità, la sicurezza e la manutenibilità del codice prodotto, ed è particolarmente
+rilevante quando si vogliono prevenire vulnerabilità legate alla \textit{memory
+safety}.
+
+Sebbene linguaggi come Rust siano stati progettati con l'obiettivo esplicito di
+garantire la \textit{memory safety}, non esiste una soluzione unica valida per
+tutti i contesti. Ogni linguaggio presenta compromessi progettuali che ne influenzano
+l'idoneità in scenari specifici.
+
+Per esempio, C e C++ restano la scelta dominante nello sviluppo di firmware, driver
+o sistemi embedded, dove è richiesto un controllo a basso livello dell'hardware
+e delle risorse. Al contrario, Java e Kotlin trovano impiego in applicazioni
+mobili e enterprise, grazie alla loro portabilità e al supporto dell'ecosistema JVM.
+Le possibilità sono numerose, e ogni progetto potrebbe richiedere una combinazione
+diversa di criteri funzionali e non funzionali.
+
+Oltre alle caratteristiche tecniche, la scelta del linguaggio dipende spesso
+anche da fattori pragmatici come il know-how del team, la disponibilità di tool e
+librerie, i vincoli di tempo, o l'integrazione con sistemi esistenti e/o legacy.
+
+Per offrire una panoramica concreta, viene di seguito riportata la
+\autoref{tab:linguaggi_memory_safety} (adattata dal paper \textit{"On the Secure
+Implementation of Cryptographic Algorithms"}\cite{fbk_crypto_algo}) che riassume
+alcune proprietà rilevanti per la \textit{memory safety}, mettendo a confronto
+alcuni linguaggi secondo criteri come il controllo automatico dei limiti di
+accesso, la gestione dei puntatori nulli, la sicurezza di tipo e altri aspetti
+chiave.
+
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{table}[H]
+  \centering
+  \begin{tabular}{l|c|c|c|c|c|c|}
+    \multicolumn{1}{l}{}         & \textbf{C/C++}                & \textbf{Java}                 & \textbf{Kotlin}               & \textbf{Python}               & \textbf{Rust}          & \textbf{Go}               \\
+    \hline
+    \textbf{Bounds Check}        & \cellcolor{red!20}No          & \cellcolor{green!20}Sì        & \cellcolor{green!20}Sì        & \cellcolor{green!20}Sì        & \cellcolor{green!20}Sì & \cellcolor{green!20}Sì    \\
+    \textbf{Null Safety}         & \cellcolor{red!20}No          & \cellcolor{red!20}No          & \cellcolor{green!20}Sì        & \cellcolor{yellow!20}Parziale & \cellcolor{green!20}Sì & \cellcolor{green!20}Sì    \\
+    \textbf{Ownership/Borrowing} & \cellcolor{red!20}No          & \cellcolor{red!20}No          & \cellcolor{red!20}No          & \cellcolor{red!20}No          & \cellcolor{green!20}Sì & \cellcolor{red!20}No      \\
+    \textbf{Type Safety}         & \cellcolor{yellow!20}Parziale & \cellcolor{yellow!20}Parziale & \cellcolor{yellow!20}Parziale & \cellcolor{green!20}Sì        & \cellcolor{green!20}Sì & \cellcolor{green!20}Sì    \\
+    \textbf{Memory Zeroization}  & \cellcolor{red!20}No          & \cellcolor{red!20}No          & \cellcolor{red!20}No          & \cellcolor{red!20}No          & \cellcolor{green!20}Sì & \cellcolor{red!20}No      \\
+    \textbf{Memory Integrity}    & \cellcolor{red!20}No          & \cellcolor{yellow!20}Parziale & \cellcolor{yellow!20}Parziale & \cellcolor{red!20}No          & \cellcolor{green!20}Sì & \cellcolor{green!20}Sì    \\
+    \textbf{Difficulty}          & \cellcolor{red!20}Alta        & \cellcolor{yellow!20}Media    & \cellcolor{yellow!20}Media    & \cellcolor{green!20}Bassa     & \cellcolor{red!20}Alta & \cellcolor{green!20}Bassa \\
+    \hline
+  \end{tabular}
+  \caption{Confronto tra linguaggi}
+  \label{tab:linguaggi_memory_safety}
+\end{table}
+
+Come si può notare dalla tabella, i linguaggi più recenti come Rust e Go offrono
+una maggiore sicurezza in termini di \textit{memory safety} rispetto a linguaggi
+più datati come C/C++. Java, Kotlin e Python si collocano in una posizione intermedia:
+sono comunemente considerati \textit{memory safe by default} grazie al garbage collector,
+ma hanno meno funzionalità avanzate che rafforzano la sicurezza della memoria.
+
+\paragraph{Memory Zeroization}
+Un aspetto spesso trascurato ma rilevante è il supporto alla \textbf{memory
+zeroization}, ovvero la capacità del linguaggio o delle librerie di pulire automaticamente
+aree di memoria contenenti dati sensibili una volta terminato il loro utilizzo.
+Questo è particolarmente importante in contesti crittografici o in applicazioni
+che gestiscono credenziali e segreti in chiaro.
+
+\paragraph{Difficoltà}
+Altra caratteristica fondamentale da considerare è la curva di apprendimento del
+linguaggio, che può impattare significativamente sui tempi di adozione e sul
+rischio di introdurre bug nei primi cicli di sviluppo. Sebbene si tratti di un aspetto
+soggettivo, alcune stime empiriche\cite{learning_curves} suggeriscono che linguaggi
+come Python e Go siano più accessibili rispetto a Rust o C++, che richiedono una
+maggiore familiarità con i concetti di basso livello e di gestione esplicita
+delle risorse.
+
+\paragraph{Librerie}
+Infine, è importante ricordare che la sola scelta del linguaggio non garantisce
+la sicurezza della memoria: l'ecosistema di \textit{librerie} gioca un ruolo
+altrettanto determinante. È pertanto raccomandabile valutare la maturità, la
+qualità del codice, e la presenza di audit di sicurezza nelle librerie esterne utilizzate,
+specialmente se implementate in linguaggi memory-unsafe o non pienamente
+compatibili con il modello di sicurezza adottato dal progetto.
