@@ -37,7 +37,7 @@ jobs:
       - name: Install TeXLive
         run: |
           sudo apt-get update
-          sudo apt-get install -y texlive-full latexmk
+          sudo apt-get install -y texlive-latex-base texlive-lang-italian texlive-latex-recommended texlive-latex-extra latexmk
 
       - name: Get current date
         id: date
