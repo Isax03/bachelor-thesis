@@ -59,46 +59,47 @@ solido framework matematico per specificare e dimostrare le garanzie di
 sicurezza implementate da un sistema (come proprietà del type system o del memory
 model). Tale formalizzazione guida inoltre lo sviluppo di strumenti verificati per
 l'enforcement della memory safety, come i monitor hardware/software descritti
-nel paper (ad esempio PUMP, Sezione 5).
+nel paper (Sezione 5).
 
-Tuttavia, questa definizione si basa su ipotesi idealizzate, come memoria illimitata,
-assenza di aritmetica sui puntatori o di cast a interi, che lo rendono parzialmente
-distante dai linguaggi e dagli ambienti reali (Sezione 4). Per questo motivo una
-definizione più intuitiva e pratica è necessaria per comprendere il concetto di
-memory safety in contesti reali.
+Tuttavia, questa definizione si basa su ipotesi idealizzate, come memoria
+illimitata, assenza di side-channels sfruttabili dagli attaccanti e assenza di aritmetica
+sui puntatori o di cast a interi, che lo rendono parzialmente distante dai
+linguaggi e dagli ambienti reali (Sezione 4). Per questo motivo una definizione più
+intuitiva e pratica è necessaria per comprendere il concetto di memory safety in
+contesti reali.
 
 \subsection{Definizione pratica}
 \label{sec:practical_definition}
 
-Dal punto di vista pratico, la memory safety viene comunemente intesa come la
-capacità di un programma di evitare comportamenti errati o vulnerabilità legate
-alla gestione della memoria dinamica.
+Dal punto di vista pratico, la memory safety viene comunemente intesa come la capacità
+di un programma di evitare comportamenti errati o vulnerabilità legate alla gestione
+della memoria dinamica.
 
-In particolare, si riferisce alla prevenzione di errori come buffer overflows,
-use-after-free e dangling pointers, che possono compromettere l'integrità o la sicurezza
-del software. Una panoramica di queste vulnerabilità sarà fornita nella \autoref{sec:vulnerability_types}.
+In particolare, si riferisce alla prevenzione di errori come buffer overflow, use-after-free
+e dangling pointers, che possono compromettere l'integrità o la sicurezza del
+software. Una panoramica di queste vulnerabilità sarà fornita nella Sezione \ref{sec:vulnerability_types}.
 
 Sebbene non costituisca una fonte accademica formale, Wikipedia\cite{wikipedia_definition}
 riflette questa visione diffusa, definendo la memory safety come \textit{"lo stato
 di protezione da vari bug nel software e vulnerabilità nella sicurezza, quando
 si ha a che fare con accessi in memoria"}. Questa formulazione, pur semplificata,
-è in linea con numerosi articoli tecnici e documenti divulgativi che descrivono la
-memory safety attraverso l'eliminazione di specifiche classi di bug piuttosto che
-tramite una definizione formale.
+è in linea con numerosi articoli tecnici e documenti divulgativi che descrivono
+la memory safety attraverso l'eliminazione di specifiche classi di bug piuttosto
+che tramite una definizione formale.
 
 % Memory Safety Continuum %
 \subsection{Memory safety come spettro continuo}
 \label{sec:continuum_definition}
 
-Sebbene le definizioni formale e pratica adottino approcci diversi, entrambe sottintendono
-che la memory safety non sia una proprietà assoluta o binaria, ma una condizione
-che può essere raggiunta in misura variabile.
+Sebbene le definizioni formale e pratica adottino approcci diversi, entrambe
+sottintendono che la memory safety non sia una proprietà assoluta o binaria, ma una
+condizione che può essere raggiunta in misura variabile.
 
 Questa idea viene esplicitamente sviluppata nell'articolo \textit{The Memory
-Safety Continuum}\cite{memory_safety_continuum}, pubblicato dalla OpenSSF, che
-propone di interpretare la memory safety come uno spettro continuo. In tale visione,
-sistemi e linguaggi possono offrire livelli differenti di protezione, a seconda delle
+Safety Continuum}\cite{memory_safety_continuum}, pubblicato dalla OpenSSF, che propone
+di interpretare la memory safety come uno spettro continuo. In tale visione, sistemi
+e linguaggi possono offrire livelli differenti di protezione, a seconda delle
 garanzie fornite e delle mitigazioni adottate.
 
-Questo approccio sottolinea come la memory safety possa essere rafforzata progressivamente,
-piuttosto che garantita in modo assoluto.
+Questo approccio sottolinea come la memory safety possa essere rafforzata
+progressivamente, piuttosto che garantita in modo assoluto.
