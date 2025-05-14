@@ -1,30 +1,38 @@
 \chapter{Memory Safety nel SDLC}
 \label{cha:sdlc}
 
-Dopo aver introdotto i concetti fondamentali legati alla memory safety e aver
-visto l'impatto che una gestione errata della memoria può avere sulla sicurezza,
-sull'affidabilità e sulla stabilità del software, questo capitolo si concentra
-su come questi principi possano essere concretamente integrati all'interno del
-ciclo di vita dello sviluppo del software \textit{(Software Development Life Cycle,
-SDLC)}.
+\begin{wrapfigure}
+	{r}{0.35\textwidth}
+	\centering
+	\includegraphics[width=\linewidth]{images/sdlc.png}
+	\caption[Schema SDLC]{Schema SDLC\protect\footnotemark}
+	\label{fig:sdlc_img}
+\end{wrapfigure}
+\footnotetext{Fonte: \url{https://pvs-studio.com/en/blog/terms/6732/}}
 
-La memory safety non è un obiettivo che può essere raggiunto in un singolo momento
-del processo di sviluppo, ma deve essere perseguito lungo tutte le sue fasi. Una
-falla memory-unsafe, infatti, può essere introdotta in qualsiasi momento, in
-maniera più o meno diretta: dal linguaggio di programmazione utilizzato,
-passando per la qualità del codice, fino ad arrivare all'ambiente di esecuzione.
-Per questo motivo, ogni fase dello SDLC rappresenta un'opportunità per prevenire,
-individuare e mitigare vulnerabilità legate all'uso insicuro della memoria. Comprendere
-il contributo specifico di ciascuna fase alla sicurezza della memoria consente ai
-team di sviluppo di adottare una strategia integrata e preventiva, riducendo
-significativamente il rischio di introdurre vulnerabilità critiche nel sistema.
+Dopo aver introdotto i concetti fondamentali legati alla memory safety e aver visto
+l'impatto che una gestione errata della memoria può avere sulla sicurezza, sull'affidabilità
+e sulla stabilità del software, questo capitolo si concentra su come questi principi
+possano essere concretamente integrati all'interno del ciclo di vita dello sviluppo
+del software \textit{(Software Development Life Cycle, SDLC)}.
 
-Va sottolineato fin da subito che le tecniche, gli strumenti e i linguaggi eventualmente
-citati \textit{non} vanno intesi come universali o necessariamente ottimali per
-ogni contesto. L'obiettivo di questo capitolo non è infatti quello di raccomandare
-soluzioni specifiche, ma piuttosto fornire un \textit{quadro strutturato di
-buone pratiche e approcci} che possono essere adattati in base ai requisiti del progetto,
-alle risorse disponibili e al contesto applicativo.
+La memory safety non è un obiettivo che può essere raggiunto in un singolo
+momento del processo di sviluppo, ma deve essere perseguito lungo tutte le sue fasi.
+Una falla memory-unsafe, infatti, può essere introdotta in qualsiasi momento, in
+maniera più o meno diretta: dal linguaggio di programmazione utilizzato, passando
+per la qualità del codice, fino ad arrivare all'ambiente di esecuzione. Per questo
+motivo, ogni fase dello SDLC rappresenta un'opportunità per prevenire, individuare
+e mitigare vulnerabilità legate all'uso insicuro della memoria. Comprendere il
+contributo specifico di ciascuna fase alla sicurezza della memoria consente ai
+team di sviluppo di adottare una strategia integrata e preventiva, riducendo significativamente
+il rischio di introdurre vulnerabilità critiche nel sistema.
+
+Va sottolineato fin da subito che le tecniche, gli strumenti e i linguaggi
+eventualmente citati \textit{non} vanno intesi come universali o necessariamente
+ottimali per ogni contesto. L'obiettivo di questo capitolo non è infatti quello
+di raccomandare soluzioni specifiche, ma piuttosto fornire un \textit{quadro
+strutturato di buone pratiche e approcci} che possono essere adattati in base ai
+requisiti del progetto, alle risorse disponibili e al contesto applicativo.
 
 \input{chapters/sdlc/preliminary_stages.tex}
 \input{chapters/sdlc/development.tex}

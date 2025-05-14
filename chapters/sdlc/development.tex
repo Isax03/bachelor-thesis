@@ -146,3 +146,72 @@ del software contro le vulnerabilità più comuni.
 
 \subsection{Analisi Statica}
 \label{sec:analisi-statica}
+
+Dopo aver trattato le tecniche per scrivere codice sicuro, incluse le buone
+pratiche e l'uso di librerie progettate per ridurre vulnerabilità come buffer
+overflow e dangling pointer, è utile introdurre un'ulteriore forma di
+mitigazione: l'analisi statica. Sebbene non intervenga direttamente nella
+scrittura del codice, questa tecnica è parte integrante della fase di sviluppo nel
+SDLC. L'analisi statica consiste nell'esaminare il codice sorgente (o, in alcuni
+casi, il bytecode o il codice compilato) alla ricerca di difetti, vulnerabilità di
+sicurezza e violazioni degli standard di codifica, il tutto senza eseguire il
+programma. Il vantaggio principale è la possibilità di individuare problemi in una
+fase precoce dello sviluppo, riducendo così i costi e la complessità delle
+successive correzioni.
+
+\begin{quote}
+  \textbf{\textit{Nota:}} L'analisi statica non è una tecnica esclusiva per la
+  \textit{memory safety}. Infatti, i tool esistenti non si limitano a rilevare solo
+  vulnerabilità legate alla gestione della memoria, ma possono anche
+  identificare una vasta gamma di problemi di qualità del codice, bug logici e violazioni
+  delle best practice di programmazione, che però non sono trattati in questo
+  documento.
+\end{quote}
+
+\noindent
+L'adozione dell'analisi statica offre numerosi vantaggi. Permette un'individuazione
+precoce e automatizzata dei difetti, spesso integrabile direttamente negli ambienti
+di sviluppo integrato (IDE) e nei sistemi di Continuous Integration/Continuous Deployment
+(CI/CD), fornendo un feedback rapido agli sviluppatori, prima che il software venga
+compilato o eseguito. Questo contribuisce a ridurre il debito tecnico, migliorare
+la qualità complessiva del codice e rafforzare la postura di sicurezza dell'applicazione
+prima che raggiunga fasi più avanzate di test o, peggio, la produzione.
+
+Nonostante la sua efficacia, l'analisi statica presenta alcune limitazioni: una delle
+sfide principali è la gestione dei \textbf{falsi positivi}, ovvero segnalazioni di
+problemi che in realtà non costituiscono errori o vulnerabilità nel contesto specifico
+dell'applicazione. Questo è dovuto al fatto che gli analizzatori non riescono
+sempre a comprendere il contesto completo in cui il codice viene eseguito, portando
+a segnalazioni errate.
+
+Un esempio pratico può essere il seguente:
+
+\begin{lstlisting}[language=C]
+  #include <stdlib.h>
+  #include <string.h>
+  void copy_string(const char *input) {
+    char buffer[64];
+    if (strlen(input) < sizeof(buffer)){
+      strcpy(buffer, input); // Sicuro: controllato prima
+   }
+  }
+\end{lstlisting}
+
+In questo caso, l'analizzatore statico potrebbe segnalare un potenziale buffer overflow,
+nonostante il controllo esplicito della lunghezza della stringa di input. Questo
+potrebbe essere dovuto al fatto che l'analizzatore non tiene conto del legame semantico
+tra la condizione \texttt{if} e l'istruzione \texttt{strcpy}. Altri tool invece
+potrebbero adottare strategie conservative che segnalano sempre funzioni come
+\texttt{strcpy} come potenzialmente pericolose.
+
+Allo stesso modo, l'analisi statica può anche portare a \textbf{falsi negativi},
+ossia la mancata rilevazione di problemi reali, specialmente per vulnerabilità complesse
+che dipendono da configurazioni di runtime o interazioni specifiche con input esterni
+non prevedibili staticamente.
+
+In conclusione, integrare l'analisi statica nel processo di sviluppo è una
+pratica altamente raccomandata, che può rilevare dimenticanze o falle introdotte
+dallo sviluppatore e dalle librerie usate, contribuendo al rafforzamento della
+sicurezza. Tuttavia, è fondamentale considerare i suoi limiti e continuare a
+migliorare il software anche nelle successive fasi del ciclo di vita, ovvero durante
+il testing, il deployment e la manutenzione.

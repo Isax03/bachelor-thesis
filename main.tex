@@ -5,6 +5,7 @@
 \usepackage{float}
 \usepackage{makecell}
 \usepackage[table]{xcolor}
+\usepackage{listings}
 % Layout
 \usepackage[
   paperheight=29.7cm,
@@ -44,6 +45,17 @@
 % TODO - START: DELETE ME
 \usepackage{lipsum}
 % TODO - END: DELETE ME
+
+\lstset{ language=C, basicstyle=\ttfamily\small, keywordstyle=
+\color{blue}
+, commentstyle=
+\color{green!60!black}
+, stringstyle=
+\color{red}
+, numberstyle=\tiny
+\color{gray}
+, numbers=left, frame=single, breaklines=true, breakatwhitespace=false, showstringspaces=false
+}
 
 % Document
 \begin{document}
