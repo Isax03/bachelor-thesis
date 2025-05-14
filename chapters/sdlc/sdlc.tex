@@ -1,20 +1,20 @@
 \chapter{Memory Safety nel SDLC}
 \label{cha:sdlc}
 
-\begin{wrapfigure}
-	{r}{0.35\textwidth}
-	\centering
-	\includegraphics[width=\linewidth]{images/sdlc.png}
-	\caption[Schema SDLC]{Schema SDLC\protect\footnotemark}
-	\label{fig:sdlc_img}
-\end{wrapfigure}
-\footnotetext{Fonte: \url{https://pvs-studio.com/en/blog/terms/6732/}}
+Dopo aver introdotto i concetti fondamentali legati alla memory safety e aver
+visto l'impatto che una gestione errata della memoria può avere sulla sicurezza,
+sull'affidabilità e sulla stabilità del software, questo capitolo si concentra
+su come questi principi possano essere concretamente integrati all'interno del
+ciclo di vita dello sviluppo del software \textit{(Software Development Life Cycle,
+SDLC)}(\autoref{fig:sdlc_img}).
 
-Dopo aver introdotto i concetti fondamentali legati alla memory safety e aver visto
-l'impatto che una gestione errata della memoria può avere sulla sicurezza, sull'affidabilità
-e sulla stabilità del software, questo capitolo si concentra su come questi principi
-possano essere concretamente integrati all'interno del ciclo di vita dello sviluppo
-del software \textit{(Software Development Life Cycle, SDLC)}.
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.7\textwidth]{images/sdlc.png}
+  \caption[Schema SDLC]{Schema SDLC\protect\footnotemark}
+  \label{fig:sdlc_img}
+\end{figure}
+\footnotetext{Fonte: \url{https://uniquesoftwaredev.com/the-software-development-life-cycle-sdlc-7-phases-and-models/}}
 
 La memory safety non è un obiettivo che può essere raggiunto in un singolo
 momento del processo di sviluppo, ma deve essere perseguito lungo tutte le sue fasi.
