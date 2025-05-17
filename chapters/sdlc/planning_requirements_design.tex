@@ -61,47 +61,51 @@ nulli, la sicurezza di tipo e altri aspetti chiave.
 \begin{table}[H]
   \centering
   \begin{tabular}{l|c|c|c|c|c|c|}
-    \multicolumn{1}{l}{}         & \textbf{C/C++}                & \textbf{Java}                 & \textbf{Kotlin}               & \textbf{Python}               & \textbf{Rust}          & \textbf{Go}               \\
+    \multicolumn{1}{l}{}         & \textbf{C/C++}                & \textbf{Java}                 & \textbf{Kotlin}               & \textbf{Python}               & \textbf{Rust}                       & \textbf{Go}               \\
     \hline
-    \textbf{Bounds Check}        & \cellcolor{red!20}No          & \cellcolor{green!20}Sì        & \cellcolor{green!20}Sì        & \cellcolor{green!20}Sì        & \cellcolor{green!20}Sì & \cellcolor{green!20}Sì    \\
-    \textbf{Null Safety}         & \cellcolor{red!20}No          & \cellcolor{red!20}No          & \cellcolor{green!20}Sì        & \cellcolor{yellow!20}Parziale & \cellcolor{green!20}Sì & \cellcolor{green!20}Sì    \\
-    \textbf{Ownership/Borrowing} & \cellcolor{red!20}No          & \cellcolor{red!20}No          & \cellcolor{red!20}No          & \cellcolor{red!20}No          & \cellcolor{green!20}Sì & \cellcolor{red!20}No      \\
-    \textbf{Type Safety}         & \cellcolor{yellow!20}Parziale & \cellcolor{yellow!20}Parziale & \cellcolor{yellow!20}Parziale & \cellcolor{green!20}Sì        & \cellcolor{green!20}Sì & \cellcolor{green!20}Sì    \\
-    \textbf{Memory Zeroization}  & \cellcolor{red!20}No          & \cellcolor{red!20}No          & \cellcolor{red!20}No          & \cellcolor{red!20}No          & \cellcolor{green!20}Sì & \cellcolor{red!20}No      \\
-    \textbf{Memory Integrity}    & \cellcolor{red!20}No          & \cellcolor{yellow!20}Parziale & \cellcolor{yellow!20}Parziale & \cellcolor{red!20}No          & \cellcolor{green!20}Sì & \cellcolor{green!20}Sì    \\
-    \textbf{Difficulty}          & \cellcolor{red!20}Alta        & \cellcolor{yellow!20}Media    & \cellcolor{yellow!20}Media    & \cellcolor{green!20}Bassa     & \cellcolor{red!20}Alta & \cellcolor{green!20}Bassa \\
+    \textbf{Bounds Check}        & \cellcolor{red!20}No          & \cellcolor{green!20}Sì        & \cellcolor{green!20}Sì        & \cellcolor{green!20}Sì        & \cellcolor{green!20}Sì              & \cellcolor{green!20}Sì    \\
+    \textbf{Null Safety}         & \cellcolor{red!20}No          & \cellcolor{red!20}No          & \cellcolor{green!20}Sì        & \cellcolor{yellow!20}Parziale & \cellcolor{green!20}Sì              & \cellcolor{green!20}Sì    \\
+    \textbf{Ownership/Borrowing} & \cellcolor{red!20}No          & \cellcolor{red!20}No          & \cellcolor{red!20}No          & \cellcolor{red!20}No          & \cellcolor{green!20}Sì              & \cellcolor{red!20}No      \\
+    \textbf{Type Safety}         & \cellcolor{yellow!20}Parziale & \cellcolor{yellow!20}Parziale & \cellcolor{yellow!20}Parziale & \cellcolor{green!20}Sì        & \cellcolor{green!20}Sì              & \cellcolor{green!20}Sì    \\
+    \textbf{Memory Zeroization}  & \cellcolor{red!20}No          & \cellcolor{red!20}No          & \cellcolor{red!20}No          & \cellcolor{red!20}No          & \cellcolor{green!20}Sì\footnotemark & \cellcolor{red!20}No      \\
+    \textbf{Memory Integrity}    & \cellcolor{red!20}No          & \cellcolor{yellow!20}Parziale & \cellcolor{yellow!20}Parziale & \cellcolor{red!20}No          & \cellcolor{green!20}Sì              & \cellcolor{green!20}Sì    \\
+    \textbf{Difficulty}          & \cellcolor{red!20}Alta        & \cellcolor{yellow!20}Media    & \cellcolor{yellow!20}Media    & \cellcolor{green!20}Bassa     & \cellcolor{red!20}Alta              & \cellcolor{green!20}Bassa \\
     \hline
   \end{tabular}
   \caption{Confronto tra linguaggi}
   \label{tab:linguaggi_memory_safety}
 \end{table}
 
+\footnotetext{Supportata tramite il crate \texttt{zeroize}, mantenuto dal team
+\texttt{RustCrypto} e ampiamente usato per la gestione sicura di dati sensibili.}
+
 Come si può notare dalla tabella, i linguaggi più recenti come Rust e Go offrono
-una maggiore sicurezza rispetto a linguaggi più datati come C/C++. Java, Kotlin
-e Python si collocano in una posizione intermedia: sono comunemente considerati \textit{memory
-safe by default} grazie al garbage collector, ma hanno meno funzionalità avanzate
-che rafforzano la sicurezza della memoria.
+una maggiore sicurezza rispetto a linguaggi più datati come C/C++. Java, Kotlin e
+Python si collocano in una posizione intermedia: sono comunemente considerati
+\textit{memory safe by default} grazie al garbage collector, ma hanno meno
+funzionalità avanzate che rafforzano la sicurezza della memoria.
 
 \paragraph{Memory Zeroization}
 Un aspetto spesso trascurato ma rilevante è il supporto alla \textbf{memory
-zeroization}, ovvero la capacità del linguaggio o delle librerie di pulire
-automaticamente aree di memoria contenenti dati sensibili una volta terminato il
-loro utilizzo. Questo è particolarmente importante in contesti crittografici o in
-applicazioni che gestiscono credenziali e segreti in chiaro.
+zeroization}, ovvero la capacità del linguaggio o delle librerie di pulire automaticamente
+aree di memoria contenenti dati sensibili una volta terminato il loro utilizzo.
+Questo è particolarmente importante in contesti crittografici o in applicazioni
+che gestiscono credenziali e segreti in chiaro.
 
 \paragraph{Learning Curve}
 Altra caratteristica fondamentale da considerare è la curva di apprendimento del
-linguaggio, che può impattare significativamente sui tempi di adozione e sul rischio
-di introdurre bug nei primi cicli di sviluppo. Sebbene si tratti di un aspetto
-soggettivo, alcune stime empiriche\cite{learning_curves} suggeriscono che
-linguaggi come Python e Go siano più accessibili rispetto a Rust o C++, che richiedono
-una maggiore familiarità con i concetti di basso livello e di gestione esplicita
+linguaggio, che può impattare significativamente sui tempi di adozione e sul
+rischio di introdurre bug nei primi cicli di sviluppo. Sebbene si tratti di un aspetto
+soggettivo, alcune stime empiriche\cite{learning_curves} suggeriscono che linguaggi
+come Python e Go siano più accessibili rispetto a Rust o C++, che richiedono una
+maggiore familiarità con i concetti di basso livello e di gestione esplicita
 delle risorse.
 
 \paragraph{Librerie}
-Infine, è importante ricordare che la sola scelta del linguaggio non garantisce la
-sicurezza della memoria: l'ecosistema di \textit{librerie} gioca un ruolo altrettanto
-determinante. È pertanto raccomandabile valutare la maturità, la qualità del codice,
-e la presenza di audit di sicurezza nelle librerie esterne utilizzate, specialmente
-se implementate in linguaggi memory-unsafe (es. librerie Python scritte in C) o
-non pienamente compatibili con il modello di sicurezza adottato dal progetto.
+Infine, è importante ricordare che la sola scelta del linguaggio non garantisce
+la sicurezza della memoria: l'ecosistema di \textit{librerie} gioca un ruolo
+altrettanto determinante. È pertanto raccomandabile valutare la maturità, la
+qualità del codice, e la presenza di audit di sicurezza nelle librerie esterne utilizzate,
+specialmente se implementate in linguaggi memory-unsafe (es. librerie Python
+scritte in C) o non pienamente compatibili con il modello di sicurezza adottato dal
+progetto.
