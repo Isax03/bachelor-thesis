@@ -7,22 +7,18 @@ per la maggior parte, definizioni di carattere più pratico, che si concentrano
 sull'assenza di determinati tipi di bug o comportamenti indesiderati legati alla
 gestione della memoria.
 
-Un'eccezione significativa è rappresentata dall'articolo \textit{The Meaning of
-Memory Safety}\cite{meaning_memory_safety}, che si pone l'obiettivo di formalizzare
-rigorosamente il concetto, supportandolo con teoremi e dimostrazioni.
-
-\vspace{0.5em}
-Di seguito, verranno presentate sia la definizione formale che quella pratica e intuitiva
-di memory safety, per fornire una visione completa del concetto e delle sue
-implicazioni.
+Di seguito, verrà presentata sia una definizione formale di memory safety che una
+definizione intuitiva derivante da aspetti più pratici, al fine di fornire una
+visione completa del concetto e delle sue implicazioni.
 
 \subsection{Definizione formale}
 \label{sec:formal_definition}
 
-L'articolo citato\cite{meaning_memory_safety} propone una formalizzazione
-rigorosa della memory safety attraverso un framework matematico basato su
-semantica operazionale e strutture formali per ragionare sulla sicurezza della
-memoria in modo verificabile.
+Una definizione formale di memory safety è stata proposta nell'articolo \textit{The
+Meaning of Memory Safety}\cite{meaning_memory_safety} e si basa su una formalizzazione
+rigorosa del concetto, attraverso un framework matematico basato su semantica
+operazionale e strutture formali per ragionare sulla sicurezza della memoria in
+modo verificabile.
 
 Nel modello proposto, un programma è considerato \textit{memory safe} se durante
 la sua esecuzione preserva le seguenti proprietà fondamentali:
@@ -32,9 +28,9 @@ la sua esecuzione preserva le seguenti proprietà fondamentali:
       \item Le operazioni su una regione di memoria non influenzano dati al di fuori
         del proprio ``footprint'' (porzione accessibile).
 
-      \item I \textit{Frame Theorems} (Sezione 3) garantiscono che l'estensione
-        dello heap iniziale con blocchi non raggiungibili non alteri il
-        comportamento del programma.
+      \item I \textit{Frame Theorems} (Sezione 3), sviluppati e dimostrati nel paper
+        stesso, garantiscono che l'estensione dello heap iniziale con blocchi
+        non raggiungibili non alteri il comportamento del programma.
     \end{itemize}
 
   \item \textbf{Non-interferenza} (Corollario 1):

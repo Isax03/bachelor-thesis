@@ -1,6 +1,22 @@
 \section{Testing}
 \label{sec:testing}
 
+Pur avendo trattato varie mitigazioni applicabili nella fase dello sviluppo del software
+(\autoref{sec:development}), queste si basano sul contributo dello sviluppatore
+che può commettere errori (best practices e uso di librerie) o su strumenti che
+possono produrre falsi positivi o falsi negativi (analisi statica). Vista l'inclinazione
+agli errori, le metodologie proposte potrebbero non essere sufficienti a
+garantire la sicurezza della memoria ed è quindi fondamentale soffermarsi anche
+sulla parte di testing.
+
+Il testing è l'altra fase principale del ciclo di vita del software dopo lo
+sviluppo. In generale, il fine dei test è quello di rilevare \textit{unexpected
+behavior} generici, che possono variare da errori di formattazione presenti
+negli output fino a crash o vulnerabilità di sicurezza del software. Nel contesto
+di questo documento, l'attenzione è rivolta alla memory safety, e quindi saranno
+presentati strumenti e tecniche sviluppati appositamente per rilevare problematiche
+legate alla memory safety.
+
 \subsection{Analisi Dinamica}
 \label{sec:analisi-dinamica}
 

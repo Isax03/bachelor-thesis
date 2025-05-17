@@ -21,16 +21,45 @@ tali rischi.
 
 Nel panorama attuale, caratterizzato da minacce informatiche in continua evoluzione
 e architetture software sempre più complesse, la sicurezza della memoria riveste
-un ruolo di crescente rilevanza. Gli attacchi informatici moderni sfruttano frequentemente
-vulnerabilità legate alla gestione della memoria per compromettere sistemi,
-sottrarre informazioni sensibili o eseguire codice arbitrario con privilegi
-elevati.
+un ruolo di crescente rilevanza. A fronte di questo scenario, alcune agenzie di
+sicurezza di Stati Uniti, Regno Unito, Canada, Australia e Nuova Zelanda hanno recentemente
+pubblicato il documento \textit{The Case for Memory Safe Roadmaps}\cite{memory_safe_roadmaps},
+incoraggiando i produttori di software a sviluppare e adottare roadmap per la
+transizione verso linguaggi di programmazione che garantiscano la sicurezza
+della memoria. Questa iniziativa, parte della campagna \textit{Secure by Design},
+mira a eliminare le vulnerabilità legate alla gestione della memoria, promuovendo
+un approccio proattivo e trasparente nello sviluppo di prodotti software sicuri.
 
 \vspace{0.5em}
 
-Per tale motivo, è fondamentale che gli sviluppatori e i professionisti della
-sicurezza informatica comprendano le nozioni di base della sicurezza della
-memoria e adottino pratiche di programmazione sicure. Ciò include l'uso di linguaggi
-di programmazione che forniscono garanzie di sicurezza della memoria, l'implementazione
+L'importanza della sicurezza della memoria è ulteriormente evidenziata dalla
+classifica \textit{CWE Top 25 Most Dangerous Software Weaknesses}\cite{cwe_top25_2024}
+del 2024, compilata da MITRE. Tra le 25 debolezze più pericolose identificate, diverse
+sono attribuibili a problematiche di gestione della memoria, tra cui:
+
+\begin{itemize}
+  \item \textbf{CWE-787}: Out-of-bounds Write (posizione \#2)
+
+  \item \textbf{CWE-125}: Out-of-bounds Read (\#6)
+
+  \item \textbf{CWE-416}: Use After Free (\#8)
+
+  \item \textbf{CWE-119}: Improper Restriction of Operations within the Bounds of
+    a Memory Buffer (\#20)
+
+  \item \textbf{CWE-476}: NULL Pointer Dereference (\#21)
+
+  \item \textbf{CWE-190}: Integer Overflow or Wraparound (\#23)
+\end{itemize}
+
+Queste vulnerabilità evidenziano come la gestione insicura della memoria continui
+a rappresentare una delle principali cause di rischio nei sistemi software moderni.
+
+\vspace{0.5em}
+
+Per tale motivo, è fondamentale che gli sviluppatori e i professionisti della sicurezza
+informatica comprendano le nozioni di base della sicurezza della memoria e adottino
+pratiche di programmazione sicure. Ciò include l'uso di linguaggi di
+programmazione che forniscono garanzie di sicurezza della memoria, l'implementazione
 di tecniche di verifica statica e dinamica del codice, e l'adozione di strumenti
 di analisi e mitigazione delle vulnerabilità.
