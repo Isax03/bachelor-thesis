@@ -1,65 +1,85 @@
 \chapter{Introduzione}
-\label{cha:introduction}
+\label{cha:introduction_new}
 
-La sicurezza della memoria (in inglese, \textit{memory safety}) costituisce un
-principio fondamentale nel campo della programmazione e della sicurezza
-informatica. Essa comprende un insieme di pratiche e tecniche volte a garantire una
-gestione sicura della memoria nelle applicazioni, prevenendo errori e
-vulnerabilità che potrebbero causare comportamenti anomali o compromettere la
-sicurezza del sistema.
+\section{Motivazioni e obiettivo}
+La sicurezza della memoria (comunemente, \textit{memory safety}) è un principio
+cardine nella programmazione moderna e nella sicurezza informatica. Essa comprende
+un insieme di pratiche e tecniche volte a garantire una gestione sicura della memoria
+nelle applicazioni, prevenendo errori e vulnerabilità che potrebbero causare
+comportamenti anomali o compromettere la sicurezza del sistema.
 
-\vspace{0.5em}
+Stime recenti di Microsoft\cite{microsoft_proactive_approach} e Google\cite{chromium_memory_safety}
+indicano che circa il 70\% delle vulnerabilità nei software moderni è collegato a
+difetti di gestione della memoria. Questo dato sottolinea quanto sia cruciale
+adottare strategie e strumenti in grado di mitigare tali classi di errori prima
+che il codice entri in produzione.
 
-Dati empirici forniti da organizzazioni come Microsoft\cite{microsoft_proactive_approach}
-e Google\cite{chromium_memory_safety} rivelano che approssimativamente il 70\%
-delle vulnerabilità di sicurezza nei software contemporanei è direttamente
-correlato a problematiche di gestione della memoria. Questa statistica sottolinea
-l'importanza dello sviluppo e dell'implementazione di strategie efficaci per mitigare
-tali rischi.
-
-\vspace{0.5em}
-
-Nel panorama attuale, caratterizzato da minacce informatiche in continua evoluzione
-e architetture software sempre più complesse, la sicurezza della memoria riveste
-un ruolo di crescente rilevanza. A fronte di questo scenario, alcune agenzie di
-sicurezza di Stati Uniti, Regno Unito, Canada, Australia e Nuova Zelanda hanno recentemente
-pubblicato il documento \textit{The Case for Memory Safe Roadmaps}\cite{memory_safe_roadmaps},
-incoraggiando i produttori di software a sviluppare e adottare roadmap per la
-transizione verso linguaggi di programmazione che garantiscano la sicurezza
-della memoria. Questa iniziativa, parte della campagna \textit{Secure by Design},
-mira a eliminare le vulnerabilità legate alla gestione della memoria, promuovendo
-un approccio proattivo e trasparente nello sviluppo di prodotti software sicuri.
-
-\vspace{0.5em}
-
-L'importanza della sicurezza della memoria è ulteriormente evidenziata dalla
+Un'ulteriore conferma dell'importanza della memory safety si ricava dalla
 classifica \textit{CWE Top 25 Most Dangerous Software Weaknesses}\cite{cwe_top25_2024}
-del 2024, compilata da MITRE. Tra le 25 debolezze più pericolose identificate, diverse
-sono attribuibili a problematiche di gestione della memoria, tra cui:
+stilata da MITRE per il 2024. Numerose posizioni sono occupate da debolezze
+legate alla memory safety:
+\begin{itemize}
+  \item \textbf{CWE-787} Out-of-bounds Write (2° posto)
+
+  \item \textbf{CWE-125} Out-of-bounds Read (6° posto)
+
+  \item \textbf{CWE-416} Use After Free (8° posto)
+
+  \item \textbf{CWE-119} Improper Restriction of Operations within the Bounds of
+    a Memory Buffer (20° posto)
+
+  \item \textbf{CWE-476} NULL Pointer Dereference (21° posto)
+
+  \item \textbf{CWE-190} Integer Overflow or Wraparound (23° posto)
+\end{itemize}
+La persistenza e la gravità delle vulnerabilità legate alla gestione della memoria
+ne fanno una delle principali cause sia di exploit attivi che di incidenti su scala
+globale.
+
+Alcuni esempi concreti di incidenti legati alla memory safety evidenziano l'importanza
+di intervenire per mitigare le vulnerabilità:
 
 \begin{itemize}
-  \item \textbf{CWE-787}: Out-of-bounds Write (posizione \#2)
+  \item \textbf{WannaCry (maggio 2017)}: un attacco ransomware su scala globale ha
+    sfruttato una vulnerabilità di buffer overflow nel protocollo SMBv1 di Windows,
+    nota come EternalBlue (CVE-2017-0144), per propagarsi rapidamente tra sistemi
+    non aggiornati. Il malware ha infettato oltre 300.000 computer in più di 150
+    paesi, criptando i dati e richiedendo un riscatto in Bitcoin. Tra le vittime
+    più colpite vi è stato il Servizio Sanitario Nazionale del Regno Unito (NHS),
+    che ha dovuto cancellare migliaia di appuntamenti e deviare ambulanze, con
+    un impatto stimato di circa 92 milioni di sterline. I danni economici globali
+    sono stati stimati fino a 4 miliardi di dollari.\cite{wannacry_kaspersky}
 
-  \item \textbf{CWE-125}: Out-of-bounds Read (\#6)
-
-  \item \textbf{CWE-416}: Use After Free (\#8)
-
-  \item \textbf{CWE-119}: Improper Restriction of Operations within the Bounds of
-    a Memory Buffer (\#20)
-
-  \item \textbf{CWE-476}: NULL Pointer Dereference (\#21)
-
-  \item \textbf{CWE-190}: Integer Overflow or Wraparound (\#23)
+  \item \textbf{CrowdStrike Falcon Sensor (luglio 2024)}: un aggiornamento difettoso
+    ha causato un problema diffuso dovuto a un errore di accesso alla memoria (lettura
+    out-of-bounds) che ha provocato crash di sistema su circa 8,5 milioni di dispositivi
+    Windows globalmente. L'incidente ha paralizzato infrastrutture critiche in
+    diversi settori come compagnie aeree, banche e strutture sanitarie, con
+    danni economici stimati intorno ai 15 miliardi di dollari.\cite{crowdstrike_bug_wired}\cite{crowdstrike_bug_wired_cost}
 \end{itemize}
 
-Queste vulnerabilità evidenziano come la gestione insicura della memoria continui
-a rappresentare una delle principali cause di rischio nei sistemi software moderni.
+\noindent
+Questo lavoro si propone di offrire una panoramica critica delle tecniche di
+mitigazione attualmente disponibili per rafforzare la memory safety, dai linguaggi
+a gestione automatica della memoria agli strumenti di verifica statica e dinamica,
+fornendo una guida pratica per gli sviluppatori. La tesi propone anche un caso studio
+di un'applicazione scritta in C/C++ intenzionalmente bacata, su cui sono stati
+applicati gli strumenti e le tecniche illustrate.
 
-\vspace{0.5em}
+\section{Struttura del lavoro}
+La tesi è divisa in quattro capitoli principali. Inizialmente, viene fornita una
+panoramica generale di cosa significhi la memory safety e di quali siano le
+principali vulnerabilità legate alla memoria.
 
-Per tale motivo, è fondamentale che gli sviluppatori e i professionisti della sicurezza
-informatica comprendano le nozioni di base della sicurezza della memoria e adottino
-pratiche di programmazione sicure. Ciò include l'uso di linguaggi di
-programmazione che forniscono garanzie di sicurezza della memoria, l'implementazione
-di tecniche di verifica statica e dinamica del codice, e l'adozione di strumenti
-di analisi e mitigazione delle vulnerabilità.
+Successivamente, vengono presentate le tecniche di mitigazione della memory safety,
+dividendole tra le varie fasi del ciclo di vita del software, dalla progettazione
+al mantenimento.
+
+Il terzo capitolo è dedicato a un caso studio pratico, in cui viene presentata
+un'applicazione scritta in C/C++ con vulnerabilità di memory safety. Viene illustrato
+il processo di analisi e correzione delle vulnerabilità, utilizzando strumenti e
+tecniche discusse nei capitoli precedenti.
+
+Infine, il capitolo conclusivo prevede una sintesi dei risultati ottenuti e l'esplorazione
+di possibili sviluppi futuri, con l'obiettivo di migliorare ulteriormente la
+memory safety nei progetti software.
