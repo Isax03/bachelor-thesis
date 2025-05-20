@@ -142,13 +142,40 @@ Un esempio è la cosiddetta \textit{Dynamic Symbolic Execution} (DSE), che
 consiste nell'eseguire il programma con input simbolici, riuscendo ad esplorare tutte
 le possibili esecuzioni e a generare input che portano a percorsi specifici.
 
+\paragraph{Limiti del fuzzing.}
+Nonostante l'efficacia del fuzzing nel rilevare vulnerabilità, questa tecnica presenta
+alcune limitazioni significative:
+
+\begin{itemize}
+  \item \textbf{Configurazione complessa:} L'impostazione corretta degli
+    strumenti di fuzzing richiede competenze specifiche, soprattutto quando si tratta
+    di definire formati di input validi o vincoli per applicazioni complesse.
+
+  \item \textbf{Consumo di risorse:} Il fuzzing efficace richiede l'esecuzione
+    di milioni di test, con conseguente elevato consumo di tempo e risorse computazionali.
+    Questo può rendere il processo proibitivo per progetti con risorse limitate.
+
+  \item \textbf{Esplosione combinatoria:} Negli approcci più sofisticati come la
+    DSE, l'esplorazione di tutti i possibili percorsi di esecuzione può crescere
+    esponenzialmente, rendendo impossibile una copertura completa per
+    applicazioni di medie o grandi dimensioni.
+
+  \item \textbf{Coverage limitata:} Nonostante gli avanzamenti nelle tecniche di
+    generazione degli input, il fuzzing potrebbe non raggiungere porzioni di codice
+    che richiedono condizioni di ingresso molto specifiche.
+\end{itemize}
+
+Per mitigare questi problemi, un approccio pragmatico consiste nell'integrare il
+fuzzing in pipeline di CI/CD continuative, focalizzandosi inizialmente sui
+componenti più critici o storicamente vulnerabili del software.
+
 \noindent
 
 \paragraph{\textit{Nota:}}
-Le tecniche e i tool di analisi dinamica e fuzzing, sono spesso associati al
-codice C o C++, ma sono applicabili anche ad altri linguaggi: infatti Rust, pur essendo
+Le tecniche e i tool di analisi dinamica e fuzzing, sono spesso associati al codice
+C o C++, ma sono applicabili anche ad altri linguaggi: infatti Rust, pur essendo
 uno dei linguaggi più sicuri dal punto di vista della memory safety, supporta il
-cosiddetto \textit{Unsafe Rust}, che permette un maggiore controllo a basso
-livello, ma introduce anche la possibilità di errori di memoria. Per questo
-motivo, tool come Valgrind e AddressSanitizer sono stati adattati per essere utilizzati
-anche con Rust.\cite{valgrind_rust}\cite{rust_manual_san}
+cosiddetto \textit{Unsafe Rust}, che permette un maggiore controllo a basso livello,
+ma introduce anche la possibilità di errori di memoria. Per questo motivo, tool
+come Valgrind e AddressSanitizer sono stati adattati per essere utilizzati anche
+con Rust.\cite{valgrind_rust}\cite{rust_manual_san}
