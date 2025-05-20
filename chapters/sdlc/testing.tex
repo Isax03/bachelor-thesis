@@ -139,18 +139,16 @@ sottoposto a test. Esistono anche approcci \textit{white-box} che, invece, anali
 il codice sorgente per generare input più mirati e specifici, che riescono ad
 esplorare \textit{"l'albero di esecuzione"} del programma in modo più efficiente.
 Un esempio è la cosiddetta \textit{Dynamic Symbolic Execution} (DSE), che
-consiste nell'eseguire il programma con input simbolici, riuscendo ad esplorare
-tutte le possibili esecuzioni e a generare input che portano a percorsi
-specifici.
+consiste nell'eseguire il programma con input simbolici, riuscendo ad esplorare tutte
+le possibili esecuzioni e a generare input che portano a percorsi specifici.
 
-\bigskip
 \noindent
 
 \paragraph{\textit{Nota:}}
-Le tecniche e i tool di analisi dinamica e fuzzing, sono spesso associati al codice
-C o C++, ma sono applicabili anche ad altri linguaggi: infatti Rust, pur essendo
+Le tecniche e i tool di analisi dinamica e fuzzing, sono spesso associati al
+codice C o C++, ma sono applicabili anche ad altri linguaggi: infatti Rust, pur essendo
 uno dei linguaggi più sicuri dal punto di vista della memory safety, supporta il
-cosiddetto \textit{Unsafe Rust}, che permette un maggiore controllo a basso livello,
-ma introduce anche la possibilità di errori di memoria. Per questo motivo, tool
-come Valgrind e AddressSanitizer sono stati adattati per essere utilizzati anche
-con Rust.\cite{valgrind_rust}\cite{rust_manual_san}
+cosiddetto \textit{Unsafe Rust}, che permette un maggiore controllo a basso
+livello, ma introduce anche la possibilità di errori di memoria. Per questo
+motivo, tool come Valgrind e AddressSanitizer sono stati adattati per essere utilizzati
+anche con Rust.\cite{valgrind_rust}\cite{rust_manual_san}
