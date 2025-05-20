@@ -1,6 +1,6 @@
 % The Meaning of Memory Safety
 @article{meaning_memory_safety,
-  author    = {Arthur Azevedo de Amorim and Cătălin Hriţcu and Benjamin C. Pierce},
+  author    = {{Arthur Azevedo de Amorim, Cătălin Hriţcu e Benjamin C. Pierce}},
   title     = {The Meaning of Memory Safety},
   booktitle = {Principles of Security and Trust},
   editor    = {Gilles Barthe and Cătălina Cămara and David Pichardie},
@@ -16,7 +16,7 @@
 % Website "The Memory Safety Continuum"
 @misc{memory_safety_continuum,
   title = {{The Memory Safety Continuum}},
-  author = {{Nell Shamrell-Harrington, Avishay Balter, Gabriel Dos Reis, David Edelsohn, Charles C Palmer, Joshua J. Drake, David A. Wheeler, Andrew Fryer and Rich Lander}},
+  author = {{Nell Shamrell-Harrington, Avishay Balter, Gabriel Dos Reis, David Edelsohn, Charles C Palmer, Joshua J. Drake, David A. Wheeler, Andrew Fryer e Rich Lander}},
   howpublished = {\url{https://memorysafety.openssf.org/memory-safety-continuum/}},
   note = {{Open Source Security Foundation (OpenSSF)}},
 }
@@ -44,11 +44,14 @@
   month = jul
 }
 
-% Chromium "Memory Safety" blog article
+% "Safer with Google: Advancing Memory Safety" blog article
 @misc{chromium_memory_safety,
-  title = {{Memory Safety}},
-  author = {{Chromium}},
-  howpublished = {\url{https://www.chromium.org/Home/chromium-security/memory-safety/}},
+  title = {{Safer with Google: Advancing Memory Safety}},
+  author = {{Alex Rebert, Chandler Carruth, Jen Engel e Andy Qin}},
+  journal = {{Google Security Blog}},
+  howpublished = {\url{https://security.googleblog.com/2024/10/safer-with-google-advancing-memory.html}},
+  year = 2024,
+  month = oct
 }
 
 % Heartbleed
@@ -101,7 +104,7 @@
 % Come il bug di Crowdstrike ha mandato in tilt i computer di mezzo mondo
 @misc{crowdstrike_bug_wired,
   title = {{Come il bug di Crowdstrike ha mandato in tilt i computer di mezzo mondo}},
-  author = {{Newman Lily Hay, Burgess Matt and Greenberg Andy}},
+  author = {{Newman Lily Hay, Burgess Matt e Greenberg Andy}},
   journal = {Wired},
   howpublished = {\url{https://www.wired.it/article/crowdstrike-microsoft-guasto-come-e-successo/}},
   year = {2024},
@@ -135,9 +138,60 @@
 
 @misc{null_pointer_dereference_linux,
   title = {{Linux NULL pointer dereference due to incorrect proto\_ops initialisation}},
-  author = {{Julien Tinnes and Tavis Ormandy}},
+  author = {{Julien Tinnes e Tavis Ormandy}},
   howpublished = {\url{https://blog.cr0.org/2009/08/linux-null-pointer-dereference-due-to.html}},
   journal = {GitHub Blog},
   year = {2009},
   month = aug
+}
+
+@misc{security_in_sdlc,
+  title = {{Integration of Security Modules in Software Development Lifecycle Phases}},
+  author = {{Isaac Chin Eian, Lim Ka Yong, Majesty Yeap Xiao Li, Noor Affan Bin Noor Hasmaddi e Fatima-tuz-Zahra}},
+  howpublished = {\url{https://arxiv.org/pdf/2012.05540}},
+  journal = {arXiv},
+  year = 2020,
+  month = dec
+}
+
+@article{afl_plus_plus,
+  title = {{AFL++: Combining incremental steps of fuzzing research}},
+  author = {{Andrea Fioraldi, Dominik Maier, Heiko Eißfeldt e Marc Heuse}},
+  journal = {14th USENIX Workshop on Offensive Technologies (WOOT 20)},
+  publisher = {USENIX Association},
+  year = 2020,
+  month = aug,
+  note = {\url{https://www.usenix.org/system/files/woot20-paper-fioraldi.pdf}}
+}
+
+@article{qasan,
+  title = {{Fuzzing binaries for memory safety errors with QASan}},
+  author = {{Andrea Fioraldi, Daniele Cono D'Elia e Leonardo Querzoni}},
+  journal = {2020 IEEE Secure Development Conference (SecDev)},
+  year = 2020,
+  doi = {10.1109/SecDev45635.2020.00019},
+  note = {\url{https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=9230171}},
+}
+
+@misc{fuzzing_types,
+  title = {{Alla scoperta del Fuzzing. Come scovare vulnerabilità sconosciute nei software}},
+  author = {Redazione RHC},
+  howpublished = {\url{https://www.redhotcyber.com/post/alla-scoperta-del-fuzzing-come-scovare-vulnerabilita-sconosciute-nei-software/}},
+  journal = {Red Hot Cyber},
+  year = 2024,
+  month = apr,
+}
+
+@misc{rust_manual_san,
+  title = {The Rust Unstable Book},
+  author = {rust-lang},
+  howpublished = {\url{https://doc.rust-lang.org/beta/unstable-book/compiler-flags/sanitizer.html}},
+}
+
+@misc{valgrind_rust,
+  title = {Rust and Valgrind},
+  author = {Nicholas Nethercote},
+  howpublished = {https://nnethercote.github.io/2022/01/05/rust-and-valgrind.html},
+  year = 2022,
+  month = jan,
 }

@@ -3,22 +3,154 @@
 
 Pur avendo trattato varie mitigazioni applicabili nella fase dello sviluppo del software
 (\autoref{sec:development}), queste si basano sul contributo dello sviluppatore
-che può commettere errori (best practices e uso di librerie) o su strumenti che
-possono produrre falsi positivi o falsi negativi (analisi statica). Vista l'inclinazione
-agli errori, le metodologie proposte potrebbero non essere sufficienti a
-garantire la sicurezza della memoria ed è quindi fondamentale soffermarsi anche
-sulla parte di testing.
+che può commettere errori (best practices e uso di librerie), o su strumenti che
+non segnalano tutti i problemi possibili o che producono falsi positivi (analisi
+statica). Vista l'inclinazione agli errori delle metodologie proposte, queste potrebbero
+non essere sufficienti a garantire la sicurezza della memoria ed è quindi fondamentale
+soffermarsi anche sulla parte di testing.
 
-Il testing è l'altra fase principale del ciclo di vita del software dopo lo
-sviluppo. In generale, il fine dei test è quello di rilevare \textit{unexpected
-behavior} generici, che possono variare da errori di formattazione presenti
-negli output fino a crash o vulnerabilità di sicurezza del software. Nel contesto
-di questo documento, l'attenzione è rivolta alla memory safety, e quindi saranno
-presentati strumenti e tecniche sviluppati appositamente per rilevare problematiche
-legate alla memory safety.
+Il testing è l'altra fase principale del ciclo di vita del software dopo lo sviluppo.
+In generale, il fine dei test è quello di rilevare \textit{unexpected behavior}
+generici, che possono variare da errori di formattazione presenti negli output fino
+a crash o vulnerabilità di sicurezza del software. Nel contesto di questo
+documento, l'attenzione è rivolta alla memory safety, e quindi saranno
+presentati strumenti e tecniche sviluppati appositamente per rilevare
+problematiche legate alla memory safety.
 
 \subsection{Analisi Dinamica}
 \label{sec:analisi-dinamica}
 
+Una delle tecniche più comuni per il testing del software dal punto di vista della
+memoria è la cosiddetta \textit{analisi dinamica}. A differenza dell'analisi statica,
+che si basa sull'ispezione del codice sorgente senza eseguirlo, l'analisi dinamica
+agisce a \textit{runtime}, monitorando il comportamento del programma durante l'esecuzione.
+Questo approccio permette di rilevare errori e vulnerabilità che emergono solo
+in presenza di determinati dati di input, condizioni ambientali o flussi di esecuzione
+specifici, spesso difficili da prevedere a priori.
+
+Nel contesto della memory safety, esistono due principali categorie di strumenti
+di analisi dinamica, in base al momento e al livello in cui vengono applicati:
+
+\paragraph{Strumenti basati su compilazione.}
+Alcuni strumenti operano direttamente a livello di compilazione, modificando il
+codice sorgente o il codice intermedio per inserire controlli di sicurezza
+aggiuntivi. Due esempi noti sono:
+
+\begin{itemize}
+  \item \textbf{AddressSanitizer (ASan):} uno strumento integrato nei
+    compilatori \texttt{clang} e \texttt{gcc}, in grado di rilevare errori comuni
+    come buffer overflow, use-after-free, e heap/stack out-of-bounds. ASan
+    aggiunge al codice binario delle istruzioni extra per controllare la
+    validità degli accessi in memoria durante l'esecuzione.
+
+  \item \textbf{MemorySanitizer (MSan):} simile ad ASan, ma focalizzato sull'individuazione
+    dell'uso di variabili non inizializzate. Questo tipo di errore, pur essendo più
+    difficile da individuare, può portare a comportamenti non deterministici e
+    vulnerabilità.
+\end{itemize}
+
+Questi strumenti offrono una buona copertura in fase di testing, ma comportano un
+significativo overhead in termini di prestazioni e dimensione del binario,
+motivo per cui non sono adatti all'uso in ambienti di produzione.
+
+\paragraph{Strumenti basati sul binario.}
+Altri strumenti operano a livello del binario compilato, senza necessità di
+modificare il sorgente. Tra i più noti in questo ambito troviamo \textbf{Valgrind},
+un framework di strumentazione dinamica che esegue il programma su una CPU virtuale,
+intercettando ogni accesso alla memoria. Il suo modulo \texttt{Memcheck} è in
+grado di rilevare accessi non inizializzati, leak di memoria, e violazioni di
+accesso. Poiché funziona a livello binario, è particolarmente utile in scenari
+in cui il codice sorgente non è disponibile.
+
+Gli strumenti binari tendono ad essere più generali ma anche più lenti, in quanto
+emulano o virtualizzano il comportamento del programma, causando un
+rallentamento significativo dell'esecuzione (fino a 10--50 volte più lento)\footnote{Manuale
+Valgrind: \url{https://valgrind.org/docs/manual/manual-core.html\#manual-core.whatdoes}}.
+
+\paragraph{Limiti e considerazioni pratiche.}
+Nonostante la loro efficacia, gli strumenti di analisi dinamica presentano
+alcune limitazioni:
+
+\begin{itemize}
+  \item Il loro funzionamento dipende fortemente dalla qualità e dalla copertura
+    dei test: eseguono controlli solo sul codice realmente percorso durante i
+    test. Infatti, se il codice contiene ramificazioni condizionali, queste potrebbero
+    non essere raggiunte durante l'esecuzione e quindi non essere segnalate se contengono
+    bug o vulnerabilità.
+
+  \item Introdurre strumentazione dinamica può alterare il comportamento temporale
+    del programma, rendendo alcuni bug meno riproducibili.
+
+  \item Per via dell'elevato overhead computazionale, questi strumenti sono
+    generalmente utilizzati esclusivamente in fase di \textit{testing} e non in ambienti
+    di produzione.
+\end{itemize}
+
+Nonostante ciò, l'analisi dinamica rappresenta un complemento fondamentale all'analisi
+statica, permettendo di coprire una gamma più ampia di possibili vulnerabilità legate
+alla memoria. Nell'ambito di un approccio difensivo multilivello, l'impiego congiunto
+di più tecniche di testing aumenta significativamente la probabilità di intercettare
+errori prima del rilascio del software.
+
 \subsection{Fuzzing}
 \label{sec:fuzzing}
+
+Il \textit{fuzzing} (o fuzz testing) è una tecnica di testing automatizzato che consiste
+nel generare una grande quantità di input, spesso casuali o leggermente mutati a
+partire da casi validi, con l'obiettivo di far emergere comportamenti anomali,
+crash o vulnerabilità nel programma in esecuzione. Sebbene non sia stato concepito
+esclusivamente per individuare problemi di gestione della memoria, il fuzzing è
+particolarmente efficace nel rivelare condizioni di \textit{undefined behavior},
+spesso sintomatiche di bug memory-unsafe.
+
+\smallskip
+Ci sono diversi tipi di fuzzing, ma in generale si possono distinguere due categorie
+principali:
+
+\begin{itemize}
+  \item \textbf{Fuzzing basato su generazione:} in questo approccio, gli input vengono
+    generati in modo casuale o semi-casuale, spesso a partire da un insieme di
+    casi di test validi. Questo metodo è utile per esplorare ampie porzioni dello
+    spazio degli input, ma può risultare inefficace nel rilevare vulnerabilità
+    specifiche.
+
+  \item \textbf{Fuzzing basato su mutazione:} qui gli input validi vengono
+    modificati (mutati) per creare nuovi casi di test. Questo approccio è particolarmente
+    efficace per individuare vulnerabilità legate a formati di file o dati strutturati,
+    poiché sfrutta la conoscenza preesistente di un input valido.
+\end{itemize}
+
+Gran parte dei tool di fuzzing non identificano direttamente gli errori di
+memoria, ma si limitano a segnalare i crash o le anomalie comportamentali,
+associandoli agli input che li hanno provocati. Per rendere l'analisi più mirata
+ed efficace, i cosiddetti \textit{fuzzers} vengono comunemente usati in combinazione
+con strumenti di analisi dinamica come i \textit{sanitizers}, in grado di diagnosticare
+in modo più preciso gli errori sottostanti.
+
+Questa mancanza ha portato a sviluppare anche strumenti di fuzzing \textit{multi-purpose},
+che combinano le funzionalità di fuzzing con altre tecniche di testing. Un
+esempio è AFL++\cite{afl_plus_plus} che, tra le sue funzionalità, include anche un
+AddressSanitizer (QASan\cite{qasan}) integrato, in grado di rilevare errori di memoria
+durante il fuzzing.
+
+Il fuzzing descritto finora è chiamato \textit{black-box fuzzing}, in quanto non
+richiede alcuna conoscenza del codice sorgente o della logica interna del programma
+sottoposto a test. Esistono anche approcci \textit{white-box} che, invece, analizzano
+il codice sorgente per generare input più mirati e specifici, che riescono ad
+esplorare \textit{"l'albero di esecuzione"} del programma in modo più efficiente.
+Un esempio è la cosiddetta \textit{Dynamic Symbolic Execution} (DSE), che
+consiste nell'eseguire il programma con input simbolici, riuscendo ad esplorare
+tutte le possibili esecuzioni e a generare input che portano a percorsi
+specifici.
+
+\bigskip
+\noindent
+
+\paragraph{\textit{Nota:}}
+Le tecniche e i tool di analisi dinamica e fuzzing, sono spesso associati al codice
+C o C++, ma sono applicabili anche ad altri linguaggi: infatti Rust, pur essendo
+uno dei linguaggi più sicuri dal punto di vista della memory safety, supporta il
+cosiddetto \textit{Unsafe Rust}, che permette un maggiore controllo a basso livello,
+ma introduce anche la possibilità di errori di memoria. Per questo motivo, tool
+come Valgrind e AddressSanitizer sono stati adattati per essere utilizzati anche
+con Rust.\cite{valgrind_rust}\cite{rust_manual_san}
