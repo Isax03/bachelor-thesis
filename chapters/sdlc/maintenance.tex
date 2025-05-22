@@ -1,5 +1,64 @@
 \section{Mantenimento}
 \label{sec:maintenance}
 
+La fase di mantenimento rappresenta l'ultima, ma non meno importante, tappa del ciclo
+di vita del software. In questo stadio, l'obiettivo primario è garantire che il sistema
+continui a operare in modo corretto e sicuro nel tempo, rispondendo a nuove
+esigenze, aggiornamenti tecnologici e, soprattutto, alla scoperta di nuove vulnerabilità.
+
 \subsection{Tracciamento delle Dipendenze}
 \label{sec:tracciamento-dipendenze}
+
+Un aspetto critico per la sicurezza della memoria nel lungo periodo è la
+gestione delle dipendenze software, specialmente quando si utilizzano librerie esterne,
+spesso sviluppate in linguaggi memory-unsafe come C e C++.
+
+Sistemi moderni possono contare su strumenti di dependency tracking
+automatizzati, in grado di:
+\begin{itemize}
+  \item identificare vulnerabilità note tramite l'integrazione con database CVE,
+
+  \item notificare la presenza di versioni obsolete o insicure,
+
+  \item suggerire aggiornamenti sicuri o alternative memory-safe.
+\end{itemize}
+
+Framework come OWASP Dependency-Check\footnotemark o strumenti integrati nei sistemi di CI/CD
+(es. GitHub Dependabot) automatizzano parte di questo processo, facilitando la gestione
+reattiva delle vulnerabilità. In contesti critici è inoltre consigliabile:
+\footnotetext{\url{https://owasp.org/www-project-dependency-check/}}
+\begin{itemize}
+  \item mantenere un \textit{Software Bill of Materials} (SBOM), per avere un inventario
+    trasparente delle dipendenze
+
+  \item ridurre il numero di dipendenze esterne inutili (minimizzazione
+    della superficie di attacco)
+
+  \item preferire librerie attivamente manutenute e con audit pubblici di sicurezza.
+\end{itemize}
+
+In linguaggi come Rust, che enfatizzano la sicurezza di tipo e l'ownership, è
+comunque fondamentale monitorare i crate esterni, specialmente quelli che usano blocchi
+\texttt{unsafe} o effettuano Foreign Function Interface (FFI) verso codice legacy. Il tracciamento deve essere
+quindi parte integrante del workflow di mantenimento.
+
+\subsection{Monitoraggio e Logging}
+\label{sec:monitoraggio-logging}
+
+Oltre al tracciamento delle dipendenze, una strategia efficace di mantenimento prevede
+l'adozione di sistemi di monitoraggio e logging, con l'obiettivo di individuare
+comportamenti anomali potenzialmente legati a vulnerabilità di memoria.
+
+In particolare, i meccanismi di logging possono aiutare a:
+\begin{itemize}
+  \item rilevare accessi fuori dai limiti o crash ripetuti
+
+  \item diagnosticare memory leak persistenti
+
+  \item correlare anomalie a specifici aggiornamenti di codice o librerie.
+\end{itemize}
+
+In definitiva, l'integrazione di tecniche di osservabilità avanzata rappresenta un
+fattore abilitante per una manutenzione proattiva, capace di prevenire l'escalation
+di vulnerabilità latenti e migliorare la resilienza complessiva del sistema
+software.
