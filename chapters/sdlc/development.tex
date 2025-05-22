@@ -108,16 +108,16 @@ della memoria espongono facilmente a vulnerabilità come buffer overflow, use-af
 o double free.
 
 Nel corso degli anni sono state sviluppate numerose librerie che affrontano
-direttamente queste problematiche. Alcune di esse, come \texttt{safe-malloc} o
-\texttt{xmalloc}, fungono da wrapper per le funzioni di allocazione (malloc, free,
-realloc), implementando controlli interni per verificare la correttezza delle
-operazioni e rilevare anomalie durante l'utilizzo della heap. Altre, come
-\texttt{safestringlib}, sostituiscono le funzioni standard per la manipolazione delle
-stringhe con versioni più sicure (strcpy\_s, memset\_s, ecc.), che includono verifiche
-esplicite sulla lunghezza dei buffer per evitare scritture fuori dai limiti. La
-libreria \texttt{Sailfish Pool}, invece, introduce tecniche come la preallocazione
-di pool di memoria e la zeroizzazione dei dati prima della deallocazione, particolarmente
-utili in contesti in cui la privacy e la protezione dei dati sono fondamentali.
+direttamente queste problematiche. Alcune di esse, come \texttt{safe-malloc} o \texttt{xmalloc},
+fungono da wrapper per le funzioni di allocazione (malloc, free, realloc),
+implementando controlli interni per verificare la correttezza delle operazioni e
+rilevare anomalie durante l'utilizzo della heap. Altre, come \texttt{safestringlib},
+sostituiscono le funzioni standard per la manipolazione delle stringhe con
+versioni più sicure (strcpy\_s, memset\_s, ecc.), che includono verifiche
+esplicite sulla lunghezza dei buffer per evitare scritture fuori dai limiti. La libreria
+\texttt{Sailfish Pool}, invece, introduce tecniche come la preallocazione di
+pool di memoria e la zeroizzazione dei dati prima della deallocazione, particolarmente
+utili in contesti in cui la privacy e la protezione dei dati sono essenziali.
 
 La necessità di rafforzare la sicurezza della memoria non riguarda esclusivamente
 i linguaggi più esposti. Anche ambienti più moderni e progettati per prevenire
