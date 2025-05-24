@@ -13,9 +13,9 @@ Il testing è l'altra fase principale del ciclo di vita del software dopo lo svi
 In generale, il fine dei test è quello di rilevare \textit{unexpected behavior}
 generici, che possono variare da errori di formattazione presenti negli output fino
 a crash o vulnerabilità di sicurezza del software. Nel contesto di questo
-documento, l'attenzione è rivolta alla memory safety, e quindi saranno
-presentati strumenti e tecniche sviluppati appositamente per rilevare
-problematiche legate alla memory safety.
+documento, la cui attenzione è rivolta alla memory safety, saranno presentati
+strumenti e tecniche sviluppati appositamente per rilevare problematiche legate
+alla memoria.
 
 \subsection{Analisi Dinamica}
 \label{sec:analisi-dinamica}
@@ -76,18 +76,19 @@ alcune limitazioni:
     dei test: eseguono controlli solo sul codice realmente percorso durante i
     test. Infatti, se il codice contiene ramificazioni condizionali, queste potrebbero
     non essere raggiunte durante l'esecuzione e quindi non essere segnalate se contengono
-    bug o vulnerabilità.
+    bug
 
   \item Introdurre strumentazione dinamica può alterare il comportamento temporale
-    del programma, rendendo alcuni bug meno riproducibili.
+    del programma, rendendo alcuni bug meno riproducibili
 
   \item Per via dell'elevato overhead computazionale, questi strumenti sono
     generalmente utilizzati esclusivamente in fase di \textit{testing} e non in ambienti
-    di produzione.
+    di produzione
 
   \item Il comportamento del software potrebbe essere influenzato dall'ambiente in
-    cui viene eseguito (es. architettura HW, OS, versioni del runtime, ecc.). Per questo motivo, è
-    importante testare il software in ambienti quanto più simili a quello di produzione.
+    cui viene eseguito (es. architettura HW, OS, versioni del runtime, ecc.). Per
+    questo motivo, è importante testare il software in ambienti quanto più
+    simili a quello di produzione
 \end{itemize}
 
 Nonostante ciò, l'analisi dinamica rappresenta un complemento fondamentale all'analisi
@@ -175,11 +176,14 @@ componenti più critici o storicamente vulnerabili del software.
 
 \noindent
 
-\paragraph{\textit{Nota:}}
-Le tecniche e i tool di analisi dinamica e fuzzing, sono spesso associati al codice
-C o C++, ma sono applicabili anche ad altri linguaggi: infatti Rust, pur essendo
-uno dei linguaggi più sicuri dal punto di vista della memory safety, supporta il
-cosiddetto \textit{Unsafe Rust}, che permette un maggiore controllo a basso livello,
-ma introduce anche la possibilità di errori di memoria. Per questo motivo, tool
-come Valgrind e AddressSanitizer sono stati adattati per essere utilizzati anche
-con Rust.\cite{valgrind_rust}\cite{rust_manual_san}
+\begin{quote}
+  \textbf{\textit{Nota:}} Le tecniche e i tool di analisi dinamica e fuzzing, sono
+  frequentemente utilizzati con codice C o C++, ma sono applicabili anche ad
+  altri linguaggi: per esempio Rust, pur essendo uno dei linguaggi più sicuri
+  dal punto di vista della memory safety, supporta il cosiddetto \textit{Unsafe
+  Rust}\footnotemark, che permette un maggiore controllo a basso livello, ma introduce
+  anche la possibilità di errori di memoria. Per questo motivo, tool come Valgrind
+  e AddressSanitizer sono stati adattati per essere utilizzati anche con Rust.\cite{valgrind_rust}\cite{rust_manual_san}
+\end{quote}
+
+\footnotetext{Manuale Rust: \url{https://doc.rust-lang.org/book/ch20-01-unsafe-rust.html}}

@@ -20,8 +20,8 @@ rigorosa del concetto, attraverso un framework matematico basato su semantica
 operazionale e strutture formali per ragionare sulla sicurezza della memoria in
 modo verificabile.
 
-Nel modello proposto, un programma è considerato \textit{memory safe} se durante
-la sua esecuzione preserva le seguenti proprietà:
+Nel modello proposto, un programma è considerato \textit{memory safe} se, durante
+la sua esecuzione, preserva le seguenti proprietà:
 \begin{enumerate}
   \item \textbf{Isolamento spaziale e temporale}:
     \begin{itemize}
@@ -37,8 +37,8 @@ la sua esecuzione preserva le seguenti proprietà:
     \begin{itemize}
       \item La memoria non raggiungibile non può modificare né essere modificata
         dall'esecuzione. Ciò assicura sia \textit{integrità} (impossibilità di
-        alterare dati isolati) sia \textit{segretezza} (impossibilità di dedurne
-        l'esistenza).
+        alterare dati isolati), sia \textit{segretezza} (impossibilità di
+        dedurne l'esistenza).
     \end{itemize}
 
   \item \textbf{Contenimento degli errori}:
@@ -52,10 +52,10 @@ la sua esecuzione preserva le seguenti proprietà:
 Questo modello consente di dimostrare proprietà come la protezione tra moduli e
 l'assenza di comportamenti indefiniti. Conseguentemente, esso fornisce anche un
 solido framework matematico per specificare e dimostrare le garanzie di
-sicurezza implementate da un sistema (come proprietà del type system o del memory
-model). Tale formalizzazione guida inoltre lo sviluppo di strumenti verificati per
-l'enforcement della memory safety, come i monitor hardware/software descritti
-nel paper (Sezione 5).
+sicurezza implementate da un sistema (come proprietà del \textit{type system} o
+del \textit{memory model}). Tale formalizzazione guida inoltre lo sviluppo di strumenti
+verificati per l'enforcement della memory safety, come i monitor hardware/software
+descritti nel paper (Sezione 5).
 
 Tuttavia, questa definizione si basa su ipotesi idealizzate, come memoria
 illimitata, assenza di side-channels sfruttabili dagli attaccanti e assenza di aritmetica

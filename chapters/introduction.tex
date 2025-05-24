@@ -36,19 +36,20 @@ La persistenza e la gravità delle vulnerabilità legate alla gestione della mem
 ne fanno una delle principali cause sia di exploit attivi che di incidenti su scala
 globale.
 
-Alcuni esempi concreti di incidenti legati alla memory safety evidenziano l'importanza
-di intervenire per mitigare le vulnerabilità:
+I seguenti esempi concreti di attacchi e incidenti legati alla memory safety evidenziano
+l'importanza di intervenire per mitigare le vulnerabilità:
 
 \begin{itemize}
   \item \textbf{WannaCry (maggio 2017)}: un attacco ransomware su scala globale ha
     sfruttato una vulnerabilità di buffer overflow nel protocollo SMBv1 di Windows,
     nota come EternalBlue (CVE-2017-0144), per propagarsi rapidamente tra sistemi
-    non aggiornati. Il malware ha infettato oltre 300.000 computer in più di 150
-    paesi, criptando i dati e richiedendo un riscatto in Bitcoin. Tra le vittime
-    più colpite vi è stato il Servizio Sanitario Nazionale del Regno Unito (NHS),
-    che ha dovuto cancellare migliaia di appuntamenti e deviare ambulanze, con
-    un impatto stimato di circa 92 milioni di sterline. I danni economici globali
-    sono stati stimati fino a 4 miliardi di dollari.\cite{wannacry_kaspersky}
+    non aggiornati. Il malware ha infettato oltre 300.000 computer in oltre 150
+    Paesi, criptando i dati e richiedendo un riscatto in Bitcoin.
+
+    Tra le vittime più colpite vi è stato il Servizio Sanitario Nazionale del Regno
+    Unito (NHS), che ha dovuto cancellare migliaia di appuntamenti e deviare
+    ambulanze, con un impatto stimato di circa 92 milioni di sterline. I danni
+    economici globali sono stati stimati fino a 4 miliardi di dollari.\cite{wannacry_kaspersky}
 
   \item \textbf{CrowdStrike Falcon Sensor (luglio 2024)}: un aggiornamento difettoso
     ha causato un problema diffuso dovuto a un errore di accesso alla memoria (lettura
@@ -71,8 +72,8 @@ La tesi è divisa in quattro capitoli principali. Inizialmente, viene fornita un
 panoramica generale di cosa significhi la memory safety e di quali siano le
 principali vulnerabilità legate alla memoria.
 
-Successivamente, vengono presentate le tecniche di mitigazione della memory safety,
-dividendole tra le varie fasi del ciclo di vita del software, dalla progettazione
+Successivamente, verranno illustrate tecniche di mitigazione per rafforzare la memory
+safety, dividendole tra le varie fasi del ciclo di vita del software, dalla progettazione
 al mantenimento.
 
 Il terzo capitolo è dedicato a un caso studio pratico, in cui viene presentata

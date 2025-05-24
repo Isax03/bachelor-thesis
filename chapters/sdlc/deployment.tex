@@ -1,107 +1,110 @@
-\section{Deployment}
+\section{Distribuzione}
 \label{sec:deployment}
 
-In questa sezione verranno trattate una serie di tecniche sviluppate per proteggere
-i software durante la loro esecuzione. Queste mitigazioni possono essere
-applicate in fase di compilazione, a runtime o essere integrate direttamente a livello
-di sistema operativo o hardware.
+In questa sezione verranno trattate diverse tecniche sviluppate per proteggere i
+software durante la loro esecuzione. Queste mitigazioni possono essere applicate
+in fase di compilazione, a runtime o essere integrate direttamente a livello di sistema
+operativo o hardware.
 
-Il deployment è forse la fase più critica dal punto di vista della sicurezza, in
-quanto è il momento in cui il software può essere esposto agli attaccanti e, anche
-avendo adottato tutte le misure di sicurezza descritte nei capitoli precedenti,
-è possibile che il software possa comunque essere vulnerabile a exploit in fase
-di esecuzione.
+Il \textit{deployment} rappresenta una delle fasi più critiche dal punto di
+vista della sicurezza, in quanto è il momento in cui il software può essere esposto
+agli attaccanti e, anche avendo adottato tutte le misure di sicurezza descritte
+nei capitoli precedenti, è possibile che il software possa comunque essere vulnerabile
+a exploit in fase di esecuzione.
 
-È quindi consigliabile applicare le mitigazioni descritte in questa sezione, soprattutto
-in modo combinato, per limitare al massimo le possibilità di attacco.
+È quindi consigliabile applicare le mitigazioni descritte in questa sezione,
+soprattutto in modo combinato, per ridurre al minimo le possibilità di attacco.
 
 \subsection{Protezioni a livello di memoria}
 \label{sec:memory-protection}
 
-Le protezioni a livello di memoria sono tecniche fondamentali per prevenire gli attacchi
-che sfruttano vulnerabilità come buffer overflow, use-after-free e altre forme
-di corruzione della memoria. Queste tecniche mirano a rendere più difficile per un
-attaccante eseguire codice arbitrario o manipolare il flusso di esecuzione di un
-programma attraverso la corruzione dei dati in memoria.
+Le protezioni a livello di memoria sono tecniche fondamentali per prevenire gli
+attacchi che sfruttano vulnerabilità come buffer overflow, use-after-free e altre
+forme di corruzione della memoria. Queste tecniche mirano a rendere più
+difficile per un attaccante eseguire codice arbitrario o manipolare il flusso di
+esecuzione di un programma attraverso la corruzione dei dati.
 
-Implementate sia a livello di compilatore che di sistema operativo, le
-protezioni di memoria rappresentano una prima linea di difesa essenziale contro
-molte classi di attacchi. Di seguito verranno presentate alcune delle tecniche più
-importanti in questo ambito.
+Queste mitigazioni, implementate sia a livello di compilatore che di sistema operativo,
+rappresentano una prima linea di difesa essenziale contro molte classi di
+attacchi. I paragrafi seguenti esplorano le principali mitigazioni implementate in
+questo ambito.
 
 \paragraph{Address Space Layout Randomization (ASLR)}
 L'ASLR è una tecnica difensiva che mira a rendere imprevedibile la disposizione
 in memoria delle principali aree di un processo, come stack, heap e librerie
-condivise, al fine di ostacolare attacchi che si basano su indirizzi statici.
+condivise, al fine di ostacolare attacchi che si basano su indirizzi statici, e
+quindi prevedibili.
 
-Pur introducendo entropia a ogni avvio del processo, la sua efficacia risulta
-limitata su architetture a 32 bit. Lo studio di Shacham et al.\cite{aslr_effectiveness}
-evidenzia che, in questi contesti, la randomizzazione effettiva per alcune aree di
-memoria può essere ridotta a soli 16 bit, rendendo gli attacchi brute-force
-ancora praticabili e in grado di eludere la protezione in pochi minuti.
+Nonostante introduca entropia a ogni avvio del processo, la sua efficacia risulta
+limitata sulle architetture a 32 bit. Lo studio di Shacham et al.\cite{aslr_effectiveness}
+dimostra che in questi sistemi l'aleatorietà degli indirizzi per alcune regioni
+di memoria può ridursi a soli 16 bit, rendendo possibili attacchi \textit{brute-force}
+in grado di compromettere le difese in pochi minuti.
 
-Per questo motivo, è importante considerare attentamente l'architettura (o le
-architetture) di destinazione del software: ASLR offre benefici maggiori su
-sistemi a 64 bit, dove è possibile una randomizzazione più ampia. In ogni caso, l'adozione
-dell'ASLR rimane una misura raccomandata, soprattutto se combinata con altre
-mitigazioni complementari discusse in questa sezione, per aumentare significativamente
-la resilienza del software contro exploit noti.
+Per questo motivo, è cruciale valutare l'architettura target del software: l'ASLR
+offre protezione più robusta sui sistemi a 64 bit, dove lo spazio d'indirizzamento
+più ampio consente una dispersione significativa delle aree memorizzate. La
+tecnica rimane comunque raccomandata come misura fondamentale, specialmente se integrata
+con altre contromisure discusse in questa sezione, per aumentare sostanzialmente
+la resilienza contro exploit noti.
 
 \paragraph{Data Execution Prevention (DEP)}
 La DEP è una misura di sicurezza che consiste nel contrassegnare specifiche aree
-di memoria, come lo stack e l'heap, come non eseguibili. L'obiettivo è impedire l'esecuzione
-di codice arbitrario iniettato in regioni di memoria destinate esclusivamente alla
-conservazione di dati.
+di memoria, come lo stack e l'heap, come non eseguibili. L'obiettivo è impedire
+l'esecuzione di codice arbitrario iniettato in regioni di memoria destinate
+esclusivamente alla conservazione di dati.
 
-Questa protezione è particolarmente efficace contro attacchi come i buffer overflow,
-nei quali un attaccante tenta di sovrascrivere l'indirizzo di ritorno di una
-funzione per eseguire codice malevolo. Se la memoria che ospita tale codice è marcata
-come non eseguibile, il tentativo di esecuzione fallisce, riducendo significativamente
-il rischio di exploit.
+Questa protezione è particolarmente efficace contro attacchi come i buffer
+overflow, nei quali un attaccante tenta di sovrascrivere l'indirizzo di ritorno di
+una funzione per eseguire codice malevolo. Se la memoria che ospita tale codice
+è marcata come non eseguibile, il tentativo di esecuzione fallisce, riducendo
+significativamente il rischio di exploit.
 
-Tuttavia, analogamente all'ASLR, anche la Data Execution Prevention è stata aggirata
-nel tempo tramite tecniche avanzate come il Return Oriented Programming (ROP) e il
-Jump Oriented Programming (JOP). Queste strategie non richiedono l'esecuzione di
-codice iniettato, ma riutilizzano frammenti di codice legittimo già presenti in memoria
-per comporre un payload malevolo. Di conseguenza, la DEP deve essere considerata
-come una misura di sicurezza complementare, efficace solo se integrata in una
-strategia difensiva più ampia.
+Tuttavia, analogamente all'ASLR, anche la Data Execution Prevention è stata
+aggirata nel tempo tramite tecniche avanzate come il Return Oriented Programming
+(ROP) e il Jump Oriented Programming (JOP). Queste strategie non richiedono l'esecuzione
+di codice iniettato, ma riutilizzano frammenti di codice legittimo già presenti
+in memoria per comporre un payload malevolo. Di conseguenza, la DEP deve essere
+considerata come una misura di sicurezza complementare, efficace solo se integrata
+in una strategia difensiva più ampia.
 
 \paragraph{Stack canary}
-Gli stack canaries sono una tecnica di protezione software mirata a prevenire gli
-attacchi basati sullo stack buffer overflow. Il nome deriva dall'analogia con i
-canarini nelle miniere di carbone, utilizzati come sentinelle per rilevare gas pericolosi:
-in questo caso, i canaries sono valori speciali inseriti tra le variabili locali
-e l'indirizzo di ritorno nella struttura dello stack.
+Gli stack canaries sono una tecnica di protezione software mirata a prevenire
+gli attacchi basati sullo stack buffer overflow. Il nome deriva dall'analogia con
+i canarini nelle miniere di carbone, utilizzati come sentinelle per rilevare gas
+pericolosi: in questo caso, i canaries sono valori speciali inseriti tra le
+variabili locali e l'indirizzo di ritorno nella struttura dello stack.
 
-Durante l'esecuzione, prima di effettuare il ritorno da una funzione, il programma
-verifica che il valore del canary non sia stato modificato. Se il valore è stato
-alterato, indice probabile di un overflow dello stack, il processo viene
-terminato o vengono attivate contromisure, impedendo così che un attaccante possa
-modificare l'indirizzo di ritorno e quindi controllare il flusso di esecuzione.
+Durante l'esecuzione, prima di effettuare il ritorno da una funzione, il
+programma verifica che il valore del canary non sia stato modificato. Se il valore
+è stato alterato, indice di un probabile overflow dello stack, il processo viene
+terminato o vengono attivate contromisure, impedendo così che un attaccante
+possa modificare l'indirizzo di ritorno e quindi controllare il flusso di
+esecuzione.
 
-Questa protezione è efficace nel mitigare un'ampia classe di vulnerabilità legate
-allo stack overflow, ma presenta alcune limitazioni: non protegge infatti da overflow
-su heap o da altre forme di corruzione della memoria, né è efficace contro
-attacchi che sfruttano tecniche più sofisticate come il Return Oriented
-Programming (ROP), che non modificano direttamente il canary ma riutilizzano codice
+Questa protezione è efficace nel mitigare un'ampia classe di vulnerabilità
+legate allo stack overflow, ma presenta alcune limitazioni: non protegge infatti
+da overflow su heap o da altre forme di corruzione della memoria, né è efficace contro
+attacchi che sfruttano tecniche più sofisticate come il Return Oriented Programming
+(ROP), che non modificano direttamente il canary ma riutilizzano codice
 legittimo.
 
-Gli stack canaries sono generalmente implementati dal compilatore e possono variare
-in complessità, dal semplice valore fisso a valori casuali generati all'avvio
-del processo, aumentando così la difficoltà per l'attaccante di prevederli e aggirarli.
+Gli stack canaries sono generalmente implementati dal compilatore e possono
+variare in complessità, dal semplice valore fisso a valori casuali generati all'avvio
+del processo, aumentando così la difficoltà per l'attaccante di prevederli e
+aggirarli.
 
 \subsection{Controlli di integrità dell'esecuzione}
-\label{sec:execution-integrity} Le tecniche presentate in questa sezione mirano a
-garantire che il codice eseguito sia quello previsto e che non sia stato manomesso
-o alterato in alcun modo.
+\label{sec:execution-integrity} Le tecniche presentate in questa sezione mirano
+a garantire che il codice eseguito sia quello previsto e che non sia stato
+manomesso o alterato in alcun modo.
 
 \paragraph{Control Flow Integrity (CFI)}
 è una tecnica avanzata di protezione che mira a impedire che un attaccante possa
-alterare il flusso di controllo di un programma attraverso vulnerabilità come i
-buffer overflow o gli use-after-free. L'idea alla base della CFI è quella di assicurarsi
-che durante l'esecuzione, un programma possa compiere solo i salti di controllo
-(es. chiamate indirette, ritorni di funzione) che sono stati previsti e
+alterare il flusso di controllo di un programma attraverso vulnerabilità come i buffer
+overflow o gli use-after-free. L'idea alla base della CFI è quella di
+assicurarsi che durante l'esecuzione, un programma possa compiere solo i salti di
+controllo (es. chiamate indirette, ritorni di funzione) che sono stati previsti e
 autorizzati in fase di compilazione.
 
 Per ottenere questo obiettivo, la CFI è implementata principalmente a livello di
@@ -111,7 +114,7 @@ compilatore, che effettua le seguenti operazioni:
 
   \item Genera metadati che definiscono i salti validi e consentiti
 
-  \item Inserisce controlli runtime nel codice eseguibili per verificare, prima
+  \item Inserisce controlli a runtime nel codice per verificare, prima
     di ogni salto, che la destinazione sia legittima
 \end{itemize}
 
@@ -122,31 +125,33 @@ In generale esistono due tipi principali di CFI:
 \begin{itemize}
   \item \textbf{Fine-grained}: impone vincoli più specifici e dettagliati sui salti
     consentiti. Questo approccio migliora senz'altro la sicurezza, ma richiede un
-    costo computazionale maggiore.
+    costo computazionale maggiore
 
   \item \textbf{Coarse-grained}: consente salti più generali e meno restrittivi.
     Questo approccio è più veloce e meno costoso, ma offre una protezione inferiore
-    rispetto al fine-grained.
+    rispetto al fine-grained
 \end{itemize}
 
-Anche per la Control Flow Integrity gli svantaggi non mancano: la CFI può
-introdurre un overhead significativo in termini di prestazioni e potrebbe essere
-aggirata se i controlli sono troppo generici o se l'attaccante riesce a
-manipolare i metadati di controllo. Tuttavia, se implementata correttamente, la CFI
-rappresenta una misura di sicurezza efficace contro molte classi di attacchi.
+Anche per la Control Flow Integrity gli svantaggi non mancano: la CFI può introdurre
+un overhead significativo in termini di prestazioni e potrebbe essere aggirata se
+i controlli sono troppo generici o se l'attaccante riesce a manipolare i metadati
+di controllo. Tuttavia, se implementata correttamente, la CFI rappresenta una
+misura di sicurezza efficace contro molte classi di attacchi.
 
 \paragraph{Memory Tagging Extension (MTE)}
 Questa è la prima delle due funzionalità di sicurezza \textit{"architecture-dependent"}
 presenti in questa sezione. La MTE infatti, è una feature hardware introdotta da
-Google e ARM (v8.5+) che mira a rilevare e prevenire errori di accesso alla memoria,
-come buffer overflow e use-after-free, attraverso l'uso di tag di memoria.
+Google e ARM (v8.5+) che mira a rilevare e prevenire errori di accesso alla
+memoria, come buffer overflow e use-after-free, attraverso l'uso di tag di
+memoria.
 
 Parlando ad alto livello, la Memory Tagging Extension funziona associando un tag
-a ogni area di memoria allocata. Questi tag sono utilizzati per identificare la proprietà
-e la validità dell'area di memoria. Quando un programma tenta di accedere a un'area
-di memoria, il processore verifica se il tag associato all'area corrisponde al tag
-previsto per quell'operazione. Se i tag non corrispondono, il processore genera un'eccezione,
-impedendo l'accesso non autorizzato e riducendo il rischio di exploit.
+a ogni area di memoria allocata. Questi tag sono utilizzati per identificare la
+proprietà e la validità dell'area di memoria. Quando un programma tenta di accedere
+a un'area di memoria, il processore verifica se il tag associato all'area
+corrisponde al tag previsto per quell'operazione. Se i tag non corrispondono, il
+processore genera un'eccezione, impedendo l'accesso non autorizzato e riducendo il
+rischio di exploit.
 
 La MTE può lavorare in 3 modalità differenti:
 \begin{itemize}
@@ -169,15 +174,15 @@ La MTE può lavorare in 3 modalità differenti:
 
 \paragraph{Pointer Authentication Code (PAC)}
 La seconda funzionalità di sicurezza \textit{"architecture-dependent"} è il PAC.
-Anche essa sviluppata da ARM (v8.3-A+), PAC è una tecnologia nata per prevenire
-in modo efficace attacchi di tipo ROP o buffer overflow.
+Anche essa sviluppata da ARM (v8.3-A+), PAC è una tecnologia nata per prevenire in
+modo efficace attacchi di tipo ROP o buffer overflow.
 
-PAC si basa sull'idea di associare una firma crittografica a ogni puntatore
-utilizzato nel programma. Questa firma viene calcolata in modo tale che qualsiasi
-modifica al puntatore stesso o alla memoria a cui punta, renda impossibile
-verificare la firma. In questo modo, se un attaccante tenta di manipolare un
-puntatore per eseguire codice malevolo, la firma non corrisponderà più e il processore
-genererà un'eccezione, impedendo l'esecuzione del codice non autorizzato.
+PAC si basa sull'idea di associare una firma crittografica a ogni puntatore utilizzato
+nel programma. Questa firma viene calcolata in modo tale che qualsiasi modifica
+al puntatore stesso o alla memoria a cui punta, renda impossibile verificare la firma.
+In questo modo, se un attaccante tenta di manipolare un puntatore per eseguire codice
+malevolo, la firma non corrisponderà più e il processore genererà un'eccezione, impedendo
+l'esecuzione del codice non autorizzato.
 
 PAC presenta due fasi principali:
 \begin{itemize}
@@ -194,22 +199,22 @@ PAC presenta due fasi principali:
 
 \bigskip
 \noindent
-Entrambe le tecnologie di ARM, MTE e PAC, sono hardware-assisted e l'hoverhead
-introdotto è molto basso, rendendole adatte per l'uso in produzione. Tuttavia, è
-importante notare che queste tecnologie sono specifiche per l'architettura ARM e
-quindi non sempre disponibili come mitigazioni per rafforzare la memory safety.
+Entrambe le tecnologie di ARM, MTE e PAC, sono hardware-assisted e l'hoverhead introdotto
+è molto basso, rendendole adatte per l'uso in produzione. Tuttavia, è importante
+notare che queste tecnologie sono specifiche per l'architettura ARM e quindi non
+sempre disponibili come mitigazioni per rafforzare la memory safety.
 
 \subsection{Isolamento del software}
 \label{sec:isolation}
 
-Il concetto di \textit{isolamento} si riferisce alla separazione tra componenti software
-con l'obiettivo di limitare l'impatto di eventuali compromissioni. L'idea alla
-base è quella di confinare il danno in un'area ben definita, impedendo che un exploit
-possa propagarsi ad altri componenti del sistema.
+Il concetto di \textit{isolamento} si riferisce alla separazione tra componenti
+software con l'obiettivo di limitare l'impatto di eventuali compromissioni. L'idea
+alla base è quella di confinare il danno in un'area ben definita, impedendo che
+un exploit possa propagarsi ad altri componenti del sistema.
 
-In ambito memory safety, l'isolamento rappresenta una misura efficace per
-mitigare vulnerabilità che, pur essendo presenti, non riescono a compromettere l'intero
-sistema grazie all'introduzione di barriere architetturali o software.
+In ambito memory safety, l'isolamento rappresenta una misura efficace per mitigare
+vulnerabilità che, pur essendo presenti, non riescono a compromettere l'intero sistema
+grazie all'introduzione di barriere architetturali o software.
 
 Le principali tecniche di isolamento includono:
 \begin{itemize}
@@ -233,19 +238,18 @@ Le principali tecniche di isolamento includono:
 \end{itemize}
 
 Un esempio concreto dell'efficacia dell'isolamento lo troviamo nel caso reale di
-WebAudio in Google Chrome, già menzionato nella \autoref{sec:vulnerability_types}.
-L'uso della sandbox del browser impediva all'attaccante di ottenere l'accesso
-completo al sistema, confinando l'esecuzione di codice arbitrario all'interno dell'ambiente
-"sandboxed".\cite{webaudio_uaf}
+WebAudio in Google Chrome, già menzionato nella
+\autoref{sec:vulnerability_types}. L'uso della sandbox del browser impediva all'attaccante
+di ottenere l'accesso completo al sistema, confinando l'esecuzione di codice
+arbitrario all'interno dell'ambiente "sandboxed".\cite{webaudio_uaf}
 
-È importante sottolineare che queste tecnologie non sono state progettate
-specificamente per garantire la memory safety, ma la loro architettura consente di
-limitare l'impatto di eventuali vulnerabilità isolando i processi e le risorse.
-Ad esempio, la containerizzazione è nata principalmente per esigenze di portabilità
-e scalabilità delle applicazioni, ma fornisce anche un utile livello di
-confinamento.
+È importante sottolineare che queste tecnologie non sono state progettate specificamente
+per garantire la memory safety, ma la loro architettura consente di limitare l'impatto
+di eventuali vulnerabilità isolando i processi e le risorse. Ad esempio, la
+containerizzazione è nata principalmente per esigenze di portabilità e
+scalabilità delle applicazioni, ma fornisce anche un utile livello di confinamento.
 
-Tuttavia, l'isolamento non elimina completamente le vulnerabilità, e introduce
-un costo aggiuntivo in termini di complessità gestionale e prestazioni. Pertanto,
-la scelta della tecnica più appropriata deve basarsi su una valutazione del
-contesto applicativo e dei requisiti di sicurezza specifici.
+Tuttavia, l'isolamento non elimina completamente le vulnerabilità, e introduce un
+costo aggiuntivo in termini di complessità gestionale e prestazioni. Pertanto, la
+scelta della tecnica più appropriata deve basarsi su una valutazione del contesto
+applicativo e dei requisiti di sicurezza specifici.

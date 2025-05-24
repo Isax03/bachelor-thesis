@@ -47,11 +47,12 @@ safety} dovrebbe includere:
     \begin{itemize}
       \item Valutazione dei linguaggi \textit{memory safe}
 
-      \item Scrittura di un nuovo componente in un linguaggio \textit{memory
-        safe} o incorporazione di un linguaggio \textit{memory safe} in un componente
-        esistente per testare l'efficacia
+      \item Scrittura di un nuovo componente utilizzando un linguaggio \textit{memory
+        safe "by default"} o incorporazione di un linguaggio \textit{memory safe}
+        in un componente esistente per testare l'efficacia
 
-      \item Threat modeling per identificare il codice memory unsafe più pericoloso.
+      \item \textit{Threat modeling} per identificare il codice memory unsafe
+        più pericoloso
 
       \item Refactoring del codice memory unsafe
     \end{itemize}
@@ -60,19 +61,19 @@ safety} dovrebbe includere:
     sistemi}: stabilire una data a partire dalla quale tutto il nuovo codice sarà
     scritto in un linguaggio memory safe.
 
-  \item \textbf{Piano di formazione interna e integrazione nei workflow}: Prevedere
+  \item \textbf{Piano di formazione interna e integrazione nei workflow}: prevedere
     tempo e risorse per formare i team su linguaggi \textit{memory safe}, debugging,
-    tooling, integrazione nei processi di build e controllo della qualità.
+    integrazione nei processi di build e controllo della qualità.
 
-  \item \textbf{Gestione delle dipendenze esterne (es. librerie C/C++)}: Documentare
+  \item \textbf{Gestione delle dipendenze esterne (es. librerie C/C++)}: documentare
     una strategia per gestire le dipendenze legacy, in particolare librerie open
     source scritte in C/C++.
 
-  \item \textbf{Piano di trasparenza}: Aggiornamenti periodici (es. trimestrali/semestrali)
+  \item \textbf{Piano di trasparenza}: aggiornamenti periodici (es. trimestrali/semestrali)
     per comunicare progressi, sfide e miglioramenti al SDLC, e ispirare altri ad
     adottare approcci simili
 
-  \item \textbf{Piano per il supporto ai CVE}: Impegno a fornire CWE per il 100\%
+  \item \textbf{Piano per il supporto ai CVE}: impegno a fornire CWE per il 100\%
     delle vulnerabilità pubblicate (CVE) e a offrire contesto tecnico utile per
     distinguere i difetti memory-unsafe da altri tipi di bug
 \end{itemize}
@@ -135,7 +136,8 @@ nulli, la sicurezza di tipo e altri aspetti chiave.
     \textbf{Difficulty}          & \cellcolor{red!20}Alta        & \cellcolor{yellow!20}Media    & \cellcolor{yellow!20}Media    & \cellcolor{green!20}Bassa     & \cellcolor{red!20}Alta              & \cellcolor{green!20}Bassa \\
     \hline
   \end{tabular}
-  \caption{Confronto tra linguaggi}
+  \caption{Confronto delle caratteristiche legate alla \textit{memory safety} tra
+  linguaggi di programmazione}
   \label{tab:linguaggi_memory_safety}
 \end{table}
 
@@ -167,7 +169,7 @@ delle risorse.
 \paragraph{Librerie}
 Infine, è importante ricordare che la sola scelta del linguaggio non garantisce
 la sicurezza della memoria: l'ecosistema di \textit{librerie} gioca un ruolo
-altrettanto determinante. È pertanto raccomandabile valutare la maturità, la
+altrettanto determinante. Si raccomanda pertanto di valutare la maturità, la
 qualità del codice, e la presenza di audit di sicurezza nelle librerie esterne utilizzate,
 specialmente se implementate in linguaggi memory-unsafe (es. librerie Python
 scritte in C) o non pienamente compatibili con il modello di sicurezza adottato dal
