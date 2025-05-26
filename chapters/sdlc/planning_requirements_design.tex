@@ -31,12 +31,11 @@ di sviluppo e di adozione delle tecnologie è uno dei primi passi per entrare ne
 di un approccio \textit{memory safe}.
 
 In quest'ottica, la CyberSecurity and Infrastructure Security Agency (CISA), in
-collaborazione con agenzie internazionali, ha pubblicato il documento \textit{The
-Case for Memory Safe Roadmaps}\cite{memory_safe_roadmaps}. Questo documento
-fornisce linee guida per i produttori di software su come creare e pubblicare
-roadmap per la transizione verso linguaggi di programmazione che garantiscano la
-sicurezza della memoria. Inoltre, viene fornita una serie di mitigazioni
-applicabili a linguaggi non \textit{memory safe}.
+collaborazione con agenzie internazionali, ha pubblicato un documento\cite{memory_safe_roadmaps}
+che fornisce linee guida per i produttori di software su come creare e
+pubblicare roadmap per la transizione verso linguaggi di programmazione che
+garantiscano la sicurezza della memoria. Inoltre, viene fornita una serie di
+mitigazioni applicabili a linguaggi non \textit{memory safe}.
 
 In particolare, secondo l'articolo, una roadmap efficace per la \textit{memory
 safety} dovrebbe includere:
@@ -113,27 +112,62 @@ Per tali situazioni, questa sezione della tesi può essere poco utile nella prat
 ma può comunque fornire spunti per migliorare la sicurezza della memoria e dare
 una panoramica dei linguaggi \textit{memory safe} più diffusi.
 
-Per offrire una panoramica concreta, viene di seguito riportata la
-\autoref{tab:linguaggi_memory_safety}, sviluppata in collaborazione con i ricercatori
-del Centro per la CyberSecurity di FBK, che riassume alcune proprietà rilevanti
-per la \textit{memory safety}, mettendo a confronto alcuni linguaggi secondo
-criteri come il controllo automatico dei limiti di accesso, la gestione dei puntatori
-nulli, la sicurezza di tipo e altri aspetti chiave.
+\paragraph{Criteri di confronto}
+Per offrire una panoramica concreta, è stata sviluppata la \autoref{tab:linguaggi_memory_safety},
+in collaborazione con i ricercatori del Centro per la CyberSecurity di FBK\footnotemark,
+che riassume alcune proprietà rilevanti per la \textit{memory safety}. I criteri
+selezionati includono:
+\begin{itemize}
+  \item \textbf{Controllo dei limiti} (Bounds Check), per prevenire accessi fuori
+    dai confini di array;
+
+  \item \textbf{Gestione dei riferimenti nulli} (Null Safety), spesso causa di crash
+    e vulnerabilità;
+
+  \item \textbf{Modello di proprietà e prestito} (Ownership/Borrowing), centrale
+    in Rust per evitare accessi concorrenti e use-after-free;
+
+  \item \textbf{Sicurezza di tipo}, per ridurre i rischi di casting improprio o accessi
+    illegali alla memoria;
+
+  \item \textbf{Zeroizzazione della memoria}, ovvero la capacità del linguaggio o
+    delle librerie di pulire automaticamente dati sensibili dopo l'uso; utile in
+    contesti crittografici o per la gestione di credenziali;
+
+  \item \textbf{Integrità della memoria}, legata alla protezione da accessi fuori
+    contesto o non autorizzati;
+
+  \item \textbf{Curva di apprendimento}, indicativa della facilità di adozione;
+    linguaggi con una difficoltà più bassa tendono a ridurre il rischio di bug
+    nei primi cicli di sviluppo; non legata alla sicurezza in modo diretto, ma
+    utile per valutare l'impatto della scelta del linguaggio sul processo di
+    sviluppo;
+
+  \item \textbf{Ecosistema e librerie}, riferito alla disponibilità e affidabilità
+    delle librerie disponibili; un ecosistema maturo offre componenti ben
+    testate, riducendo la necessità di implementazioni custom potenzialmente vulnerabili
+    e influenzando positivamente la sicurezza del progetto, nonostante non
+    riguardi direttamente la \textit{memory safety};
+\end{itemize}
+
+\footnotetext{\url{https://cs.fbk.eu/}}
 
 \small
 \setlength{\tabcolsep}{4pt}
 \begin{table}[H]
   \centering
   \begin{tabular}{l|c|c|c|c|c|c|}
-    \multicolumn{1}{l}{}         & \textbf{C/C++}                & \textbf{Java}                 & \textbf{Kotlin}               & \textbf{Python}               & \textbf{Rust}                       & \textbf{Go}               \\
+    \multicolumn{1}{l}{}                      & \textbf{C/C++}                & \textbf{Java}                 & \textbf{Kotlin}               & \textbf{Python}               & \textbf{Rust}                       & \textbf{Go}                      \\
     \hline
-    \textbf{Bounds Check}        & \cellcolor{red!20}No          & \cellcolor{green!20}Sì        & \cellcolor{green!20}Sì        & \cellcolor{green!20}Sì        & \cellcolor{green!20}Sì              & \cellcolor{green!20}Sì    \\
-    \textbf{Null Safety}         & \cellcolor{red!20}No          & \cellcolor{red!20}No          & \cellcolor{green!20}Sì        & \cellcolor{yellow!20}Parziale & \cellcolor{green!20}Sì              & \cellcolor{green!20}Sì    \\
-    \textbf{Ownership/Borrowing} & \cellcolor{red!20}No          & \cellcolor{red!20}No          & \cellcolor{red!20}No          & \cellcolor{red!20}No          & \cellcolor{green!20}Sì              & \cellcolor{red!20}No      \\
-    \textbf{Type Safety}         & \cellcolor{yellow!20}Parziale & \cellcolor{yellow!20}Parziale & \cellcolor{yellow!20}Parziale & \cellcolor{green!20}Sì        & \cellcolor{green!20}Sì              & \cellcolor{green!20}Sì    \\
-    \textbf{Memory Zeroization}  & \cellcolor{red!20}No          & \cellcolor{red!20}No          & \cellcolor{red!20}No          & \cellcolor{red!20}No          & \cellcolor{green!20}Sì\footnotemark & \cellcolor{red!20}No      \\
-    \textbf{Memory Integrity}    & \cellcolor{red!20}No          & \cellcolor{yellow!20}Parziale & \cellcolor{yellow!20}Parziale & \cellcolor{red!20}No          & \cellcolor{green!20}Sì              & \cellcolor{green!20}Sì    \\
-    \textbf{Difficulty}          & \cellcolor{red!20}Alta        & \cellcolor{yellow!20}Media    & \cellcolor{yellow!20}Media    & \cellcolor{green!20}Bassa     & \cellcolor{red!20}Alta              & \cellcolor{green!20}Bassa \\
+    \textbf{Bounds Check}                     & \cellcolor{red!20}No          & \cellcolor{green!20}Sì        & \cellcolor{green!20}Sì        & \cellcolor{green!20}Sì        & \cellcolor{green!20}Sì              & \cellcolor{green!20}Sì           \\
+    \textbf{Null Safety}                      & \cellcolor{red!20}No          & \cellcolor{red!20}No          & \cellcolor{green!20}Sì        & \cellcolor{yellow!20}Parziale & \cellcolor{green!20}Sì              & \cellcolor{green!20}Sì           \\
+    \textbf{Ownership/Borrowing}              & \cellcolor{red!20}No          & \cellcolor{red!20}No          & \cellcolor{red!20}No          & \cellcolor{red!20}No          & \cellcolor{green!20}Sì              & \cellcolor{red!20}No             \\
+    \textbf{Type Safety}                      & \cellcolor{yellow!20}Parziale & \cellcolor{yellow!20}Parziale & \cellcolor{yellow!20}Parziale & \cellcolor{green!20}Sì        & \cellcolor{green!20}Sì              & \cellcolor{green!20}Sì           \\
+    \textbf{Memory Zeroization}               & \cellcolor{red!20}No          & \cellcolor{red!20}No          & \cellcolor{red!20}No          & \cellcolor{red!20}No          & \cellcolor{green!20}Sì\footnotemark & \cellcolor{red!20}No             \\
+    \textbf{Memory Integrity}                 & \cellcolor{red!20}No          & \cellcolor{yellow!20}Parziale & \cellcolor{yellow!20}Parziale & \cellcolor{red!20}No          & \cellcolor{green!20}Sì              & \cellcolor{green!20}Sì           \\
+    \hline
+    \textbf{Difficoltà}\cite{learning_curves} & \cellcolor{red!20}Alta        & \cellcolor{yellow!20}Media    & \cellcolor{yellow!20}Media    & \cellcolor{green!20}Bassa     & \cellcolor{red!20}Alta              & \cellcolor{green!20}Bassa        \\
+    \textbf{Ecosistema e Librerie}            & \cellcolor{green!20}Vasto     & \cellcolor{green!20}Vasto     & \cellcolor{green!20}Vasto     & \cellcolor{green!20}Vasto     & \cellcolor{yellow!20}In crescita    & \cellcolor{yellow!20}In crescita \\
     \hline
   \end{tabular}
   \caption{Confronto delle caratteristiche legate alla \textit{memory safety} tra
@@ -144,35 +178,39 @@ nulli, la sicurezza di tipo e altri aspetti chiave.
 \footnotetext{Supportata tramite il crate \texttt{zeroize}, mantenuto dal team
 \texttt{RustCrypto} e ampiamente usato per la gestione sicura di dati sensibili.}
 
-Come si può notare dalla tabella, i linguaggi più recenti come Rust e Go offrono
-una maggiore sicurezza rispetto a linguaggi più datati come C/C++. Java, Kotlin e
-Python si collocano in una posizione intermedia: sono comunemente considerati
-\textit{memory safe by default} grazie al garbage collector, ma hanno meno
-funzionalità avanzate che rafforzano la sicurezza della memoria.
+\bigskip
+\noindent
 
-\paragraph{Memory Zeroization}
-Un aspetto spesso trascurato ma rilevante è il supporto alla \textbf{memory
-zeroization}, ovvero la capacità del linguaggio o delle librerie di pulire automaticamente
-aree di memoria contenenti dati sensibili una volta terminato il loro utilizzo.
-Questo è particolarmente importante in contesti crittografici o in applicazioni
-che gestiscono credenziali e segreti in chiaro.
+Come si può osservare dalla tabella, emergono pattern interessanti che riflettono
+le diverse filosofie di design dei linguaggi analizzati.
 
-\paragraph{Learning Curve}
-Altra caratteristica fondamentale da considerare è la curva di apprendimento del
-linguaggio, che può impattare significativamente sui tempi di adozione e sul
-rischio di introdurre bug nei primi cicli di sviluppo. Sebbene si tratti di un aspetto
-soggettivo, alcune stime empiriche\cite{learning_curves} suggeriscono che linguaggi
-come Python e Go siano più accessibili rispetto a Rust o C++, che richiedono una
-maggiore familiarità con i concetti di basso livello e di gestione esplicita
-delle risorse.
+\begin{itemize}
+  \item \textbf{Rust e Go} si distinguono come i linguaggi più orientati alla
+    \textit{memory safety}, offrendo protezioni integrate estensive. Rust, in
+    particolare, rappresenta l'approccio più radicale con il suo sistema di ownership/borrowing
+    unico, che elimina alla radice molte categorie di vulnerabilità, e il supporto
+    per la zeroizzazione della memoria. Go, pur non implementando ownership/borrowing,
+    compensa con un garbage collector efficace e controlli runtime robusti. Tuttavia,
+    entrambi presentano ecosistemi ancora in fase di maturazione rispetto ai
+    linguaggi più consolidati.
 
-\paragraph{Librerie}
-Infine, è importante ricordare che la sola scelta del linguaggio non garantisce
-la sicurezza della memoria: l'ecosistema di \textit{librerie} gioca un ruolo
-altrettanto determinante. Si raccomanda pertanto di valutare la maturità, la
-qualità del codice, e la presenza di audit di sicurezza nelle librerie esterne utilizzate,
-specialmente se implementate in linguaggi memory-unsafe (es. librerie Python
-scritte in C) o non pienamente compatibili con il modello di sicurezza adottato dal
-progetto.
+  \item \textbf{Java, Kotlin e Python} occupano una posizione intermedia, beneficiando
+    di ecosistemi maturi e ricchi di librerie, ma con approcci diversificati
+    alla sicurezza. Kotlin emerge come il più avanzato del gruppo grazie alla null
+    safety nativa, che elimina una fonte significativa di errori runtime. Java,
+    nonostante la sua maturità, mantiene alcuni compromessi storici come la possibilità
+    di \texttt{NullPointerException}. Python offre un buon bilanciamento generale,
+    ma la sua natura dinamica può introdurre vulnerabilità in contesti specifici.
 
-\newpage
+  \item \textbf{C e C++} rappresentano l'estremo opposto, con protezioni minime integrate
+    ma controllo completo delle risorse di sistema. Questo li rende
+    indispensabili in contesti dove performance e controllo hardware sono
+    prioritari, ma richiede competenze specifiche e processi di sviluppo rigorosi
+    per mitigare i rischi intrinseci.
+\end{itemize}
+
+La scelta finale del linguaggio dovrebbe quindi considerare il trade-off tra
+controllo, performance, sicurezza e produttività, valutando attentamente il contesto
+specifico del progetto, le competenze del team e i requisiti di sicurezza. In molti
+casi, un approccio ibrido che combini linguaggi diversi per componenti
+specifiche può rappresentare la soluzione ottimale.

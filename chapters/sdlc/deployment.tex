@@ -68,7 +68,7 @@ in memoria per comporre un payload malevolo. Di conseguenza, la DEP deve essere
 considerata come una misura di sicurezza complementare, efficace solo se integrata
 in una strategia difensiva più ampia.
 
-\paragraph{Stack canary}
+\paragraph{Stack Canary}
 Gli stack canaries sono una tecnica di protezione software mirata a prevenire
 gli attacchi basati sullo stack buffer overflow. Il nome deriva dall'analogia con
 i canarini nelle miniere di carbone, utilizzati come sentinelle per rilevare gas
@@ -114,8 +114,8 @@ compilatore, che effettua le seguenti operazioni:
 
   \item Genera metadati che definiscono i salti validi e consentiti
 
-  \item Inserisce controlli a runtime nel codice per verificare, prima
-    di ogni salto, che la destinazione sia legittima
+  \item Inserisce controlli a runtime nel codice per verificare, prima di ogni
+    salto, che la destinazione sia legittima
 \end{itemize}
 
 In questo modo, anche vettori di attacco come ROP e JOP, che si basano sull'alterazione
@@ -138,7 +138,7 @@ i controlli sono troppo generici o se l'attaccante riesce a manipolare i metadat
 di controllo. Tuttavia, se implementata correttamente, la CFI rappresenta una
 misura di sicurezza efficace contro molte classi di attacchi.
 
-\paragraph{Memory Tagging Extension (MTE)}
+\paragraph{Memory Tagging Extension (MTE)\protect\footnote{https://developer.arm.com/documentation/108035/0100/Introduction-to-the-Memory-Tagging-Extension}}
 Questa è la prima delle due funzionalità di sicurezza \textit{"architecture-dependent"}
 presenti in questa sezione. La MTE infatti, è una feature hardware introdotta da
 Google e ARM (v8.5+) che mira a rilevare e prevenire errori di accesso alla
@@ -172,7 +172,7 @@ La MTE può lavorare in 3 modalità differenti:
     è causato da una scrittura, il processore agisce in maniera "Asynchronous".
 \end{itemize}
 
-\paragraph{Pointer Authentication Code (PAC)}
+\paragraph{Pointer Authentication Code (PAC)\protect\footnote{https://developer.arm.com/documentation/109576/0100/Pointer-Authentication-Code/Introduction-to-PAC}}
 La seconda funzionalità di sicurezza \textit{"architecture-dependent"} è il PAC.
 Anche essa sviluppata da ARM (v8.3-A+), PAC è una tecnologia nata per prevenire in
 modo efficace attacchi di tipo ROP o buffer overflow.
