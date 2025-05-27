@@ -48,7 +48,8 @@ tecnica rimane comunque raccomandata come misura fondamentale, specialmente se i
 con altre contromisure discusse in questa sezione, per aumentare sostanzialmente
 la resilienza contro exploit noti.
 
-\paragraph{Data Execution Prevention (DEP)}
+\paragraph{Data Execution Prevention (DEP)\protect\footnote{Fonte: \url{https://www.datasunrise.com/knowledge-center/dep-data-execution-prevention/},
+ultimo accesso: 27 maggio 2025}}
 La DEP è una misura di sicurezza che consiste nel contrassegnare specifiche aree
 di memoria, come lo stack e l'heap, come non eseguibili. L'obiettivo è impedire
 l'esecuzione di codice arbitrario iniettato in regioni di memoria destinate
@@ -92,19 +93,19 @@ legittimo.
 Gli stack canaries sono generalmente implementati dal compilatore e possono
 variare in complessità, dal semplice valore fisso a valori casuali generati all'avvio
 del processo, aumentando così la difficoltà per l'attaccante di prevederli e
-aggirarli.
+aggirarli.\cite{stack_canaries}
 
 \subsection{Controlli di integrità dell'esecuzione}
-\label{sec:execution-integrity} Le tecniche presentate in questa sezione mirano
-a garantire che il codice eseguito sia quello previsto e che non sia stato
-manomesso o alterato in alcun modo.
+\label{sec:execution-integrity} Le tecniche presentate in questa sezione mirano a
+garantire che il codice eseguito sia quello previsto e che non sia stato manomesso
+o alterato in alcun modo.
 
 \paragraph{Control Flow Integrity (CFI)}
 è una tecnica avanzata di protezione che mira a impedire che un attaccante possa
-alterare il flusso di controllo di un programma attraverso vulnerabilità come i buffer
-overflow o gli use-after-free. L'idea alla base della CFI è quella di
-assicurarsi che durante l'esecuzione, un programma possa compiere solo i salti di
-controllo (es. chiamate indirette, ritorni di funzione) che sono stati previsti e
+alterare il flusso di controllo di un programma attraverso vulnerabilità come i
+buffer overflow o gli use-after-free. L'idea alla base della CFI è quella di assicurarsi
+che durante l'esecuzione, un programma possa compiere solo i salti di controllo
+(es. chiamate indirette, ritorni di funzione) che sono stati previsti e
 autorizzati in fase di compilazione.
 
 Per ottenere questo obiettivo, la CFI è implementata principalmente a livello di
@@ -132,11 +133,11 @@ In generale esistono due tipi principali di CFI:
     rispetto al fine-grained
 \end{itemize}
 
-Anche per la Control Flow Integrity gli svantaggi non mancano: la CFI può introdurre
-un overhead significativo in termini di prestazioni e potrebbe essere aggirata se
-i controlli sono troppo generici o se l'attaccante riesce a manipolare i metadati
-di controllo. Tuttavia, se implementata correttamente, la CFI rappresenta una
-misura di sicurezza efficace contro molte classi di attacchi.
+Anche per la Control Flow Integrity gli svantaggi non mancano: la CFI può
+introdurre un overhead significativo in termini di prestazioni e potrebbe essere
+aggirata se i controlli sono troppo generici o se l'attaccante riesce a
+manipolare i metadati di controllo. Tuttavia, se implementata correttamente, la CFI
+rappresenta una misura di sicurezza efficace contro molte classi di attacchi.\cite{control_flow_integrity}
 
 \paragraph{Memory Tagging Extension (MTE)\protect\footnote{https://developer.arm.com/documentation/108035/0100/Introduction-to-the-Memory-Tagging-Extension}}
 Questa è la prima delle due funzionalità di sicurezza \textit{"architecture-dependent"}
