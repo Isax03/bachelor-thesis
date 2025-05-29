@@ -40,6 +40,12 @@
 \usepackage{xurl}
 \usepackage[pdfa]{hyperref}
 \hypersetup{breaklinks=true}
+% Capitalize autoref names
+\addto\extrasitalian{%
+\renewcommand{\sectionautorefname}{Sezione}%
+\renewcommand{\subsectionautorefname}{Sottosezione}%
+\renewcommand{\subsubsectionautorefname}{Sottosottosezione}%
+}
 % List
 \usepackage{enumitem}
 
@@ -49,6 +55,16 @@
 % TODO - START: DELETE ME
 \usepackage{lipsum}
 % TODO - END: DELETE ME
+
+\lstset{
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  backgroundcolor=\color{gray!10},
+  frame=single,
+  rulecolor=\color{gray},
+  captionpos=b,
+  columns=fullflexible,
+}
 
 \lstset{ language=C, basicstyle=\footnotesize\ttfamily, % <== più piccolo di \small
 keywordstyle=
@@ -108,7 +124,7 @@ showstringspaces=false, captionpos=b % caption sotto il codice
 
   \input{chapters/sdlc/sdlc.tex}
 
-  \input{chapters/real_case.tex}
+  \input{chapters/real_case/real_case.tex}
 
   % Conclusions
   \input{etc/conclusions.tex}
@@ -123,4 +139,9 @@ showstringspaces=false, captionpos=b % caption sotto il codice
   % Alphabetical order of authors
   \bibliographystyle{unsrt} % plain for alphabetical order, unsrt for order of appearance
   \bibliography{bibliography.bib}
+
+  % Attachments
+  \titleformat{\chapter} {\normalfont\Huge\bfseries}{Appendix \thechapter}{1em}{}
+  \appendix
+  \input{attachments/attachment.tex}
 \end{document}

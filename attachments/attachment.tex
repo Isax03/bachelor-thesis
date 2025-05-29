@@ -1,0 +1,28 @@
+\chapter{Prompt per Copilot}
+\label{appendix:attachment}
+
+\begin{lstlisting}[language=, caption={Prompt utilizzato per la generazione del caso studio}, numbers=none, inputencoding=utf8, extendedchars=true, literate={à}{{\`a}}1 {è}{{\`e}}1 {ì}{{\`i}}1 {ò}{{\`o}}1 {ù}{{\`u}}1 {é}{{\'e}}1 {'}{{'}}1 {"}{{"}}1]
+Sto lavorando alla mia **tesi triennale in Informatica** sulla *memory safety nei linguaggi di programmazione unsafe*, con particolare attenzione all'integrazione delle mitigazioni durante lo **Software Development Lifecycle (SDLC)**.
+
+Per uno dei capitoli, ho bisogno di un **caso studio realistico**. Mi serve un **programma in C che simuli un file tracker**, ovvero uno strumento da riga di comando che tiene traccia dei file modificati in una directory, o che registra operazioni su file (creazione, modifica, accesso, ecc.). Il codice deve apparire plausibile per uso reale, non una lista di funzioni scollegate, e **può essere strutturato su più file**.
+
+### Requisiti tecnici:
+
+* Linguaggio: **C**
+* Struttura: progetto realistico, anche "legacy style", con uso di heap, strutture complesse, buffer, e gestione manuale della memoria
+* Deve contenere **almeno uno**, ma idealmente più, dei seguenti bug memory-unsafe:
+
+  * Buffer Overflow (BO)
+  * Use-After-Free (UAF)
+  * Dangling Pointer
+  * Double Free (DF)
+  * Out-of-Bounds Read e Write (OOB)
+  * (eventuali altri come integer overflow, memory leaks, ecc.)
+* Deve essere **abbastanza complesso da consentire un'analisi statica e dinamica interessante**, con tool come Valgrind, ASan, GDB, Cppcheck, ecc.
+* Il codice può leggere input da file o riga di comando, mantenere strutture dati in memoria (es. lista di file monitorati), scrivere log, ecc.
+* Commenti opzionali ma utili
+
+L'obiettivo è confrontare l'output di tool statici e dinamici su una versione "buggata" e su una versione corretta del programma, per mostrare come i bug vengano rilevati e corretti.
+
+Puoi generare un programma con queste caratteristiche?
+\end{lstlisting}

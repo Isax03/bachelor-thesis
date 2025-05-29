@@ -1,0 +1,92 @@
+\chapter{Caso studio}
+\label{chap:real_case}
+
+\section{Presentazione}
+\label{sec:presentation}
+
+Dopo aver illustrato nei capitoli precedenti le principali vulnerabilità legate alla
+gestione della memoria e le relative tecniche di mitigazione, questo capitolo
+presenta un caso studio pratico, volto a dimostrare come i concetti teorici possano
+essere applicati concretamente ad un progetto reale.
+
+L'obiettivo iniziale era quello di selezionare un progetto open source scritto in
+C o C++, in modo da analizzarlo e rafforzarne la \textit{memory safety} mediante
+strumenti statici e dinamici. Tuttavia, durante la fase di selezione, è emerso
+un problema ricorrente: i progetti realmente utilizzati in produzione risultavano
+già abbastanza robusti e testati, rendendo poco significativa l'analisi; mentre,
+all'estremo opposto, i progetti "educational" erano spesso troppo semplificati e
+artificiali.
+
+Per superare questo dilemma, si è optato per un approccio intermedio: la generazione
+di un progetto realistico ma deliberatamente vulnerabile. A tal fine, è stato impiegato
+\textit{GitHub Copilot}\footnote{\url{https://github.com/features/copilot}} in modalità
+\textit{Agent}, richiedendo esplicitamente la creazione di un'applicazione plausibile,
+scritta in C, che includesse vulnerabilità comuni di \textit{memory safety} a
+fini educativi e dimostrativi. Il prompt utilizzato è disponibile in appendice (\autoref{appendix:attachment}).
+per garantire riproducibilità e trasparenza.
+
+Il progetto risultante è un \textbf{file tracker}, ovvero un'applicazione a riga
+di comando che monitora una directory specificata, rilevando in tempo reale la creazione,
+modifica e cancellazione di file. Il programma supporta opzioni avanzate per il filtraggio
+dei file, la configurazione dell'intervallo di polling, il logging su file e la modalità
+verbosa.
+
+Nonostante la sua apparente semplicità, il codice è strutturato in più moduli e
+include numerosi bug intenzionali, fra cui:
+
+\begin{itemize}
+  \item \textbf{Buffer Overflow} in funzioni di inizializzazione e logging
+
+  \item \textbf{Use After Free} e \textbf{Double Free} in diverse fasi del ciclo
+    di vita del tracker
+
+  \item \textbf{Out-of-Bounds Read/Write} nel parsing degli argomenti e nel
+    confronto dei pattern
+
+  \item \textbf{Dereferenziazione di puntatori nulli} in condizioni anomale
+
+  \item \textbf{Memory Leak} in caso di errori intermedi
+\end{itemize}
+
+Queste vulnerabilità sono documentate direttamente nel file \texttt{README.md} del
+progetto, che elenca anche gli strumenti suggeriti per l'analisi. I tool utilizzati
+includono \textbf{Valgrind}, \textbf{AddressSanitizer}, \textbf{cppcheck}, \textbf{Clang
+Static Analyzer}, nonché compilazioni con flag di sicurezza avanzati (\texttt{-Wall
+-Wextra -Wformat-security}).
+
+\begin{quote}
+  \textbf{Nota:} È importante sottolineare che, in un contesto reale di progettazione
+  ex novo, molte delle vulnerabilità analizzate in questo capitolo avrebbero
+  potuto essere evitate scegliendo un linguaggio \textit{memory safe} già in fase
+  di design (\autoref{sec:linguaggio}).
+
+  Tuttavia, l'approccio adottato in questo caso studio è deliberatamente diverso:
+  si è scelto di partire da un'applicazione scritta in C, linguaggio
+  storicamente vulnerabile ma ancora ampiamente utilizzato, per illustrare concretamente
+  l'efficacia (e le limitazioni) degli strumenti di analisi e delle tecniche di mitigazione
+  nel contesto di un progetto esistente. Questo consente di simulare un caso
+  realistico di refactoring e messa in sicurezza di software legacy, situazione frequente
+  nel mondo industriale.
+\end{quote}
+
+Nel corso del capitolo verranno illustrati:
+\begin{itemize}
+  \item I principali difetti rilevati tramite analisi statica e dinamica
+
+  \item Le correzioni apportate per eliminare le vulnerabilità
+
+  \item Il confronto tra l'esecuzione pre e post-mitigazione, utilizzando
+    strumenti di verifica
+
+  \item Alcuni esempi di \textit{crash} osservati durante l'esecuzione, utili per
+    illustrare il comportamento anomalo di programmi affetti da vulnerabilità di
+    gestione della memoria
+\end{itemize}
+
+Questo caso studio rappresenta quindi una dimostrazione concreta dell'approccio proposto
+nella tesi: identificare, analizzare e mitigare vulnerabilità di memoria lungo il
+ciclo di vita del software, anche in assenza di exploit attivi.
+
+\input{chapters/real_case/initial_analysis.tex}
+\input{chapters/real_case/sdlc_phases.tex}
+\input{chapters/real_case/comparison.tex}
