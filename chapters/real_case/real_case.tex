@@ -22,8 +22,8 @@ di un progetto realistico ma deliberatamente vulnerabile. A tal fine, è stato i
 \textit{GitHub Copilot}\footnote{\url{https://github.com/features/copilot}} in modalità
 \textit{Agent}, richiedendo esplicitamente la creazione di un'applicazione plausibile,
 scritta in C, che includesse vulnerabilità comuni di \textit{memory safety} a
-fini educativi e dimostrativi. Il prompt utilizzato è disponibile in appendice (\autoref{appendix:attachment}).
-per garantire riproducibilità e trasparenza.
+fini educativi e dimostrativi. Per trasparenza, il prompt utilizzato è
+disponibile in appendice (\autoref{appendix:attachment}).
 
 Il progetto risultante è un \textbf{file tracker}, ovvero un'applicazione a riga
 di comando che monitora una directory specificata, rilevando in tempo reale la creazione,
@@ -32,27 +32,48 @@ dei file, la configurazione dell'intervallo di polling, il logging su file e la 
 verbosa.
 
 Nonostante la sua apparente semplicità, il codice è strutturato in più moduli e
-include numerosi bug intenzionali, fra cui:
+include numerosi bug intenzionali. Nella \autoref{tab:tracker_vulnerabilities} è
+riportato un elenco delle vulnerabilità identificate, con le relative posizioni
+nel codice.
 
-\begin{itemize}
-  \item \textbf{Buffer Overflow} in funzioni di inizializzazione e logging
+\begin{table}[htbp]
+  \centering
+  \begin{tabular}{|l|l|} % |p{6cm}|}
+    \hline
+    \textbf{Bug/Vulnerabilità} & \textbf{Posizione}                     \\ % & \textbf{Spiegazione}
+    \hline
+    Out-of-Bounds Write        & \texttt{main.c:27}, \texttt{main.c:42} \\ % & Se i pattern sono più di 5 o lunghi più di 63 caratteri, la copia della stringa va oltre i limiti
+    \hline
+    Use After Free             & \texttt{main.c:127}                    \\ % & La variabile \texttt{tracker} viene usata dopo la sua distruzione
+    \hline
+    Memory Leak                & \texttt{utils.c:14-18}                 \\ % & Se \texttt{malloc()} di \texttt{info->path} fallisce, \texttt{info} non viene liberata ma la funzione termina
+    \hline
+    Out-of-Bounds Read         & \texttt{utils.c:56}                    \\ % & Se il nome del file è più corto dell'estensione con cui viene confrontato, la lettura può uscire dai limiti della stringa
+    \hline
+    Dangling Pointer           & \texttt{utils.c:72-79}                 \\ % & Nel contesto attuale non particolarmente rilevante, ma in casi di concorrenza, può portare uso di valori errati
+    \hline
+    Buffer Overflow            & \texttt{tracker\_core.c:14,18}         \\ % & Scrittura di argomenti da linea di comando in buffer limitati
+    \hline
+    Double Free                & \texttt{tracker\_core.c:45}            \\ % & Evidente doppia deallocazione di \texttt{tracker->monitored\_directory}
+    \hline
+    Dangling Pointer           & \texttt{tracker\_core.c:56}            \\ % & Dopo la deallocazione, il puntatore \texttt{tracker} dovrebbe essere uguale a \texttt{NULL}
+    \hline
+    Out-of-Bounds Write        & \texttt{tracker\_core.c:81}            \\ % & Copia di stringa in buffer senza controllo della lunghezza
+    \hline
+    Use After Free             & \texttt{tracker\_core.c:161}           \\ % & Stampa dell'elemento rimosso dopo la sua deallocazione
+    \hline
+    Out-of-Bounds Write        & \texttt{tracker\_core.c:194}           \\ % & Copia di stringa in una matrice di caratteri senza controllo della lunghezza (su entrambe le dimensioni)
+    \hline
+    Out-of-Bounds Write        & \texttt{tracker\_core.c:216}           \\ % & Scrittura di stringa in un buffer troppo piccolo
+    \hline
+  \end{tabular}
+  \caption{Vulnerabilità presenti nel progetto File Tracker}
+  \label{tab:tracker_vulnerabilities}
+\end{table}
 
-  \item \textbf{Use After Free} e \textbf{Double Free} in diverse fasi del ciclo
-    di vita del tracker
-
-  \item \textbf{Out-of-Bounds Read/Write} nel parsing degli argomenti e nel
-    confronto dei pattern
-
-  \item \textbf{Dereferenziazione di puntatori nulli} in condizioni anomale
-
-  \item \textbf{Memory Leak} in caso di errori intermedi
-\end{itemize}
-
-Queste vulnerabilità sono documentate direttamente nel file \texttt{README.md} del
-progetto, che elenca anche gli strumenti suggeriti per l'analisi. I tool utilizzati
-includono \textbf{Valgrind}, \textbf{AddressSanitizer}, \textbf{cppcheck}, \textbf{Clang
-Static Analyzer}, nonché compilazioni con flag di sicurezza avanzati (\texttt{-Wall
--Wextra -Wformat-security}).
+Una lista con spiegazioni dettagliate di ciascuna vulnerabilità è disponibile nel
+file \texttt{README.md} del progetto\footnote{Progetto GitHub: \url{https://github.com/Isax03/unsafe-file-tracker}},
+che può essere consultato per comprendere meglio
 
 \begin{quote}
   \textbf{Nota:} È importante sottolineare che, in un contesto reale di progettazione
@@ -77,15 +98,24 @@ Nel corso del capitolo verranno illustrati:
 
   \item Il confronto tra l'esecuzione pre e post-mitigazione, utilizzando
     strumenti di verifica
-
-  \item Alcuni esempi di \textit{crash} osservati durante l'esecuzione, utili per
-    illustrare il comportamento anomalo di programmi affetti da vulnerabilità di
-    gestione della memoria
 \end{itemize}
 
-Questo caso studio rappresenta quindi una dimostrazione concreta dell'approccio proposto
-nella tesi: identificare, analizzare e mitigare vulnerabilità di memoria lungo il
-ciclo di vita del software, anche in assenza di exploit attivi.
+Questo caso studio rappresenta quindi una dimostrazione concreta dell'approccio
+proposto nella tesi: identificare, analizzare e mitigare vulnerabilità di
+memoria lungo il ciclo di vita del software, anche in assenza di exploit attivi.
+
+\begin{quote}
+  \textbf{Dettagli d'ambiente:} Il progetto è stato analizzato, compilato ed eseguito
+  su un sistema \textit{Linux} (Ubuntu 24.04.2 LTS). Di conseguenza, tutti i risultati
+  presentati fanno riferimento a tale ambiente.
+
+  I tool utilizzati sono generalmente disponibili anche su altri sistemi operativi,
+  inclusi altri ambienti Linux, macOS e in parte Windows. Tuttavia, non si garantisce
+  il corretto funzionamento né la piena compatibilità su piattaforme diverse,
+  poiché potrebbero sussistere differenze nei compilatori, nelle librerie di sistema
+  o nei meccanismi di gestione della memoria che influenzano l'efficacia degli strumenti
+  e la riproducibilità dei risultati.
+\end{quote}
 
 \input{chapters/real_case/initial_analysis.tex}
 \input{chapters/real_case/sdlc_phases.tex}

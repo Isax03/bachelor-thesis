@@ -1,2 +1,192 @@
 \section{Analisi preliminare}
 \label{sec:initial_analysis}
+
+Dal momento che questo caso studio si basa su un'applicazione già scritta e funzionante,
+la prima fase non sarà quella di riscrivere il codice seguendo le best practice
+e usando librerie che aggiungono controlli di sicurezza, ma piuttosto quella di analizzare
+il codice presente nel progetto, identificare le vulnerabilità e valutare l'efficacia
+degli strumenti utilizzati per la loro individuazione.
+
+\subsection*{Analisi statica}
+Seguendo l'ordine in cui sono state introdotte le tecniche di mitigazione nel
+\autoref{cha:sdlc}, la prima fase di analisi è quella statica, che analizza il
+codice sorgente senza effettivamente eseguirlo.
+
+\paragraph{Criteri di selezione degli strumenti}
+I tool di analisi sono stati scelti a partire dalla lista proposta dal \textit{National
+Institute of Standards and Technology} (NIST)\footnote{Source Code Security
+Analyzers: \url{https://www.nist.gov/itl/ssd/software-quality-group/source-code-security-analyzers}}
+che propone quasi 90 strumenti di analisi statica, in una tabella che comprende
+i linguaggi supportati, le funzionalità offerte, la disponibilità (gratuita o meno)
+e la data dell'ultimo aggiornamento. Grazie a queste informazioni, è stato
+possibile restringere la scelta degli strumenti da utilizzare, usando i seguenti
+criteri:
+\begin{itemize}
+  \item \textbf{Linguaggio supportato}: rimuovendo dalla lista gli strumenti che
+    non supportano il linguaggio C, si è ottenuta una lista di circa 50 tools
+
+  \item \textbf{Disponibilità gratuita}: dal momento che si tratta di un caso studio
+    didattico, si è scelto di utilizzare solo strumenti gratuiti, eliminando dalla
+    lista quelli a pagamento o con licenza commerciale. Questo ha ridotto
+    ulteriormente la lista a 16 strumenti.
+
+  \item \textbf{Data dell'ultimo aggiornamento}: per garantire l'affidabilità degli
+    strumenti, si è scelto di considerare solo quelli aggiornati dal 2010 in poi.
+    Questo ha dimezzato la lista a 8 strumenti.
+
+  \item \textbf{Focus sulla memory safety}: sono stati infine esclusi gli strumenti
+    che non avevano la sicurezza della memoria tra i principali obiettivi e quelli
+    troppo general purpose.
+\end{itemize}
+
+Questa scrematura ha portato a una lista finale di tre strumenti: \textbf{CppCheck},
+un analizzatore statico di codice C/C++ focalizzato su errori di programmazione
+e vulnerabilità di sicurezza; \textbf{Clang Static Analyzer}, parte del progetto
+Clang che fornisce funzionalità avanzate per il rilevamento di errori e vulnerabilità;
+e \textbf{Frama-C}, un analizzatore statico di codice C che si concentra sulla
+sicurezza della memoria e sulla rilevazione di vulnerabilità comuni.
+
+\medskip
+\subsubsection*{\small CppCheck\footnote{Sito: \url{https://cppcheck.sourceforge.io/}}}
+L'analizzatore \texttt{cppcheck} è il primo strumento che è stato utilizzato per
+l'analisi statica del codice sorgente. Esso è in grado di rilevare errori di
+programmazione, vulnerabilità di sicurezza e altri problemi nel codice C/C++.
+
+\noindent
+Lo strumento è stato eseguito con il seguente comando:
+\begin{lstlisting}[language=bash, numbers=none]
+cppcheck --enable=warning --inconclusive --std=c11 *.c
+\end{lstlisting}
+Il comando specifica di abilitare i warning e di considerare anche i casi in cui
+non è possibile determinare con certezza se un codice sia corretto o meno (\texttt{--inconclusive}),
+e di utilizzare lo standard C11 per l'analisi.
+
+L'analisi ha prodotto risultati limitati. CppCheck ha identificato esclusivamente
+un potenziale memory leak, fallendo nel rilevare le vulnerabilità più critiche
+come il buffer overflow e il double free presenti nel codice.
+
+\begin{lstlisting}[language={}, numbers=none]
+utils.c:17:9 error: Memory leak: info [memleak]
+  return NULL;
+  ^
+\end{lstlisting}
+
+Questo risultato è stato inaspettato, poiché ci si aspettava che lo strumento
+rilevasse almeno parte delle vulnerabilità presenti nel codice, come ad esempio il
+rischio di buffer overflow o l'evidente double free presente nel file \texttt{tracker\_core.c}.
+Per questo motivo, è consigliato utilizzare più strumenti di analisi statica nei
+progetti reali, per ottenere risultati più completi e affidabili.
+
+\medskip
+
+\subsubsection*{\small Clang\footnote{Sito: \url{https://clang.llvm.org/}}}
+Un altro strumento di analisi statica utilizzato è \texttt{clang}, che è un
+compilatore con funzionalità di analisi statica integrate. Esso, come \texttt{cppcheck},
+è in grado di rilevare errori di programmazione e vulnerabilità di sicurezza nel
+codice C/C++.
+
+Anche in questo caso, lo strumento è stato eseguito da terminale e l'analisi statica
+del codice è possibile con i seguente comando:
+\begin{lstlisting}[language={}, numbers=none]
+clang --analyze -Xanalyzer -analyzer-checker=core,security *.c
+\end{lstlisting}
+Il comando specifica di eseguire l'analisi statica del codice e di abilitare i
+checkers per la sicurezza e per i \textit{core issues}.
+
+L'analisi ha prodotto risultati più interessanti rispetto a \texttt{cppcheck}, evidenziando
+diversi problemi nel codice:
+\begin{itemize}
+  \item \textbf{Funzioni non sicure}: gran parte dell'output del comando evidenzia
+    l'uso di funzioni non sicure, in particolare \texttt{strcpy}, \texttt{sprintf}
+    e \texttt{fprintf}. In più, \texttt{clang} suggerisce funzioni alternative più
+    sicure, come \texttt{strlcpy}, \texttt{sprintf\_s} e \texttt{fprintf\_s}, che
+    dovrebbero essere utilizzate per evitare vulnerabilità di buffer overflow.
+
+  \item \textbf{Memory Leak}: viene rilvato lo stesso memory leak già evidenziato
+    da \texttt{cppcheck}
+
+  \item \textbf{Double Free}: al contrario di \texttt{cppcheck}, \texttt{clang}
+    riesce a rilevare l'ovvio problema di double free presente nel file \texttt{tracker\_core.c}
+\end{itemize}
+
+\medskip
+
+\subsubsection*{\small Frama-C\footnote{Sito: \url{https://frama-c.com/}}}
+L'ultimo strumento di analisi statica utilizzato sul progetto File Tracker è
+\texttt{Frama-C}, un analizzatore che mira a combinare più tecniche di analisi, fornite
+tramite plugin, per massimizzare l'eliminazione di bug e vulnerabilità nel
+codice C.
+
+Frama-C è un analizzatore più complesso rispetto ai precedenti, poiché prevede sia
+uno strumento che lavora da linea di comando (come gli altri due), sia un'interfaccia
+grafica che permette di visualizzare i risultati dell'analisi in modo più
+interattivo. In entrambi i casi, l'output richiede più sforzo per essere
+compreso, poiché i risultati sono presentati in modo più dettagliato e con terminologia
+più tecnica.
+
+Avviando l'interfaccia grafica di Frama-C con il comando \begin{lstlisting}[language=bash, numbers=none]
+frama\-c\-gui \-eva *.c
+\end{lstlisting}
+si ottiene una visualizzazione del codice sorgente con i risultati dell'analisi evidenziati
+direttamente sul codice. In questo modo, è possibile navigare tra le funzioni e i
+file del progetto, visualizzando i problemi rilevati in modo interattivo.
+
+L'analisi, in questo caso, ha prodotto risultati "peggiori" rispetto agli altri
+due strumenti, dal momento che la maggior parte del codice analizzato ha segnalato
+un risultati inconcludenti, ovvero che non è stato possibile determinare con
+certezza se il codice sia corretto o meno. L'unico bug che Frama-C è riuscito a segnalare
+è stato lo use-after-free nelle ultime righe del file \texttt{main.c}.
+
+\bigskip
+\noindent
+\paragraph{Riepilogo dell'analisi statica}
+L'analisi statica del codice sorgente del progetto File Tracker, condotta
+utilizzando tre strumenti distinti, ha evidenziato diverse criticità nel codice.
+Come mostrato nella \autoref{tab:static_analysis_results}, ciascun strumento ha dimostrato
+punti di forza e limitazioni specifiche: CppCheck ha identificato principalmente
+memory leak, Clang ha mostrato la migliore capacità di rilevamento generale segnalando
+funzioni non sicure e double free, mentre Frama-C ha evidenziato use-after-free
+non rilevati dagli altri strumenti. Complessivamente, nessun singolo strumento è
+riuscito a identificare tutte le vulnerabilità presenti, confermando l'importanza
+di utilizzare approcci complementari nell'analisi statica. I risultati "Parziale"
+nella tabella indicano i warning di Clang sull'utilizzo di funzioni non sicure
+come \texttt{strcpy} e \texttt{sprintf}, dal momento che l'analizzatore non fornisce
+informazioni sulla vulnerabilità specifica, ma che comunque dà un'indicazione
+sul fatto che il codice potrebbe essere vulnerabile.
+
+\begin{table}[htbp]
+  \centering
+  \begin{tabular}{|l|l|l|l|l|}
+    \hline
+    \textbf{Bug/Vulnerabilità} & \textbf{Posizione}                     & \textbf{CppCheck}              & \textbf{Clang}                 & \textbf{Frama-C}               \\
+    \hline
+    Out-of-Bounds Write        & \texttt{main.c:27}, \texttt{main.c:42} & \cellcolor{red!20}Non Rilevato & \cellcolor{yellow!20}Parziale  & \cellcolor{red!20}Non Rilevato \\
+    \hline
+    Use After Free             & \texttt{main.c:127}                    & \cellcolor{red!20}Non Rilevato & \cellcolor{red!20}Non Rilevato & \cellcolor{green!20}Rilevato   \\
+    \hline
+    Memory Leak                & \texttt{utils.c:14-18}                 & \cellcolor{green!20}Rilevato   & \cellcolor{green!20}Rilevato   & \cellcolor{red!20}Non Rilevato \\
+    \hline
+    Out-of-Bounds Read         & \texttt{utils.c:56}                    & \cellcolor{red!20}Non Rilevato & \cellcolor{red!20}Non Rilevato & \cellcolor{red!20}Non Rilevato \\
+    \hline
+    Dangling Pointer           & \texttt{utils.c:72-79}                 & \cellcolor{red!20}Non Rilevato & \cellcolor{red!20}Non Rilevato & \cellcolor{red!20}Non Rilevato \\
+    \hline
+    Buffer Overflow            & \texttt{tracker\_core.c:14,18}         & \cellcolor{red!20}Non Rilevato & \cellcolor{yellow!20}Parziale  & \cellcolor{red!20}Non Rilevato \\
+    \hline
+    Double Free                & \texttt{tracker\_core.c:45}            & \cellcolor{red!20}Non Rilevato & \cellcolor{green!20}Rilevato   & \cellcolor{red!20}Non Rilevato \\
+    \hline
+    Dangling Pointer           & \texttt{tracker\_core.c:56}            & \cellcolor{red!20}Non Rilevato & \cellcolor{red!20}Non Rilevato & \cellcolor{red!20}Non Rilevato \\
+    \hline
+    Out-of-Bounds Write        & \texttt{tracker\_core.c:81}            & \cellcolor{red!20}Non Rilevato & \cellcolor{yellow!20}Parziale  & \cellcolor{red!20}Non Rilevato \\
+    \hline
+    Use After Free             & \texttt{tracker\_core.c:161}           & \cellcolor{red!20}Non Rilevato & \cellcolor{red!20}Non Rilevato & \cellcolor{red!20}Non Rilevato \\
+    \hline
+    Out-of-Bounds Write        & \texttt{tracker\_core.c:194}           & \cellcolor{red!20}Non Rilevato & \cellcolor{yellow!20}Parziale  & \cellcolor{red!20}Non Rilevato \\
+    \hline
+    Out-of-Bounds Write        & \texttt{tracker\_core.c:216}           & \cellcolor{red!20}Non Rilevato & \cellcolor{yellow!20}Parziale  & \cellcolor{red!20}Non Rilevato \\
+    \hline
+  \end{tabular}
+  \caption{Risultati dell'Analisi Statica}
+  \label{tab:static_analysis_results}
+\end{table}
+
+\subsection*{Analisi dinamica}
