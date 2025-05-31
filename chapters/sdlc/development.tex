@@ -2,7 +2,7 @@
 \label{sec:development}
 
 La fase di sviluppo del software rappresenta il cuore del ciclo di vita del software.
-In questa sezione vengono analizzate le best practices di scrittura del codice
+In questa sezione vengono analizzate le best practice di scrittura del codice
 consigliate da enti specializzati come OWASP e SEI CERT, che si occupano di sicurezza
 e qualità del software.
 
@@ -14,26 +14,25 @@ Infine, viene trattata l'analisi statica del codice, una tecnica che permette di
 rilevare vulnerabilità e problemi di qualità del codice senza la necessità di
 eseguire il programma.
 
-\subsection{Best Practices nel Codice}
+\subsection{Best Practice nel Codice}
 \label{sec:best-practices-codice}
 
-La creazione di software con elevati standard di \textit{memory safety} inizia
-dalle decisioni prese durante la fase di implementazione del codice. Per quanto si
-possano utilizzare linguaggi moderni e progettati con meccanismi di sicurezza intrinseci,
-la qualità del software dipende inevitabilmente dalle decisioni adottate dallo
-sviluppatore. Per questo motivo esistono linee guida consolidate, note come
-\textit{secure coding practices}, che aiutano a prevenire vulnerabilità legate
-alla gestione della memoria, come buffer overflow, dangling pointer o memory
-leak. L'applicazione di queste best practices consente di ridurre drasticamente il
-rischio di exploit e aumentare la robustezza del software, fin dalle sue
-fondamenta.
+La creazione di software con elevati standard di memory safety inizia dalle decisioni
+prese durante la fase di implementazione del codice. Per quanto si possano
+utilizzare linguaggi moderni e progettati con meccanismi di sicurezza intrinseci,
+la qualità del software dipende inevitabilmente dalle decisioni adottate dallo sviluppatore.
+Per questo motivo esistono linee guida consolidate, note come \textit{secure
+coding practice}, che aiutano a prevenire vulnerabilità legate alla gestione della
+memoria, come buffer overflow, dangling pointer o memory leak. L'applicazione di
+queste best practice consente di ridurre drasticamente il rischio di exploit e
+aumentare la robustezza del software, fin dalle sue fondamenta.
 
 Una delle principali fonti di riferimento è la \textbf{OWASP Secure Coding
-Practices Quick Reference Guide}\cite{owasp_best_practices}, che fornisce una checklist
+Practices Quick Reference Guide}~\cite{owasp_best_practices}, che fornisce una checklist
 focalizzata su vari aspetti della sicurezza del software, tra cui la gestione
 della memoria.
 
-Di seguito si riportano alcune delle principali best practices relative alla
+Di seguito si riportano alcune delle principali best practice relative alla
 sicurezza della memoria:
 
 \begin{itemize}
@@ -66,7 +65,7 @@ sicurezza della memoria:
 
   \item \textbf{Liberare correttamente la memoria}: la memoria dinamica va liberata
     in tutti i punti di uscita del programma, compresi quelli dovuti a
-    condizioni di errore (evita memory leaks).
+    condizioni di errore (evita memory leak).
 
   \item \textbf{Sovrascrivere i dati sensibili prima della deallocazione}: quando
     si gestiscono dati come password o chiavi crittografiche, è consigliabile
@@ -75,13 +74,13 @@ sicurezza della memoria:
 
 Oltre alle regole già formalizzate, risulta opportuno considerare anche altre
 buone pratiche non sempre trattate esplicitamente, ma che possono contribuire a prevenire
-i bug descritti nella \autoref{sec:vulnerability_types}. Un esempio
-significativo è il controllo degli \textbf{integer overflow} durante il calcolo degli
-indici di un array: un valore che supera il massimo rappresentabile da un intero
-può produrre un indice errato, portando a un accesso fuori dai limiti della memoria.
+i bug descritti nella ~\autoref{sec:vulnerability_types}. Un esempio significativo
+è il controllo degli \textbf{integer overflow} durante il calcolo degli indici
+di un array: un valore che supera il massimo rappresentabile da un intero può produrre
+un indice errato, portando a un accesso fuori dai limiti della memoria.
 
 A complemento della guida proposta da \textit{OWASP}, i \textbf{SEI CERT Coding
-Standards}\cite{cert_coding_standard} offrono una raccolta di regole dettagliate,
+Standard}~\cite{cert_coding_standard} offrono una raccolta di regole dettagliate,
 spesso accompagnate da esempi di codice non conforme (\textit{non-compliant}) e dalle
 relative soluzioni corrette (\textit{compliant}). Le regole di SEI CERT sono organizzate
 in base al linguaggio di programmazione e risultano molto più numerose rispetto a
@@ -100,10 +99,10 @@ un esempio di regola SEI CERT relativa alla gestione sicura degli array in C:
 
   \bigskip
   \noindent
-  Il \autoref{lst:non-compliant} mostra un esempio di codice che viola questa
-  regola, effettuando il controllo solo sul limite superiore dell'array (e non
-  su quello inferiore), mentre il \autoref{lst:compliant} mostra una versione
-  conforme che verifica entrambi i limiti prima di accedere all'array.
+  Il ~\autoref{lst:non-compliant} mostra un esempio di codice che viola questa regola,
+  effettuando il controllo solo sul limite superiore dell'array (e non su quello
+  inferiore), mentre il ~\autoref{lst:compliant} mostra una versione conforme
+  che verifica entrambi i limiti prima di accedere all'array.
 \end{quote}
 
 \begin{minipage}[t]{0.4\textwidth}
@@ -140,34 +139,34 @@ int *f(int index) {
 \noindent
 Queste pratiche, se correttamente implementate, costituiscono un primo livello di
 difesa essenziale nella costruzione di software robusto e sicuro, specialmente
-in linguaggi notoriamente \textit{memory unsafe} come C e C++.
+in linguaggi notoriamente non memory safe come C e C++.
 
 \subsection{Librerie}
 \label{sec:librerie}
 
-Per migliorare la memory safety nei progetti software, risulta spesso vantaggioso
-affidarsi a librerie progettate per offrire un livello di controllo e protezione
-superiore rispetto a quello garantito dalle funzioni standard del linguaggio.
-Questo aspetto è particolarmente rilevante nei linguaggi storicamente non memory
-safe, come C e C++, dove l'allocazione manuale e la gestione esplicita della
-memoria espongono facilmente a vulnerabilità come buffer overflow, use-after-free
+Per migliorare la memory safety nei progetti software, risulta spesso
+vantaggioso affidarsi a librerie progettate per offrire un livello di controllo
+e protezione superiore rispetto a quello garantito dalle funzioni standard del
+linguaggio. Questo aspetto è particolarmente rilevante nei linguaggi storicamente
+non memory safe, come C e C++, dove l'allocazione manuale e la gestione esplicita
+della memoria espongono facilmente a vulnerabilità come buffer overflow, use-after-free
 o double free.
 
-Nel corso degli anni sono state sviluppate numerose librerie che affrontano direttamente
-queste problematiche. Alcune di esse, come \textit{safe-malloc}\protect\footnote{Repository
+Nel corso degli anni sono state sviluppate numerose librerie che affrontano
+direttamente queste problematiche. Alcune di esse, come \textit{safe-malloc}\protect\footnote{Repository
 GitHub: \url{https://github.com/cjhasselkus/safe-malloc}} o \textit{xmalloc}\protect\footnote{Repository
-GitHub: \url{https://github.com/rosingh/xmalloc}}, fungono da wrapper per le
-funzioni di allocazione (\texttt{malloc()}, \texttt{free()}, \texttt{realloc()}),
-implementando controlli interni per verificare la correttezza delle operazioni e
-rilevare anomalie durante l'utilizzo della heap. Altre, come \textit{safestringlib}\protect\footnote{Repository
+GitHub: \url{https://github.com/rosingh/xmalloc}}, fungono da wrapper per le funzioni
+di allocazione (\texttt{malloc()}, \texttt{free()}, \texttt{realloc()}), implementando
+controlli interni per verificare la correttezza delle operazioni e rilevare anomalie
+durante l'utilizzo della heap. Altre, come \textit{safestringlib}\protect\footnote{Repository
 GitHub: \url{https://github.com/intel/safestringlib}}, sostituiscono le funzioni
 standard per la manipolazione delle stringhe con versioni più sicure (\texttt{strcpy\_s},
 \texttt{memset\_s}, ecc.), che includono verifiche esplicite sulla lunghezza dei
 buffer per evitare scritture fuori dai limiti. La libreria \textit{Sailfish Pool}\protect\footnote{Repository
 GitHub: \url{https://github.com/dyne/sailfish-pool}}, invece, introduce tecniche
-come la preallocazione di pool di memoria e la \textit{"zeroizzazione"} dei dati
-prima della deallocazione, particolarmente utili in contesti in cui la privacy e
-la protezione dei dati sono essenziali.
+come la preallocazione di pool di memoria e la zeroization dei dati prima della deallocazione,
+particolarmente utili in contesti in cui la privacy e la protezione dei dati
+sono essenziali.
 
 La necessità di rafforzare la sicurezza della memoria non riguarda
 esclusivamente i linguaggi più esposti. Anche ambienti più moderni e progettati per
@@ -216,11 +215,11 @@ anche al di fuori di contesti di esecuzione specifici.
 
 \begin{quote}
   \textbf{\textit{Nota:}} L'analisi statica non è una tecnica esclusiva per la
-  \textit{memory safety}. Infatti, i tool esistenti non si limitano a rilevare solo
-  vulnerabilità legate alla gestione della memoria, ma possono anche
-  identificare una vasta gamma di problemi di qualità del codice, bug logici e violazioni
-  delle best practice di programmazione, che tuttavia non rientrano nell'ambito
-  di questo elaborato.
+  memory safety. Infatti, i tool esistenti non si limitano a rilevare solo
+  vulnerabilità legate alla gestione della memoria, ma possono anche identificare
+  una vasta gamma di problemi di qualità del codice, bug logici e violazioni
+  delle best practice di programmazione, che tuttavia non rientrano nell'ambito di
+  questo elaborato.
 \end{quote}
 
 \noindent

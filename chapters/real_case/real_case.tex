@@ -10,31 +10,30 @@ presenta un caso studio pratico, volto a dimostrare come i concetti teorici poss
 essere applicati concretamente ad un progetto reale.
 
 L'obiettivo iniziale era quello di selezionare un progetto open source scritto in
-C o C++, in modo da analizzarlo e rafforzarne la \textit{memory safety} mediante
-strumenti statici e dinamici. Tuttavia, durante la fase di selezione, è emerso
-un problema ricorrente: i progetti realmente utilizzati in produzione risultavano
+C o C++, in modo da analizzarlo e rafforzarne la memory safety mediante
+strumenti statici e dinamici. Tuttavia, durante la fase di selezione, è emerso un
+problema ricorrente: i progetti realmente utilizzati in produzione risultavano
 già abbastanza robusti e testati, rendendo poco significativa l'analisi; mentre,
 all'estremo opposto, i progetti "educational" erano spesso troppo semplificati e
 artificiali.
 
-Per superare questo dilemma, si è optato per un approccio intermedio: la generazione
-di un progetto realistico ma deliberatamente vulnerabile. A tal fine, è stato impiegato
-\textit{GitHub Copilot}\footnote{\url{https://github.com/features/copilot}} in modalità
-\textit{Agent}, richiedendo esplicitamente la creazione di un'applicazione plausibile,
-scritta in C, che includesse vulnerabilità comuni di \textit{memory safety} a
+Per superare questo dilemma, si è optato per un approccio intermedio: la
+generazione di un progetto realistico ma deliberatamente vulnerabile. A tal fine,
+è stato impiegato \textit{GitHub Copilot}\footnote{\url{https://github.com/features/copilot}}
+in modalità \textit{Agent}, richiedendo esplicitamente la creazione di un'applicazione
+plausibile, scritta in C, che includesse vulnerabilità comuni di memory safety a
 fini educativi e dimostrativi. Per trasparenza, il prompt utilizzato è
-disponibile in appendice (\autoref{appendix:attachment}).
+disponibile in appendice (~\autoref{appendix:attachment}).
 
 Il progetto risultante è un \textbf{file tracker}, ovvero un'applicazione a riga
-di comando che monitora una directory specificata, rilevando in tempo reale la creazione,
-modifica e cancellazione di file. Il programma supporta opzioni avanzate per il filtraggio
-dei file, la configurazione dell'intervallo di polling, il logging su file e la modalità
-verbosa.
+di comando che monitora una directory specificata, rilevando in tempo reale la
+creazione, modifica e cancellazione di file. Il programma supporta opzioni
+avanzate per il filtraggio dei file, la configurazione dell'intervallo di polling,
+il logging su file e la modalità verbosa.
 
-Nonostante la sua apparente semplicità, il codice è strutturato in più moduli e
-include numerosi bug intenzionali. Nella \autoref{tab:tracker_vulnerabilities} è
-riportato un elenco delle vulnerabilità identificate, con le relative posizioni
-nel codice.
+Nonostante la sua apparente semplicità, il codice è strutturato in più moduli e include
+numerosi bug intenzionali. Nella ~\autoref{tab:tracker_vulnerabilities} è riportato
+un elenco delle vulnerabilità identificate, con le relative posizioni nel codice.
 
 \begin{table}[htbp]
   \centering
@@ -78,8 +77,8 @@ che può essere consultato per comprendere meglio
 \begin{quote}
   \textbf{Nota:} È importante sottolineare che, in un contesto reale di progettazione
   ex novo, molte delle vulnerabilità analizzate in questo capitolo avrebbero
-  potuto essere evitate scegliendo un linguaggio \textit{memory safe} già in fase
-  di design (\autoref{sec:linguaggio}).
+  potuto essere evitate scegliendo un linguaggio memory safe già in fase di
+  design (~\autoref{sec:linguaggio}).
 
   Tuttavia, l'approccio adottato in questo caso studio è deliberatamente diverso:
   si è scelto di partire da un'applicazione scritta in C, linguaggio
@@ -90,7 +89,7 @@ che può essere consultato per comprendere meglio
   nel mondo industriale.
 \end{quote}
 
-Nel corso del capitolo verranno illustrati:
+Nel corso del capitolo vengono illustrati:
 \begin{itemize}
   \item I principali difetti rilevati tramite analisi statica e dinamica
 
