@@ -156,11 +156,11 @@ potrebbe essere a rischio.
     \hline
     Use After Free             & \texttt{main.c:127}            & \cellcolor{red!20}Non Rilevato & \cellcolor{red!20}Non Rilevato & \cellcolor{green!20}Rilevato   \\
     \hline
-    Memory Leak                & \texttt{utils.c:14--18}         & \cellcolor{green!20}Rilevato   & \cellcolor{green!20}Rilevato   & \cellcolor{red!20}Non Rilevato \\
+    Memory Leak                & \texttt{utils.c:14-18}         & \cellcolor{green!20}Rilevato   & \cellcolor{green!20}Rilevato   & \cellcolor{red!20}Non Rilevato \\
     \hline
     Out-of-Bounds Read         & \texttt{utils.c:56}            & \cellcolor{red!20}Non Rilevato & \cellcolor{red!20}Non Rilevato & \cellcolor{red!20}Non Rilevato \\
     \hline
-    Dangling Pointer           & \texttt{utils.c:72--79}         & \cellcolor{red!20}Non Rilevato & \cellcolor{red!20}Non Rilevato & \cellcolor{red!20}Non Rilevato \\
+    Dangling Pointer           & \texttt{utils.c:72-79}         & \cellcolor{red!20}Non Rilevato & \cellcolor{red!20}Non Rilevato & \cellcolor{red!20}Non Rilevato \\
     \hline
     Buffer Overflow            & \texttt{tracker\_core.c:14,18} & \cellcolor{red!20}Non Rilevato & \cellcolor{yellow!20}Parziale  & \cellcolor{red!20}Non Rilevato \\
     \hline
@@ -359,12 +359,12 @@ Per esempio, è ragionevole ipotizzare che AddressSanitizer e Valgrind avrebbero
 rilevato tutti o quasi tutti i buffer overflow e gli out-of-bounds read/write
 presenti nel codice, se fossero stati attivati durante l'esecuzione tramite scenari
 di test appropriati. Un'eccezione invece, potrebbe essere rappresentata dal memory
-leak presente in \texttt{utils.c:14--18}, che si verifica in condizioni molto specifiche
+leak presente in \texttt{utils.c:14-18}, che si verifica in condizioni molto specifiche
 (il fallimento di una \texttt{malloc} dovuto a esaurimento della memoria o a limiti
 imposti dal sistema). Tuttavia, questo problema è stato comunque rilevato
 durante la fase di analisi statica, da parte di Clang e CppCheck.
 
-Questo evidenzia ancora una volta come i diversi strumenti di analisi siano
-complementari tra loro e come tutte le tecniche di mitigazione viste possano
-essere combinate per rafforzare significativamente la capacità di rilevazione e
-correzione dei bug, compensando le limitazioni individuali di ciascun approccio.
+Questo evidenzia ancora una volta come i diversi strumenti di analisi siano complementari
+tra loro e come tutte le tecniche di mitigazione viste possano essere combinate per
+rafforzare significativamente la capacità di rilevazione e correzione dei bug,
+compensando le limitazioni individuali di ciascun approccio.
