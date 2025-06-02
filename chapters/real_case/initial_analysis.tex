@@ -154,31 +154,31 @@ sul fatto che il codice potrebbe essere vulnerabile.
   \centering
   \begin{tabular}{|l|l|l|l|l|}
     \hline
-    \textbf{Bug/Vulnerabilità} & \textbf{Posizione}                     & \textbf{CppCheck}              & \textbf{Clang}                 & \textbf{Frama-C}               \\
+    \textbf{Bug/Vulnerabilità} & \textbf{Posizione}             & \textbf{CppCheck}              & \textbf{Clang}                 & \textbf{Frama-C}               \\
     \hline
-    Out-of-Bounds Write        & \texttt{main.c:27}, \texttt{main.c:42} & \cellcolor{red!20}Non Rilevato & \cellcolor{yellow!20}Parziale  & \cellcolor{red!20}Non Rilevato \\
+    Out-of-Bounds Write        & \texttt{main.c:27, 42}         & \cellcolor{red!20}Non Rilevato & \cellcolor{yellow!20}Parziale  & \cellcolor{red!20}Non Rilevato \\
     \hline
-    Use After Free             & \texttt{main.c:127}                    & \cellcolor{red!20}Non Rilevato & \cellcolor{red!20}Non Rilevato & \cellcolor{green!20}Rilevato   \\
+    Use After Free             & \texttt{main.c:127}            & \cellcolor{red!20}Non Rilevato & \cellcolor{red!20}Non Rilevato & \cellcolor{green!20}Rilevato   \\
     \hline
-    Memory Leak                & \texttt{utils.c:14-18}                 & \cellcolor{green!20}Rilevato   & \cellcolor{green!20}Rilevato   & \cellcolor{red!20}Non Rilevato \\
+    Memory Leak                & \texttt{utils.c:14-18}         & \cellcolor{green!20}Rilevato   & \cellcolor{green!20}Rilevato   & \cellcolor{red!20}Non Rilevato \\
     \hline
-    Out-of-Bounds Read         & \texttt{utils.c:56}                    & \cellcolor{red!20}Non Rilevato & \cellcolor{red!20}Non Rilevato & \cellcolor{red!20}Non Rilevato \\
+    Out-of-Bounds Read         & \texttt{utils.c:56}            & \cellcolor{red!20}Non Rilevato & \cellcolor{red!20}Non Rilevato & \cellcolor{red!20}Non Rilevato \\
     \hline
-    Dangling Pointer           & \texttt{utils.c:72-79}                 & \cellcolor{red!20}Non Rilevato & \cellcolor{red!20}Non Rilevato & \cellcolor{red!20}Non Rilevato \\
+    Dangling Pointer           & \texttt{utils.c:72-79}         & \cellcolor{red!20}Non Rilevato & \cellcolor{red!20}Non Rilevato & \cellcolor{red!20}Non Rilevato \\
     \hline
-    Buffer Overflow            & \texttt{tracker\_core.c:14,18}         & \cellcolor{red!20}Non Rilevato & \cellcolor{yellow!20}Parziale  & \cellcolor{red!20}Non Rilevato \\
+    Buffer Overflow            & \texttt{tracker\_core.c:14,18} & \cellcolor{red!20}Non Rilevato & \cellcolor{yellow!20}Parziale  & \cellcolor{red!20}Non Rilevato \\
     \hline
-    Double Free                & \texttt{tracker\_core.c:45}            & \cellcolor{red!20}Non Rilevato & \cellcolor{green!20}Rilevato   & \cellcolor{red!20}Non Rilevato \\
+    Double Free                & \texttt{tracker\_core.c:45}    & \cellcolor{red!20}Non Rilevato & \cellcolor{green!20}Rilevato   & \cellcolor{red!20}Non Rilevato \\
     \hline
-    Dangling Pointer           & \texttt{tracker\_core.c:56}            & \cellcolor{red!20}Non Rilevato & \cellcolor{red!20}Non Rilevato & \cellcolor{red!20}Non Rilevato \\
+    Dangling Pointer           & \texttt{tracker\_core.c:56}    & \cellcolor{red!20}Non Rilevato & \cellcolor{red!20}Non Rilevato & \cellcolor{red!20}Non Rilevato \\
     \hline
-    Out-of-Bounds Write        & \texttt{tracker\_core.c:81}            & \cellcolor{red!20}Non Rilevato & \cellcolor{yellow!20}Parziale  & \cellcolor{red!20}Non Rilevato \\
+    Out-of-Bounds Write        & \texttt{tracker\_core.c:81}    & \cellcolor{red!20}Non Rilevato & \cellcolor{yellow!20}Parziale  & \cellcolor{red!20}Non Rilevato \\
     \hline
-    Use After Free             & \texttt{tracker\_core.c:161}           & \cellcolor{red!20}Non Rilevato & \cellcolor{red!20}Non Rilevato & \cellcolor{red!20}Non Rilevato \\
+    Use After Free             & \texttt{tracker\_core.c:161}   & \cellcolor{red!20}Non Rilevato & \cellcolor{red!20}Non Rilevato & \cellcolor{red!20}Non Rilevato \\
     \hline
-    Out-of-Bounds Write        & \texttt{tracker\_core.c:194}           & \cellcolor{red!20}Non Rilevato & \cellcolor{yellow!20}Parziale  & \cellcolor{red!20}Non Rilevato \\
+    Out-of-Bounds Write        & \texttt{tracker\_core.c:194}   & \cellcolor{red!20}Non Rilevato & \cellcolor{yellow!20}Parziale  & \cellcolor{red!20}Non Rilevato \\
     \hline
-    Out-of-Bounds Write        & \texttt{tracker\_core.c:216}           & \cellcolor{red!20}Non Rilevato & \cellcolor{yellow!20}Parziale  & \cellcolor{red!20}Non Rilevato \\
+    Out-of-Bounds Write        & \texttt{tracker\_core.c:216}   & \cellcolor{red!20}Non Rilevato & \cellcolor{yellow!20}Parziale  & \cellcolor{red!20}Non Rilevato \\
     \hline
   \end{tabular}
   \caption{Risultati dell'Analisi Statica}
@@ -186,3 +186,115 @@ sul fatto che il codice potrebbe essere vulnerabile.
 \end{table}
 
 \subsection*{Analisi dinamica}
+Dopo aver analizzato il codice sorgente, la fase successiva è osservare il
+comportamento del programma durante l'esecuzione tramite l'analisi dinamica.
+
+Seguendo criteri simili a quelli utilizzati per la selezione degli strumenti di
+analisi statica, sono stati scelti due strumenti di analisi dinamica, entrambi
+già citati nella \autoref{sec:analisi-dinamica}:
+\begin{itemize}
+  \item \textbf{AddressSanitizer (ASan)}, uno strumento di analisi dinamica integrato
+    in Clang e GCC, progettato per rilevare errori di memoria come buffer
+    overflow, use-after-free e memory leak
+
+  \item \textbf{Valgrind}, un framework di analisi dinamica che fornisce diversi
+    strumenti per il rilevamento di errori di memoria, come memory leak, buffer overflow
+    e use-after-free, grazie al suo strumento \texttt{memcheck}
+\end{itemize}
+
+\noindent
+Poiché entrambi gli strumenti di analisi dinamica dipendono strettamente dagli
+input forniti al programma durante l'esecuzione e richiedono scenari specifici
+per attivare le diverse vulnerabilità, sono stati testati solamente tre casi d'uso
+mirati che permettono agli analizzatori di rilevare le seguenti vulnerabilità:
+\begin{itemize}
+  \item \textbf{Buffer Overflow} (\texttt{tracker\_core.c:14,18}), quando il la
+    lunghezza del percorso del file di log o della directory monitorata supera
+    il limite di 255 caratteri
+
+  \item \textbf{Use After Free} (\texttt{file\_tracker.c:161}), quando il
+    programma prova a stampare il nome di un file eliminato dalla directory
+    monitorata dopo aver liberato la memoria allocata per il nome del file
+
+  \item \textbf{Double Free} (\texttt{tracker\_core.c:45}), quando il programma
+    libera due volte la memoria allocata per la stringa del percorso della
+    directory
+\end{itemize}
+
+\subsubsection*{\small AddressSanitizer\footnote{Sito: \url{https://github.com/google/sanitizers/wiki/AddressSanitizer}}}
+AddressSanitizer, come già menzionato nel~\autoref{cha:sdlc}, non si limita ad agire
+sul binario compilato, ma richiede l'accesso al codice sorgente, che verrà arricchito
+con i controlli necessari prima della compilazione. Infatti, il comando utilizzato
+per compilare il progetto con AddressSanitizer è il seguente:
+\begin{lstlisting}[language=bash, numbers=none]
+clang -fsanitize=address -g -O0 -std=c11 -o file_tracker_asan main.c tracker_core.c utils.c
+\end{lstlisting}
+
+Il comando specifica di abilitare AddressSanitizer (\texttt{-fsanitize=address}),
+di includere le informazioni di debug (\texttt{-g}), di disabilitare le ottimizzazioni
+(\texttt{-O0}) e di utilizzare lo standard C11 (\texttt{-std=c11}).
+
+Dopo la compilazione, il programma può essere eseguito in cerca di vulnerabilità
+o bug. Nello specifico, per testare le vulnerabilità selezionate, è necessaria la
+creazione di contesti specifici. Di seguito sono riportati i comandi utilizzati
+per l'impostazione di ciascun contesto, in base alla vulnerabilità da testare:
+\begin{itemize}
+  \item \textbf{Buffer Overflow}: per testare il buffer overflow, è necessario
+    fornire un percorso di directory o di file di log che superi i 255 caratteri.
+    Dal momento che il tracker controlla l'esistenza della directory monitorata,
+    è necessario creare delle directory "a cascata" per raggiungere il limite
+    imposto di 255 caratteri. Per riproducibilità, i comandi utilizzati sono i
+    seguenti: \begin{lstlisting}[language=bash, numbers=none]
+# creazione della directory
+mkdir -p $(printf 'asan/asan1/asan2/%.0s' {1..15}) # crea 45 directory annidate
+# esecuzione del tracker con un percorso di directory lungo
+./file_tracker_asan ./$(printf 'asan/asan1/asan2/%.0s' {1..15})
+# oppure con un file di log nella directory appena creata
+./file_tracker_asan ./ -l ./$(printf 'asan/asan1/asan2/%.0s' {1..15})logfile.log
+    \end{lstlisting}
+
+  \item \textbf{Use After Free}: per testare l'use-after-free, è sufficiente
+    creare una directory e un file, eseguire il tracker e infine eliminare il file:
+    \begin{lstlisting}[language=bash, numbers=none]
+# creazione della directory e del file
+mkdir asan && touch ./asan/asan.txt
+# esecuzione del tracker per monitorare la directory ./asan/
+./file_tracker_asan ./asan/
+    \end{lstlisting}
+
+  \item \textbf{Double Free}: per quanto riguarda il double free, il processo è
+    ancora più semplice, poiché è sufficiente eseguire il tracker su una directory
+    arbitraria e poi terminare il programma premendo \texttt{Ctrl+C} per forzare
+    la chiusura: \begin{lstlisting}[language=bash, numbers=none]
+# esecuzione del tracker su una directory arbitraria
+./file_tracker_asan ./asan/
+# terminazione del programma con Ctrl+C
+\end{lstlisting}
+    In generale, il double free si verifica ogni volta che il programma termina
+    grazie ad un segnale \texttt{SIGINT} (come \texttt{Ctrl+C}).
+\end{itemize}
+
+\noindent
+Riproducendo questi tre scenari, AddressSanitizer è stato in grado di rilevare
+tutte e tre le vulnerabilità, producendo output troppo estesi per essere riportati
+qui, ma che possono essere trovati nella repository GitHub del progetto. È comunque
+utile riportare delle considerazioni sugli output generati da AddressSanitizer:
+\begin{itemize}
+  \item \textbf{Localizzazione delle vulnerabilità}: AddressSanitizer fornisce informazioni
+    dettagliate sulla posizione esatta della vulnerabilità nel codice, indicando
+    il file e la riga specifica in cui si verifica il problema. Questo è molto utile
+    per la correzione rapida e mirata.
+
+  \item \textbf{Classificazione delle vulnerabilità}: per ogni vulnerabilità rilevata,
+    ASan fornisce una nomenclatura chiara del tipo di problema (es. "heap-buffer-overflow",
+    "attemting double free", ...) che aiuta a comprendere immediatamente la natura
+    del bug.
+
+  \item \textbf{Stack trace}: per ogni vulnerabilità rilevata, AddressSanitizer
+    fornisce un traceback completo dello stack delle chiamate, mostrando la sequenza
+    di funzioni che ha portato al problema.
+
+  \item \textbf{Informazioni sulla memoria}: l'output include dettagli tecnici sulla
+    regione di memoria coinvolta, come l'indirizzo specifico, la dimensione del blocco
+    allocato e lo stato della memoria (freed, allocated, etc.).
+\end{itemize}

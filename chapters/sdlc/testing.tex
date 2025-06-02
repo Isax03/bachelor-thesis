@@ -31,7 +31,7 @@ ambientali o flussi di esecuzione specifici, spesso difficili da prevedere a pri
 Nel contesto della memory safety, esistono due principali categorie di strumenti
 di analisi dinamica, in base al momento e al livello in cui vengono applicati:
 
-\paragraph{Strumenti basati su compilazione.}
+\paragraph{Strumenti basati su compilazione}
 Alcuni strumenti operano direttamente a livello di compilazione, modificando il codice
 sorgente o il codice intermedio per inserire controlli di sicurezza aggiuntivi.
 Due esempi noti sono:
@@ -53,7 +53,7 @@ Questi strumenti offrono una buona copertura in fase di testing, ma comportano
 un significativo overhead in termini di prestazioni e dimensione del binario, motivo
 per cui non sono adatti all'uso in ambienti di produzione.
 
-\paragraph{Strumenti basati sul binario.}
+\paragraph{Strumenti basati sul binario}
 Altri strumenti operano a livello del binario compilato, senza necessità di modificare
 il sorgente. Tra i più noti in questo ambito troviamo \textbf{Valgrind}, un
 framework di strumentazione dinamica che esegue il programma su una CPU virtuale,
@@ -87,7 +87,7 @@ alcune limitazioni:
     di produzione
 
   \item Il comportamento del software potrebbe essere influenzato dall'ambiente in
-    cui viene eseguito (es. architettura HW, OS, versioni del runtime, ecc.). Per
+    cui viene eseguito (es. architettura HW, OS, versioni del runtime, etc.). Per
     questo motivo, è importante testare il software in ambienti quanto più
     simili a quello di produzione
 \end{itemize}

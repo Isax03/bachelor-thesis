@@ -78,6 +78,26 @@ keywordstyle=
 , numbers=left, frame=single, breaklines=true, breakatwhitespace=false,
 showstringspaces=false, captionpos=b % caption sotto il codice
 }
+
+\lstdefinestyle{bash}{
+  language=bash,
+  basicstyle=\footnotesize\ttfamily,
+  keywordstyle=\color{blue}\bfseries,
+  commentstyle=\color{green!60!black}\itshape,
+  stringstyle=\color{red},
+  numberstyle=\tiny\color{gray},
+  numbers=left,
+  frame=single,
+  breaklines=true,
+  breakatwhitespace=false,
+  showstringspaces=false,
+  captionpos=b,
+  morekeywords={sudo, chmod, chown, grep, awk, sed, find, xargs, tar, gzip, curl, wget},
+  morecomment=[l]{\#},
+  morestring=[b]",
+  morestring=[b]'
+}
+
 \lstdefinestyle{changes_in_c}{ language=C, moredelim=**[is][
 \color{green!40!black}
 ]{@}{@} }
