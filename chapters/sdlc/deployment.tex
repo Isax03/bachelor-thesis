@@ -138,7 +138,7 @@ manipolare i metadati di controllo. Tuttavia, se implementata correttamente, la 
 rappresenta una misura di sicurezza efficace contro molte classi di attacchi.~\cite{control_flow_integrity}
 
 \paragraph{Memory Tagging Extension (MTE)\protect\footnote{https://developer.arm.com/documentation/108035/0100/Introduction-to-the-Memory-Tagging-Extension}}
-Questa è la prima delle due funzionalità di sicurezza \textit{"architecture-dependent"}
+Questa è la prima delle due funzionalità di sicurezza \textit{``architecture-dependent''}
 presenti in questa sezione. La MTE infatti, è una feature hardware introdotta da
 Google e ARM (v8.5+) che mira a rilevare e prevenire errori di accesso alla memoria,
 come buffer overflow e use-after-free, attraverso l'uso di tag di memoria.
@@ -165,12 +165,12 @@ La MTE può lavorare in tre modalità differenti:
 
   \item \textbf{Asymmetric}(v8.7-A+): questa modalità è una combinazione delle
     due precedenti. Se l'accesso non autorizzato è causato da una lettura, il
-    processore agisce in maniera "Synchronous", mentre se l'accesso non autorizzato
-    è causato da una scrittura, il processore agisce in maniera "Asynchronous".
+    processore agisce in maniera ``Synchronous'', mentre se l'accesso non autorizzato
+    è causato da una scrittura, il processore agisce in maniera ``Asynchronous''.
 \end{itemize}
 
 \paragraph{Pointer Authentication Code (PAC)\protect\footnote{https://developer.arm.com/documentation/109576/0100/Pointer-Authentication-Code/Introduction-to-PAC}}
-La seconda funzionalità di sicurezza "architecture-dependent" è il PAC. Anche
+La seconda funzionalità di sicurezza ``architecture-dependent'' è il PAC. Anche
 essa sviluppata da ARM (v8.3-A+), PAC è una tecnologia nata per prevenire in modo
 efficace attacchi di tipo ROP o buffer overflow.
 
@@ -238,7 +238,7 @@ Un esempio concreto dell'efficacia dell'isolamento lo troviamo nel caso reale di
 WebAudio in Google Chrome, già menzionato nella ~\autoref{sec:vulnerability_types}.
 L'uso della sandbox del browser impediva all'attaccante di ottenere l'accesso
 completo al sistema, confinando l'esecuzione di codice arbitrario all'interno dell'ambiente
-"sandboxed".~\cite{webaudio_uaf}
+``sandboxed''.~\cite{webaudio_uaf}
 
 È importante sottolineare che queste tecnologie non sono state progettate specificamente
 per garantire la memory safety, ma la loro architettura consente di limitare l'impatto
