@@ -14,13 +14,11 @@ effettivamente eseguirlo.
 
 \paragraph{Criteri di selezione degli strumenti}
 I tool di analisi sono stati scelti a partire dalla lista proposta dal \textit{National
-Institute of Standards and Technology} (NIST)\footnote{Source Code Security
-Analyzers: \url{https://www.nist.gov/itl/ssd/software-quality-group/source-code-security-analyzers}}
-che propone quasi 90 strumenti di analisi statica, in una tabella che comprende
-i linguaggi supportati, le funzionalità offerte, la disponibilità (gratuita o meno)
-e la data dell'ultimo aggiornamento. Grazie a queste informazioni, è stato
-possibile restringere la scelta degli strumenti da utilizzare, usando i seguenti
-criteri:
+Institute of Standards and Technology} (NIST)~\cite{nist_sast_list} che propone
+quasi 90 strumenti di analisi statica, in una tabella che comprende i linguaggi supportati,
+le funzionalità offerte, la disponibilità (gratuita o meno) e la data dell'ultimo
+aggiornamento. Grazie a queste informazioni, è stato possibile restringere la scelta
+degli strumenti da utilizzare, usando i seguenti criteri:
 \begin{itemize}
   \item \textbf{Linguaggio supportato}: rimuovendo dalla lista gli strumenti che
     non supportano il linguaggio C, si è ottenuta una lista di circa 50 tool;
@@ -40,28 +38,29 @@ criteri:
 \end{itemize}
 
 Questa scrematura ha portato a una lista finale di tre strumenti: \textbf{CppCheck},
-un analizzatore statico di codice C/C++ focalizzato su errori di programmazione
-e vulnerabilità di sicurezza; \textbf{Clang Static Analyzer}, parte del progetto
-Clang che fornisce funzionalità avanzate per il rilevamento di errori e vulnerabilità;
-e \textbf{Frama-C}, un analizzatore statico di codice C che si concentra sulla
-sicurezza della memoria e sulla rilevazione di vulnerabilità comuni.
+un analizzatore statico di codice C/C++ focalizzato su errori di programmazione e
+vulnerabilità di sicurezza; \textbf{Clang Static Analyzer}, parte del progetto
+Clang che fornisce funzionalità avanzate per il rilevamento di errori e
+vulnerabilità; e \textbf{Frama-C}, un analizzatore statico di codice C che si concentra
+sulla sicurezza della memoria e sulla rilevazione di vulnerabilità comuni.
 
 \subsubsection*{CppCheck}
 \label{subsubsec:cppcheck} L'analizzatore \texttt{cppcheck}\footnote{Sito: \url{https://cppcheck.sourceforge.io/}}
-è il primo strumento che è stato utilizzato per l'analisi statica del codice
-sorgente. Esso è in grado di rilevare errori di programmazione, vulnerabilità di
-sicurezza e altri problemi nel codice C/C++.
+è il primo strumento che è stato utilizzato per l'analisi statica del codice sorgente.
+Esso è in grado di rilevare errori di programmazione, vulnerabilità di sicurezza
+e altri problemi nel codice C/C++.
 
-Lo strumento è stato eseguito con il seguente comando: \begin{lstlisting}[language=bash, numbers=none]
+Lo strumento è stato eseguito con il seguente comando:
+\begin{lstlisting}[language=bash, numbers=none]
 cppcheck --enable=warning --inconclusive --std=c11 *.c
 \end{lstlisting}
 Il comando specifica di abilitare i warning e di considerare anche i casi in cui
 non è possibile determinare con certezza se un codice sia corretto o meno (\texttt{--inconclusive}),
 e di utilizzare lo standard C11 per l'analisi.
 
-L'analisi ha prodotto risultati limitati. CppCheck ha identificato
-esclusivamente un potenziale memory leak, fallendo nel rilevare le vulnerabilità
-più critiche come il buffer overflow e il double free presenti nel codice:
+L'analisi ha prodotto risultati limitati. CppCheck ha identificato esclusivamente
+un potenziale memory leak, fallendo nel rilevare le vulnerabilità più critiche
+come il buffer overflow e il double free presenti nel codice:
 
 \begin{lstlisting}[language={}, numbers=none]
 utils.c:17:9 error: Memory leak: info [memleak]
@@ -69,28 +68,28 @@ utils.c:17:9 error: Memory leak: info [memleak]
   ^
 \end{lstlisting}
 
-Questo risultato è stato inaspettato, poiché ci si aspettava che lo strumento rilevasse
-almeno parte delle vulnerabilità presenti nel codice, come ad esempio il rischio
-di buffer overflow o l'evidente double free presente nel file \texttt{tracker\_core.c}.
-Per questo motivo, è consigliabile utilizzare più strumenti di analisi statica nei
-progetti reali, per ottenere risultati più completi e affidabili.
+Questo risultato è stato inaspettato, poiché ci si aspettava che lo strumento
+rilevasse almeno parte delle vulnerabilità presenti nel codice, come ad esempio il
+rischio di buffer overflow o l'evidente double free presente nel file \texttt{tracker\_core.c}.
+Per questo motivo, è consigliabile utilizzare più strumenti di analisi statica
+nei progetti reali, per ottenere risultati più completi e affidabili.
 
 \subsubsection*{Clang Static Analyzer}
-\label{subsubsec:clang} Un altro strumento di analisi statica utilizzato è
-\texttt{clang}\footnote{Sito: \url{https://clang.llvm.org/}}, che è un compilatore
-con funzionalità di analisi statica integrate. Esso, come \texttt{cppcheck}, è in
-grado di rilevare errori di programmazione e vulnerabilità di sicurezza nel codice
-C/C++.
+\label{subsubsec:clang} Un altro strumento di analisi statica utilizzato è \texttt{clang}\footnote{Sito:
+\url{https://clang.llvm.org/}}, che è un compilatore con funzionalità di analisi
+statica integrate. Esso, come \texttt{cppcheck}, è in grado di rilevare errori
+di programmazione e vulnerabilità di sicurezza nel codice C/C++.
 
-Anche in questo caso, lo strumento è stato eseguito dal terminale e l'analisi
-statica del codice è possibile con il seguente comando: \begin{lstlisting}[language=bash, numbers=none]
+Anche in questo caso, lo strumento è stato eseguito dal terminale e l'analisi statica
+del codice è possibile con il seguente comando:
+\begin{lstlisting}[language=bash, numbers=none]
 clang --analyze -Xanalyzer -analyzer-checker=core,security *.c
 \end{lstlisting}
-Il comando specifica di eseguire l'analisi statica del codice e di abilitare i checker
-per la sicurezza e per i \textit{core issue}.
+Il comando specifica di eseguire l'analisi statica del codice e di abilitare i
+checker per la sicurezza e per i \textit{core issue}.
 
-L'analisi ha prodotto risultati più interessanti rispetto a \texttt{cppcheck},
-evidenziando diversi problemi nel codice:
+L'analisi ha prodotto risultati più interessanti rispetto a \texttt{cppcheck}, evidenziando
+diversi problemi nel codice:
 \begin{itemize}
   \item \textbf{Funzioni non sicure}: gran parte dell'output del comando evidenzia
     l'uso di funzioni non sicure, in particolare \texttt{strcpy}, \texttt{sprintf}
@@ -106,45 +105,47 @@ evidenziando diversi problemi nel codice:
 \end{itemize}
 
 \subsubsection*{Frama-C}
-\label{subsubsec:frama-c} L'ultimo strumento di analisi statica utilizzato sul
-progetto File Tracker è \texttt{Frama-C}\footnote{Sito: \url{https://frama-c.com/}},
-un analizzatore che mira a combinare più tecniche di analisi, fornite tramite
-plugin, per massimizzare l'eliminazione di bug e vulnerabilità nel codice C.
+\label{subsubsec:frama-c} L'ultimo strumento di analisi statica utilizzato sul progetto
+File Tracker è \texttt{Frama-C}\footnote{Sito: \url{https://frama-c.com/}}, un
+analizzatore che mira a combinare più tecniche di analisi, fornite tramite plugin,
+per massimizzare l'eliminazione di bug e vulnerabilità nel codice C.
 
-Frama-C è un analizzatore più avanzato rispetto ai precedenti, poiché prevede
-sia uno strumento che lavora da linea di comando (come gli altri due), sia un'interfaccia
-grafica che permette di visualizzare i risultati dell'analisi in modo più interattivo.
-In entrambi i casi, l'output richiede più sforzo per essere compreso, poiché i
-risultati sono presentati in modo più dettagliato e con terminologia più tecnica.
+Frama-C è un analizzatore più avanzato rispetto ai precedenti, poiché prevede sia
+uno strumento che lavora da linea di comando (come gli altri due), sia un'interfaccia
+grafica che permette di visualizzare i risultati dell'analisi in modo più
+interattivo. In entrambi i casi, l'output richiede più sforzo per essere
+compreso, poiché i risultati sono presentati in modo più dettagliato e con terminologia
+più tecnica.
 
-L'interfaccia grafica di Frama-C è stata avviata con il comando: \begin{lstlisting}[language=bash, numbers=none]
+L'interfaccia grafica di Frama-C è stata avviata con il comando:
+\begin{lstlisting}[language=bash, numbers=none]
 frama-c-gui -eva *.c
 \end{lstlisting}
-ottenendo una visualizzazione del codice sorgente con i risultati dell'analisi evidenziati
-direttamente sul codice. In questo modo, è possibile navigare tra le funzioni e i
-file del progetto, consentendo una visualizzazione interattiva dei problemi
+ottenendo una visualizzazione del codice sorgente con i risultati dell'analisi
+evidenziati direttamente sul codice. In questo modo, è possibile navigare tra le
+funzioni e i file del progetto, consentendo una visualizzazione interattiva dei problemi
 rilevati.
 
-L'analisi, in questo caso, ha prodotto risultati meno soddisfacenti rispetto
-agli altri due strumenti, dal momento che la maggior parte del codice analizzato
-ha segnalato risultati inconcludenti, ovvero che non è stato possibile
-determinare con certezza se il codice sia corretto o meno. L'unico bug che Frama-C
-è riuscito a segnalare è stato lo use-after-free nelle ultime righe del file \texttt{main.c}.
+L'analisi, in questo caso, ha prodotto risultati meno soddisfacenti rispetto agli
+altri due strumenti, dal momento che la maggior parte del codice analizzato ha
+segnalato risultati inconcludenti, ovvero che non è stato possibile determinare con
+certezza se il codice sia corretto o meno. L'unico bug che Frama-C è riuscito a
+segnalare è stato lo use-after-free nelle ultime righe del file \texttt{main.c}.
 
 \subsubsection*{Riepilogo dell'analisi statica}
-L'analisi statica del codice sorgente del progetto File Tracker, condotta utilizzando
-tre strumenti distinti, ha evidenziato diverse criticità nel codice. Come mostrato
-nella~\autoref{tab:static_analysis_results}, ciascun strumento ha dimostrato
+L'analisi statica del codice sorgente del progetto File Tracker, condotta
+utilizzando tre strumenti distinti, ha evidenziato diverse criticità nel codice.
+Come mostrato nella~\autoref{tab:static_analysis_results}, ciascun strumento ha dimostrato
 punti di forza e limitazioni specifiche: CppCheck ha identificato principalmente
-memory leak, Clang ha mostrato la migliore capacità di rilevamento generale
-segnalando funzioni non sicure e double free, mentre Frama-C ha evidenziato use-after-free
+memory leak, Clang ha mostrato la migliore capacità di rilevamento generale segnalando
+funzioni non sicure e double free, mentre Frama-C ha evidenziato use-after-free
 non rilevati dagli altri strumenti. Complessivamente, nessun singolo strumento è
 riuscito a identificare tutte le vulnerabilità presenti, confermando l'importanza
 di utilizzare approcci complementari nell'analisi statica. I risultati ``Parziale''
-nella tabella indicano i warning di Clang sull'utilizzo di funzioni non sicure come
-\texttt{strcpy} e \texttt{sprintf}, dal momento che l'analizzatore non fornisce
-informazioni specifiche sulla vulnerabilità in particolare, ma segnala che il codice
-potrebbe essere a rischio.
+nella tabella indicano i warning di Clang sull'utilizzo di funzioni non sicure
+come \texttt{strcpy} e \texttt{sprintf}, dal momento che l'analizzatore non fornisce
+informazioni specifiche sulla vulnerabilità in particolare, ma segnala che il
+codice potrebbe essere a rischio.
 
 \begin{table}[htbp]
   \centering
@@ -158,9 +159,9 @@ potrebbe essere a rischio.
     \hline
     Memory Leak                & \texttt{utils.c:14-18}         & \cellcolor{green!20}Rilevato   & \cellcolor{green!20}Rilevato   & \cellcolor{red!20}Non Rilevato \\
     \hline
-    Out-of-Bounds Read         & \texttt{utils.c:56}            & \cellcolor{red!20}Non Rilevato & \cellcolor{red!20}Non Rilevato & \cellcolor{red!20}Non Rilevato \\
+    Out-of-Bounds Read         & \texttt{utils.c:55}            & \cellcolor{red!20}Non Rilevato & \cellcolor{red!20}Non Rilevato & \cellcolor{red!20}Non Rilevato \\
     \hline
-    Dangling Pointer           & \texttt{utils.c:72-79}         & \cellcolor{red!20}Non Rilevato & \cellcolor{red!20}Non Rilevato & \cellcolor{red!20}Non Rilevato \\
+    Dangling Pointer           & \texttt{utils.c:69-76}         & \cellcolor{red!20}Non Rilevato & \cellcolor{red!20}Non Rilevato & \cellcolor{red!20}Non Rilevato \\
     \hline
     Buffer Overflow            & \texttt{tracker\_core.c:14,18} & \cellcolor{red!20}Non Rilevato & \cellcolor{yellow!20}Parziale  & \cellcolor{red!20}Non Rilevato \\
     \hline
@@ -182,12 +183,12 @@ potrebbe essere a rischio.
 \end{table}
 
 \subsection*{Analisi dinamica}
-Dopo aver analizzato il codice sorgente, la fase successiva è osservare il comportamento
-del programma durante l'esecuzione tramite l'analisi dinamica.
+Dopo aver analizzato il codice sorgente, la fase successiva è osservare il
+comportamento del programma durante l'esecuzione tramite l'analisi dinamica.
 
-Seguendo criteri simili a quelli utilizzati per la selezione degli strumenti di analisi
-statica, sono stati scelti due strumenti di analisi dinamica, entrambi già citati
-nella~\autoref{sec:analisi-dinamica}:
+Seguendo criteri simili a quelli utilizzati per la selezione degli strumenti di
+analisi statica, sono stati scelti due strumenti di analisi dinamica, entrambi
+già citati nella~\autoref{sec:analisi-dinamica}:
 \begin{itemize}
   \item \textbf{AddressSanitizer (ASan)}, uno strumento di analisi dinamica integrato
     in Clang e GCC, progettato per rilevare errori di memoria come buffer
@@ -199,10 +200,10 @@ nella~\autoref{sec:analisi-dinamica}:
 \end{itemize}
 
 \noindent
-Poiché entrambi gli strumenti di analisi dinamica dipendono strettamente dagli input
-forniti al programma durante l'esecuzione e richiedono scenari specifici per attivare
-le diverse vulnerabilità, sono stati testati solamente tre casi d'uso mirati che
-permettono agli analizzatori di rilevare le seguenti vulnerabilità:
+Poiché entrambi gli strumenti di analisi dinamica dipendono strettamente dagli
+input forniti al programma durante l'esecuzione e richiedono scenari specifici
+per attivare le diverse vulnerabilità, sono stati testati solamente tre casi d'uso
+mirati che permettono agli analizzatori di rilevare le seguenti vulnerabilità:
 \begin{itemize}
   \item \textbf{Buffer Overflow} (\texttt{tracker\_core.c:14,18}), quando la
     lunghezza del percorso del file di log o della directory monitorata supera
@@ -219,29 +220,28 @@ permettono agli analizzatori di rilevare le seguenti vulnerabilità:
 
 \subsubsection*{AddressSanitizer}
 \label{subsubsec:asan} AddressSanitizer\footnote{Sito: \url{https://github.com/google/sanitizers/wiki/AddressSanitizer}},
-come già menzionato nel~\autoref{cha:sdlc}, non si limita ad agire sul binario compilato,
-ma richiede l'accesso al codice sorgente, che verrà arricchito con i controlli necessari
-prima della compilazione. Infatti, il comando utilizzato per compilare il progetto
-con AddressSanitizer è il seguente:
-\begin{lstlisting}[language=bash, numbers=none]
+come già menzionato nel~\autoref{cha:sdlc}, non si limita ad agire sul binario
+compilato, ma richiede l'accesso al codice sorgente, che verrà arricchito con i
+controlli necessari prima della compilazione. Infatti, il comando utilizzato per
+compilare il progetto con AddressSanitizer è il seguente: \begin{lstlisting}[language=bash, numbers=none]
 clang -fsanitize=address -g -O0 -std=c11 -o file_tracker_asan main.c tracker_core.c utils.c
 \end{lstlisting}
 
 Il comando specifica di abilitare AddressSanitizer (\texttt{-fsanitize=address}),
-di includere le informazioni di debug (\texttt{-g}), di disabilitare le ottimizzazioni
-(\texttt{-O0}) e di utilizzare lo standard C11 (\texttt{-std=c11}).
+di includere le informazioni di debug (\texttt{-g}), di disabilitare le
+ottimizzazioni (\texttt{-O0}) e di utilizzare lo standard C11 (\texttt{-std=c11}).
 
 Dopo la compilazione, il programma può essere eseguito in cerca di vulnerabilità
-o bug. Nello specifico, per testare le vulnerabilità selezionate, è necessaria la
-creazione di contesti specifici. Di seguito sono riportati i comandi utilizzati
+o bug. Nello specifico, per testare le vulnerabilità selezionate, è necessaria
+la creazione di contesti specifici. Di seguito sono riportati i comandi utilizzati
 per l'impostazione di ciascun contesto, in base alla vulnerabilità da testare:
 \begin{itemize}
-  \item \textbf{Buffer Overflow}: per testare il buffer overflow, è necessario
+  \item \textbf{Buffer Overflow}: per testare il buffer overflow, è sufficiente
     fornire un percorso di directory o di file di log che superi i 255 caratteri.
-    Dal momento che il tracker controlla l'esistenza della directory monitorata,
-    è necessario creare delle directory annidate per raggiungere il limite
-    imposto di 255 caratteri. Per riproducibilità, i comandi utilizzati sono i
-    seguenti: \begin{lstlisting}[language=bash, numbers=none]
+    Poiché il tracker verifica l'esistenza della directory monitorata prima dell'esecuzione,
+    è necessario creare una struttura di directory annidate sufficientemente
+    profonda da raggiungere il limite di 255 caratteri. A fini di riproducibilità,
+    sono stati utilizzati i seguenti comandi: \begin{lstlisting}[language=bash, numbers=none]
 # creazione della directory
 mkdir -p $(printf 'asan/asan1/asan2/%.0s' {1..15}) # crea 45 directory annidate
 # esecuzione del tracker con un percorso di directory lungo
@@ -271,10 +271,12 @@ mkdir asan && touch ./asan/asan.txt
     a causa di un segnale \texttt{SIGINT} (come \texttt{Ctrl+C}).
 \end{itemize}
 
-Riproducendo questi tre scenari, AddressSanitizer è stato in grado di rilevare
-tutte e tre le vulnerabilità, producendo output troppo estesi per essere riportati
-qui, ma che possono essere trovati nella repository GitHub del progetto. È comunque
-utile riportare delle considerazioni sugli output generati da AddressSanitizer:
+Riproducendo questi tre scenari, AddressSanitizer è stato in grado di rilevare tutte
+e tre le vulnerabilità, producendo output dettagliati e informativi per ciascun
+caso. Un esempio rappresentativo dell'output generato è mostrato nell'~\autoref{appendix:asan_output}
+(relativo al primo scenario di test).
+
+Le caratteristiche distintive degli output prodotti da AddressSanitizer includono:
 \begin{itemize}
   \item \textbf{Localizzazione delle vulnerabilità}: AddressSanitizer fornisce informazioni
     dettagliate sulla posizione esatta della vulnerabilità nel codice, indicando
@@ -296,75 +298,74 @@ utile riportare delle considerazioni sugli output generati da AddressSanitizer:
     allocato e lo stato della memoria (freed, allocated, etc.).
 \end{itemize}
 
-Queste informazioni sono estremamente utili per gli sviluppatori, poiché
-permettono di individuare rapidamente e risolvere le vulnerabilità nel codice, migliorando
+Queste informazioni sono estremamente utili per gli sviluppatori, poiché permettono
+di individuare rapidamente e risolvere le vulnerabilità nel codice, migliorando
 la sicurezza e l'affidabilità dell'applicazione.
 
 \subsubsection*{Valgrind}
-\label{subsubsec:valgrind} Valgrind\footnote{Sito: \url{http://valgrind.org/}}, a
-differenza di AddressSanitizer, non agisce direttamente sul codice sorgente, ma analizza
-l'esecuzione del programma compilato, monitorando l'uso della memoria e
-rilevando errori come buffer overflow, use-after-free e memory leak.
+\label{subsubsec:valgrind} Valgrind\footnote{Sito: \url{http://valgrind.org/}},
+a differenza di AddressSanitizer, non agisce direttamente sul codice sorgente,
+ma analizza l'esecuzione del programma compilato, monitorando l'uso della memoria
+e rilevando errori come buffer overflow, use-after-free e memory leak.
 
-Per utilizzare Valgrind, è necessario compilare il progetto senza
-AddressSanitizer, ma preferibilmente con le informazioni di debug attivate, in
-modo da ottenere un output più dettagliato e utile per la correzione dei bug (come
-per ASan). Il comando usato per questo progetto è:
-\begin{lstlisting}[language=bash, numbers=none]
+Per utilizzare Valgrind, è necessario compilare il progetto senza AddressSanitizer,
+ma preferibilmente con le informazioni di debug attivate, in modo da ottenere un
+output più dettagliato e utile per la correzione dei bug (come per ASan). Il
+comando usato per questo progetto è: \begin{lstlisting}[language=bash, numbers=none]
 clang -g -O0 -std=c11 -o file_tracker_valgrind main.c tracker_core.c utils.c
 \end{lstlisting}
 
-Dopo la compilazione, il programma può essere eseguito con Valgrind aggiungendo
-il seguente prefisso al comando di esecuzione del programma: \begin{lstlisting}[language=bash, numbers=none]
+Dopo la compilazione, il programma può essere eseguito con Valgrind aggiungendo il
+seguente prefisso al comando di esecuzione del programma:
+\begin{lstlisting}[language=bash, numbers=none]
 valgrind --tool=memcheck --leak-check=full --show-leak-kinds=all
 \end{lstlisting}
 
-Il comando specifica di utilizzare lo strumento \texttt{memcheck} di Valgrind,
-che è progettato per rilevare errori di memoria, e di abilitare il controllo completo
-dei leak di memoria (\texttt{--leak-check=full}), mostrando tutti i tipi di leak
-(\texttt{--show-leak-kinds=all}), anche se i tre scenari di test richiesti non richiedono
-necessariamente l'analisi dei leak di memoria.
+Il comando specifica di utilizzare lo strumento \texttt{memcheck} di Valgrind, che
+è progettato per rilevare errori di memoria, e di abilitare il controllo
+completo dei leak di memoria (\texttt{--leak-check=full}), mostrando tutti i
+tipi di leak (\texttt{--show-leak-kinds=all}), anche se i tre scenari di test
+richiesti non richiedono necessariamente l'analisi dei leak di memoria.
 
-Anche nel caso di Valgrind, sono stati usati gli stessi tre scenari di test per
-verificare le vulnerabilità selezionate, e i log prodotti sono simili a quelli di
-ASan: entrambi gli strumenti forniscono informazioni dettagliate sulla posizione
-delle vulnerabilità, con uno stack trace e informazioni sulla memoria coinvolta.
-Tuttavia, con ASan è più intuitivo, soprattutto per i principianti, capire la natura
-del bug rilevato, poiché Valgrind fornisce un output più tecnico e meno
-immediato.
+Anche nel caso di Valgrind, sono stati usati gli stessi tre scenari di test per verificare
+le vulnerabilità selezionate, e i log prodotti sono simili a quelli di ASan: entrambi
+gli strumenti forniscono informazioni dettagliate sulla posizione delle vulnerabilità,
+con uno stack trace e informazioni sulla memoria coinvolta. Tuttavia, con ASan è
+più intuitivo, soprattutto per i principianti, capire la natura del bug rilevato,
+poiché Valgrind fornisce un output più tecnico e meno immediato.
 
 Un'altra differenza importante tra i due strumenti è che Valgrind non blocca l'esecuzione
-nel momento in cui viene rilevato un problema, ma continua a eseguire il programma
-fino alla sua conclusione, producendo un report finale con tutti i problemi
-rilevati. Infatti, in tutti e tre gli scenari di test, Valgrind ha rilevato anche
-uno use-after-free (\texttt{main.c:127}), non facente parte dei tre casi di test
-previsti, che si verifica quando il programma prova a stampare il numero di file
-monitorati dopo aver liberato la memoria allocata per la struttura del tracker. AddressSanitizer,
-al contrario, interrompe l'esecuzione del programma non appena viene rilevato un
-problema, evitando ulteriori errori o comportamenti imprevisti.
+nel momento in cui viene rilevato un problema, ma continua a eseguire il
+programma fino alla sua conclusione, producendo un report finale con tutti i problemi
+rilevati. Infatti, in tutti e tre gli scenari di test, Valgrind ha rilevato
+anche uno use-after-free (\texttt{main.c:127}), non facente parte dei tre casi
+di test previsti, che si verifica quando il programma prova a stampare il numero
+di file monitorati dopo aver liberato la memoria allocata per la struttura del tracker.
+AddressSanitizer, al contrario, interrompe l'esecuzione del programma non appena
+viene rilevato un problema, evitando ulteriori errori o comportamenti imprevisti.
 
 \subsubsection*{Considerazioni sull'analisi dinamica}
-L'analisi dinamica del progetto File Tracker ha dimostrato l'efficacia di
-AddressSanitizer e Valgrind nel rilevare vulnerabilità di memory safety, confermando
-la loro utilità nella fase di testing e debugging. Entrambi gli strumenti hanno
-identificato le vulnerabilità previste, fornendo informazioni dettagliate sulla loro
-natura e posizione nel codice.
+L'analisi dinamica del progetto File Tracker ha dimostrato l'efficacia di AddressSanitizer
+e Valgrind nel rilevare vulnerabilità di memory safety, confermando la loro
+utilità nella fase di testing e debugging. Entrambi gli strumenti hanno identificato
+le vulnerabilità previste, fornendo informazioni dettagliate sulla loro natura e
+posizione nel codice.
 
 Tuttavia, è importante precisare che l'analisi dinamica ha dei limiti intrinseci
-come la sua dipendenza dai percorsi di esecuzione attivati durante i test. Le vulnerabilità
-vengono rilevate solo se il codice che le contiene viene effettivamente eseguito
-con input appropriati o in scenari specifici.
+come la sua dipendenza dai percorsi di esecuzione attivati durante i test. Le
+vulnerabilità vengono rilevate solo se il codice che le contiene viene
+effettivamente eseguito con input appropriati o in scenari specifici.
 
-Per esempio, è ragionevole ipotizzare che AddressSanitizer e Valgrind avrebbero
-rilevato tutti o quasi tutti i buffer overflow e gli out-of-bounds read/write
-presenti nel codice, se fossero stati attivati durante l'esecuzione tramite scenari
-di test appropriati. Un'eccezione invece, potrebbe essere rappresentata dal memory
-leak presente in \texttt{utils.c:14-18}, che si verifica in condizioni molto specifiche
-(il fallimento di una \texttt{malloc} dovuto a esaurimento della memoria o a limiti
-imposti dal sistema). Tuttavia, questo problema è stato comunque rilevato
-durante la fase di analisi statica, da parte di Clang e CppCheck.
+Per esempio, è ragionevole ipotizzare che AddressSanitizer e Valgrind avrebbero rilevato
+tutti o quasi tutti i buffer overflow e gli out-of-bounds read/write presenti nel
+codice, se fossero stati attivati durante l'esecuzione tramite scenari di test
+appropriati. Un'eccezione invece, potrebbe essere rappresentata dal memory leak
+presente in \texttt{utils.c:14-18}, che si verifica in condizioni molto
+specifiche (il fallimento di una \texttt{malloc} dovuto a esaurimento della
+memoria o a limiti imposti dal sistema). Tuttavia, questo problema è stato comunque
+rilevato durante la fase di analisi statica, da parte di Clang e CppCheck.
 
-Questo evidenzia ancora una volta come i diversi strumenti di analisi siano complementari
-tra loro e come tutte le tecniche di mitigazione viste possano essere combinate per
-rafforzare significativamente la capacità di rilevazione e correzione dei bug,
-compensando le limitazioni individuali di ciascun approccio.
+Questo evidenzia ancora una volta come i diversi strumenti di analisi siano
+complementari tra loro e come tutte le tecniche di mitigazione viste possano
+essere combinate per rafforzare significativamente la capacità di rilevazione e
+correzione dei bug, compensando le limitazioni individuali di ciascun approccio.

@@ -1,0 +1,58 @@
+\chapter{Output di ASan}
+\label{appendix:asan_output}
+
+\begin{lstlisting}[language={}, caption={Output di ASan sul primo caso di test}, numbers=none, inputencoding=utf8, basicstyle=\scriptsize\ttfamily]
+user@Ubuntu-24:~/unsafe-file-tracker$ ./build/file_tracker_asan ./$(printf 'asan/asan1/asan2/%.0s' {1..15})
+=================================================================
+==6599==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x511000000140 at pc 0x78d1b6aa7923 bp 0x7ffdcdca6210 sp 0x7ffdcdca59b8
+WRITE of size 258 at 0x511000000140 thread T0
+  #0 0x78d1b6aa7922 in strcpy ../../../../src/libsanitizer/asan/asan_interceptors.cpp:563
+  #1 0x610ce2af3f56 in tracker_init /home/user/unsafe-file-tracker/tracker_core.c:14
+  #2 0x610ce2af3ae7 in main /home/user/unsafe-file-tracker/main.c:78
+  #3 0x78d1b662a1c9 in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+  #4 0x78d1b662a28a in __libc_start_main_impl ../csu/libc-start.c:360
+  #5 0x610ce2af3544 in _start (/home/user/unsafe-file-tracker/build/file_tracker_asan+0x2544) (BuildId: ee27ffd6731191ce89228a5d9209e2d6640aba01)
+
+0x511000000140 is located 0 bytes after 256-byte region [0x511000000040,0x511000000140)
+allocated by thread T0 here:
+  #0 0x78d1b6afd9c7 in malloc ../../../../src/libsanitizer/asan/asan_malloc_linux.cpp:69
+  #1 0x610ce2af3f0f in tracker_init /home/user/unsafe-file-tracker/tracker_core.c:13
+  #2 0x610ce2af3ae7 in main /home/user/unsafe-file-tracker/main.c:78
+  #3 0x78d1b662a1c9 in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+  #4 0x78d1b662a28a in __libc_start_main_impl ../csu/libc-start.c:360
+  #5 0x610ce2af3544 in _start (/home/user/unsafe-file-tracker/build/file_tracker_asan+0x2544) (BuildId: ee27ffd6731191ce89228a5d9209e2d6640aba01)
+
+SUMMARY: AddressSanitizer: heap-buffer-overflow ../../../../src/libsanitizer/asan/asan_interceptors.cpp:563 in strcpy
+Shadow bytes around the buggy address:
+  0x510ffffffe80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x510fffffff00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x510fffffff80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x511000000000: fa fa fa fa fa fa fa fa 00 00 00 00 00 00 00 00
+  0x511000000080: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+=>0x511000000100: 00 00 00 00 00 00 00 00[fa]fa fa fa fa fa fa fa
+  0x511000000180: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x511000000200: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x511000000280: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x511000000300: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x511000000380: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+==6599==ABORTING
+\end{lstlisting}
