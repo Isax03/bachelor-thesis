@@ -45,7 +45,7 @@ vulnerabilità; e \textbf{Frama-C}, un analizzatore statico di codice C che si c
 sulla sicurezza della memoria e sulla rilevazione di vulnerabilità comuni.
 
 \subsubsection*{CppCheck}
-\label{subsubsec:cppcheck} L'analizzatore \texttt{cppcheck}\footnote{Sito: \url{https://cppcheck.sourceforge.io/}}
+L'analizzatore \texttt{cppcheck}\footnote{Sito: \url{https://cppcheck.sourceforge.io/}}
 è il primo strumento che è stato utilizzato per l'analisi statica del codice sorgente.
 Esso è in grado di rilevare errori di programmazione, vulnerabilità di sicurezza
 e altri problemi nel codice C/C++.
@@ -75,7 +75,7 @@ Per questo motivo, è consigliabile utilizzare più strumenti di analisi statica
 nei progetti reali, per ottenere risultati più completi e affidabili.
 
 \subsubsection*{Clang Static Analyzer}
-\label{subsubsec:clang} Un altro strumento di analisi statica utilizzato è \texttt{clang}\footnote{Sito:
+Un altro strumento di analisi statica utilizzato è \texttt{clang}\footnote{Sito:
 \url{https://clang.llvm.org/}}, che è un compilatore con funzionalità di analisi
 statica integrate. Esso, come \texttt{cppcheck}, è in grado di rilevare errori
 di programmazione e vulnerabilità di sicurezza nel codice C/C++.
@@ -105,7 +105,7 @@ diversi problemi nel codice:
 \end{itemize}
 
 \subsubsection*{Frama-C}
-\label{subsubsec:frama-c} L'ultimo strumento di analisi statica utilizzato sul progetto
+L'ultimo strumento di analisi statica utilizzato sul progetto
 File Tracker è \texttt{Frama-C}\footnote{Sito: \url{https://frama-c.com/}}, un
 analizzatore che mira a combinare più tecniche di analisi, fornite tramite plugin,
 per massimizzare l'eliminazione di bug e vulnerabilità nel codice C.
@@ -153,7 +153,7 @@ codice potrebbe essere a rischio.
     \hline
     \textbf{Bug/Vulnerabilità} & \textbf{Posizione}             & \textbf{CppCheck}              & \textbf{Clang}                 & \textbf{Frama-C}               \\
     \hline
-    Out-of-Bounds Write        & \texttt{main.c:27, 42}         & \cellcolor{red!20}Non Rilevato & \cellcolor{yellow!20}Parziale  & \cellcolor{red!20}Non Rilevato \\
+    Out-of-Bounds Write        & \texttt{main.c:27,42}         & \cellcolor{red!20}Non Rilevato & \cellcolor{yellow!20}Parziale  & \cellcolor{red!20}Non Rilevato \\
     \hline
     Use After Free             & \texttt{main.c:127}            & \cellcolor{red!20}Non Rilevato & \cellcolor{red!20}Non Rilevato & \cellcolor{green!20}Rilevato   \\
     \hline
@@ -219,7 +219,7 @@ mirati che permettono agli analizzatori di rilevare le seguenti vulnerabilità:
 \end{itemize}
 
 \subsubsection*{AddressSanitizer}
-\label{subsubsec:asan} AddressSanitizer\footnote{Sito: \url{https://github.com/google/sanitizers/wiki/AddressSanitizer}},
+AddressSanitizer\footnote{Sito: \url{https://github.com/google/sanitizers/wiki/AddressSanitizer}},
 come già menzionato nel~\autoref{cha:sdlc}, non si limita ad agire sul binario
 compilato, ma richiede l'accesso al codice sorgente, che verrà arricchito con i
 controlli necessari prima della compilazione. Infatti, il comando utilizzato per
@@ -276,7 +276,8 @@ e tre le vulnerabilità, producendo output dettagliati e informativi per ciascun
 caso. Un esempio rappresentativo dell'output generato è mostrato nell'~\autoref{appendix:asan_output}
 (relativo al primo scenario di test).
 
-Le caratteristiche distintive degli output prodotti da AddressSanitizer includono:
+Le caratteristiche distintive degli output prodotti da AddressSanitizer
+includono:
 \begin{itemize}
   \item \textbf{Localizzazione delle vulnerabilità}: AddressSanitizer fornisce informazioni
     dettagliate sulla posizione esatta della vulnerabilità nel codice, indicando
@@ -303,7 +304,7 @@ di individuare rapidamente e risolvere le vulnerabilità nel codice, migliorando
 la sicurezza e l'affidabilità dell'applicazione.
 
 \subsubsection*{Valgrind}
-\label{subsubsec:valgrind} Valgrind\footnote{Sito: \url{http://valgrind.org/}},
+Valgrind\footnote{Sito: \url{http://valgrind.org/}},
 a differenza di AddressSanitizer, non agisce direttamente sul codice sorgente,
 ma analizza l'esecuzione del programma compilato, monitorando l'uso della memoria
 e rilevando errori come buffer overflow, use-after-free e memory leak.
@@ -356,16 +357,27 @@ come la sua dipendenza dai percorsi di esecuzione attivati durante i test. Le
 vulnerabilità vengono rilevate solo se il codice che le contiene viene
 effettivamente eseguito con input appropriati o in scenari specifici.
 
-Per esempio, è ragionevole ipotizzare che AddressSanitizer e Valgrind avrebbero rilevato
-tutti o quasi tutti i buffer overflow e gli out-of-bounds read/write presenti nel
-codice, se fossero stati attivati durante l'esecuzione tramite scenari di test
-appropriati. Un'eccezione invece, potrebbe essere rappresentata dal memory leak
-presente in \texttt{utils.c:14-18}, che si verifica in condizioni molto
-specifiche (il fallimento di una \texttt{malloc} dovuto a esaurimento della
-memoria o a limiti imposti dal sistema). Tuttavia, questo problema è stato comunque
-rilevato durante la fase di analisi statica, da parte di Clang e CppCheck.
+In particolare, alcuni problemi noti presenti nel codice non sono stati segnalati
+da nessuno dei due strumenti durante i test, tra cui:
+\begin{itemize}
+  \item Out-of-Bounds Read(\texttt{utils.c:55}): lettura di un buffer oltre i
+    limiti definiti tramite \texttt{strcmp} su un puntatore con offset negativo.
 
-Questo evidenzia ancora una volta come i diversi strumenti di analisi siano
-complementari tra loro e come tutte le tecniche di mitigazione viste possano
-essere combinate per rafforzare significativamente la capacità di rilevazione e
-correzione dei bug, compensando le limitazioni individuali di ciascun approccio.
+  \item Dangling Pointer(\texttt{utils.c:69-76}): ritorno di un puntatore di un
+    buffer statico locale.
+
+  \item Dangling Pointer(\texttt{tracker\_core.c:56}): deallocazione di un
+    puntatore all'interno di una funzione, mentre il chiamante ne conserva ancora
+    una copia dangling.
+\end{itemize}
+
+Questi esempi dimostrano che, oltre a richiedere tempi di esecuzione più lunghi e
+a dipendere dagli input forniti, i tool DAST non sono in grado di rilevare tutte
+le vulnerabilità potenziali, soprattutto in assenza di una copertura esaustiva del
+codice o in presenza di bug più sottili.
+
+In conclusione, AddressSanitizer e Valgrind si confermano strumenti fondamentali
+per l'individuazione di bug legati alla gestione della memoria, ma non possono sostituire
+completamente l'analisi statica o altre forme di verifica. È quindi
+consigliabile integrare diverse tecniche di analisi per ottenere una copertura
+più completa e robusta del codice.
