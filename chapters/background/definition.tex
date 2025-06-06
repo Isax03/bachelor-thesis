@@ -7,7 +7,7 @@ per la maggior parte, definizioni di carattere più pratico, che si concentrano
 sull'assenza di determinati tipi di bug o comportamenti indesiderati legati alla
 gestione della memoria.
 
-Di seguito, verrà presentata sia una definizione formale di memory safety che una
+Di seguito, vengono presentate sia una definizione formale di memory safety che una
 definizione intuitiva derivante da aspetti più pratici, al fine di fornire una
 visione completa del concetto e delle sue implicazioni.
 
@@ -28,9 +28,9 @@ la sua esecuzione, preserva le seguenti proprietà:
       \item Le operazioni su una regione di memoria non influenzano dati al di fuori
         del proprio ``footprint'' (porzione accessibile).
 
-      \item I \textit{Frame Theorems} (Sezione 3), sviluppati e dimostrati nel paper
-        stesso, garantiscono che l'estensione dello heap iniziale con blocchi
-        non raggiungibili non alteri il comportamento del programma.
+      \item I \textit{Frame Theorems} (Sezione 3 del paper), sviluppati e dimostrati
+        nel paper stesso, garantiscono che l'estensione dello heap iniziale con
+        blocchi non raggiungibili non alteri il comportamento del programma.
     \end{itemize}
 
   \item \textbf{Non-interferenza} (Corollario 1):
@@ -60,9 +60,8 @@ descritti nel paper (Sezione 5).
 Tuttavia, questa definizione si basa su ipotesi idealizzate, come memoria
 illimitata, assenza di side-channel sfruttabili dagli attaccanti e assenza di aritmetica
 sui puntatori o di cast a interi, che lo rendono parzialmente distante dai
-linguaggi e dagli ambienti reali (Sezione 4). Per questo motivo una definizione più
-intuitiva e pratica è necessaria per comprendere il concetto di memory safety in
-contesti reali.
+linguaggi e dagli ambienti reali. Per questo motivo una definizione più intuitiva
+e pratica è necessaria per comprendere il concetto di memory safety in contesti reali.
 
 \subsection{Definizione pratica}
 \label{sec:practical_definition}
@@ -77,38 +76,39 @@ che descrivono un programma memory safe, come un'entità software che:
   \item non accede a locazioni di memoria al di fuori dello spazio di indirizzamento
     a esso allocato
 
-  \item non esegue istruzioni al di fuori del proprio codice compilato e linkato
+  \item non esegue istruzioni al di fuori del proprio codice compilato e ``linkato''
 
-  \item rispetta restrizioni di tipo e vincoli sulle conversioni di tipo e sugli
-    accessi agli array
+  \item rispetta restrizioni di tipo sulle operazioni, vincoli sulle conversioni
+    di tipo e accessi nei limiti degli array
 \end{itemize}
 
 Sulla base di questi principi, la memory safety può essere vista come la
 capacità di garantire che tutte le operazioni di accesso alla memoria (lettura,
 scrittura, esecuzione) avvengano in modo controllato e conforme alle intenzioni
-del programma. In altre parole, essa protegge il programma da errori come buffer
-overflow, \textit{dangling pointers} e \textit{use-after-free}, che possono
-causare violazioni di integrità o problemi di sicurezza.
+del programma. In altre parole, essa protegge il programma da errori come
+\textit{buffer overflow}, \textit{dangling pointers} e \textit{use-after-free}, che
+possono causare violazioni di integrità o problemi di sicurezza.
 
 Questa visione, pur derivando da un'analisi formale, si allinea con un'intuizione
 più diffusa: un programma è memory safe se è protetto da una serie di bug comuni
-e pericolosi relativi agli accessi in memoria. Questa prospettiva è spesso
-adottata in contesti divulgativi, dove la memory safety è intesa come l'assenza di
-specifiche classi di vulnerabilità anziché come una proprietà rigorosamente formale.
+e pericolosi relativi agli accessi in memoria. Questa prospettiva è spesso adottata
+in contesti divulgativi, dove la memory safety è intesa come l'assenza di
+specifiche classi di vulnerabilità anziché come una proprietà rigorosamente
+formale.
 
 % Memory Safety Continuum %
 \subsection{Memory safety come spettro continuo}
 \label{sec:continuum_definition}
 
-Sebbene le definizioni formale e pratica adottino approcci diversi, entrambe sottintendono
-che la memory safety non sia una proprietà assoluta o binaria, ma una condizione
-che può essere raggiunta in misura variabile.
+Sebbene le definizioni formale e pratica adottino approcci diversi, entrambe
+sottintendono che la memory safety non sia una proprietà assoluta o binaria, ma una
+condizione che può essere raggiunta in misura variabile.
 
-Questa idea viene esplicitamente sviluppata da \textit{Open Source Security
-Foundation} (OpenSSF)~\cite{memory_safety_continuum}, che propone di
-interpretare la memory safety come uno spettro continuo. In tale visione,
-sistemi e linguaggi possono offrire livelli differenti di protezione, a seconda delle
-garanzie fornite e delle mitigazioni adottate.
+Questa idea viene esplicitamente sviluppata dalla \textit{Open Source Security
+Foundation} (OpenSSF)~\cite{memory_safety_continuum}, che propone di interpretare
+la memory safety come uno spettro continuo. In tale visione, sistemi e linguaggi
+possono offrire livelli differenti di protezione, a seconda delle garanzie
+fornite e delle mitigazioni adottate.
 
-Questo approccio sottolinea come la memory safety possa essere rafforzata progressivamente,
-piuttosto che garantita in modo assoluto.
+Questo approccio sottolinea come la memory safety possa essere rafforzata
+progressivamente, piuttosto che garantita in modo assoluto.

@@ -23,9 +23,9 @@ utilizzare linguaggi moderni e progettati con meccanismi di sicurezza intrinseci
 la qualità del software dipende inevitabilmente dalle decisioni adottate dallo sviluppatore.
 Per questo motivo esistono linee guida consolidate, note come \textit{secure
 coding practice}, che aiutano a prevenire vulnerabilità legate alla gestione della
-memoria, come buffer overflow, dangling pointer o memory leak. L'applicazione di
-queste best practice consente di ridurre drasticamente il rischio di exploit e
-aumentare la robustezza del software, fin dalle sue fondamenta.
+memoria. L'applicazione di queste buone pratiche consente di ridurre
+drasticamente il rischio di exploit e aumentare la robustezza del software, fin dalle
+sue fondamenta.
 
 Una delle principali fonti di riferimento è la \textbf{OWASP Secure Coding
 Practices Quick Reference Guide}~\cite{owasp_best_practices}, che fornisce una checklist
@@ -69,24 +69,25 @@ sicurezza della memoria:
 
   \item \textbf{Sovrascrivere i dati sensibili prima della deallocazione}: quando
     si gestiscono dati come password o chiavi crittografiche, è consigliabile
-    sovrascrivere la memoria per evitare che rimangano accessibili in chiaro.
+    sovrascrivere la memoria per evitare che rimangano accessibili in chiaro (zeroization).
 \end{itemize}
 
 Oltre alle regole già formalizzate, risulta opportuno considerare anche altre
 buone pratiche non sempre trattate esplicitamente, ma che possono contribuire a prevenire
-i bug descritti nella ~\autoref{sec:vulnerability_types}. Un esempio significativo
-è il controllo degli \textbf{integer overflow} durante il calcolo degli indici
-di un array: un valore che supera il massimo rappresentabile da un intero può produrre
-un indice errato, portando a un accesso fuori dai limiti della memoria.
+i bug descritti nella~\autoref{sec:vulnerability_types}. Un esempio
+significativo è il controllo degli \textbf{integer overflow} durante il calcolo degli
+indici di un array: un valore che supera il massimo rappresentabile da un intero
+può produrre un indice errato, portando a un accesso fuori dai limiti della memoria.
 
 A complemento della guida proposta da \textit{OWASP}, i \textbf{SEI CERT Coding
 Standard}~\cite{cert_coding_standard} offrono una raccolta di regole dettagliate,
-spesso accompagnate da esempi di codice non conforme (\textit{non-compliant}) e dalle
-relative soluzioni corrette (\textit{compliant}). Le regole di SEI CERT sono organizzate
-in base al linguaggio di programmazione e risultano molto più numerose rispetto a
-quelle di OWASP, rendendo difficile presentarle tutte in questo documento. Tuttavia,
-per fornire un'idea della loro struttura e approccio, viene di seguito presentato
-un esempio di regola SEI CERT relativa alla gestione sicura degli array in C:
+spesso accompagnate da esempi di codice non conforme (\textit{non-compliant}) e
+dalle relative soluzioni corrette (\textit{compliant}). Le regole di SEI CERT
+sono organizzate in base al linguaggio di programmazione e risultano molto più
+numerose rispetto a quelle di OWASP, rendendo difficile presentarle tutte in questo
+documento. Tuttavia, per fornire un'idea della loro struttura e approccio, viene
+di seguito presentato un esempio di regola SEI CERT relativa alla gestione
+sicura degli array in C:
 
 \begin{quote}
   \textbf{ARR30-C\protect\footnote{\url{https://wiki.sei.cmu.edu/confluence/display/c/ARR30-C.+Do+not+form+or+use+out-of-bounds+pointers+or+array+subscripts},
@@ -99,10 +100,10 @@ un esempio di regola SEI CERT relativa alla gestione sicura degli array in C:
 
   \bigskip
   \noindent
-  Il ~\autoref{lst:non-compliant} mostra un esempio di codice che viola questa regola,
-  effettuando il controllo solo sul limite superiore dell'array (e non su quello
-  inferiore), mentre il ~\autoref{lst:compliant} mostra una versione conforme
-  che verifica entrambi i limiti prima di accedere all'array.
+  Il~\autoref{lst:non-compliant} mostra un esempio di codice che viola questa
+  regola, effettuando il controllo solo sul limite superiore dell'array (e non
+  su quello inferiore), mentre il~\autoref{lst:compliant} mostra una versione
+  conforme che verifica entrambi i limiti prima di accedere all'array.
 \end{quote}
 
 \begin{minipage}[t]{0.4\textwidth}
@@ -137,39 +138,39 @@ int *f(int index) {
 
 \medskip
 \noindent
-Queste pratiche, se correttamente implementate, costituiscono un primo livello di
-difesa essenziale nella costruzione di software robusto e sicuro, specialmente
+Queste pratiche, se correttamente implementate, costituiscono un primo livello
+di difesa essenziale nella costruzione di software robusto e sicuro, specialmente
 in linguaggi notoriamente non memory safe come C e C++.
 
 \subsection{Librerie}
 \label{sec:librerie}
 
-Per migliorare la memory safety nei progetti software, risulta spesso
-vantaggioso affidarsi a librerie progettate per offrire un livello di controllo
-e protezione superiore rispetto a quello garantito dalle funzioni standard del
-linguaggio. Questo aspetto è particolarmente rilevante nei linguaggi storicamente
-non memory safe, come C e C++, dove l'allocazione manuale e la gestione esplicita
-della memoria espongono facilmente a vulnerabilità come buffer overflow, use-after-free
+Per migliorare la memory safety nei progetti software, risulta spesso vantaggioso
+affidarsi a librerie progettate per offrire un livello di controllo e protezione
+superiore rispetto a quello garantito dalle funzioni standard del linguaggio.
+Questo aspetto è particolarmente rilevante nei linguaggi storicamente non memory
+safe, come C e C++, dove l'allocazione manuale e la gestione esplicita della
+memoria espongono facilmente a vulnerabilità come buffer overflow, use-after-free
 o double free.
 
-Nel corso degli anni sono state sviluppate numerose librerie che affrontano
-direttamente queste problematiche. Alcune di esse, come \textit{safe-malloc}\protect\footnote{Repository
+Nel corso degli anni sono state sviluppate numerose librerie che affrontano direttamente
+queste problematiche. Alcune di esse, come \textit{safe-malloc}\protect\footnote{Repository
 GitHub: \url{https://github.com/cjhasselkus/safe-malloc}} o \textit{xmalloc}\protect\footnote{Repository
-GitHub: \url{https://github.com/rosingh/xmalloc}}, fungono da wrapper per le funzioni
-di allocazione (\texttt{malloc()}, \texttt{free()}, \texttt{realloc()}), implementando
-controlli interni per verificare la correttezza delle operazioni e rilevare anomalie
-durante l'utilizzo della heap. Altre, come \textit{safestringlib}\protect\footnote{Repository
+GitHub: \url{https://github.com/rosingh/xmalloc}}, fungono da wrapper per le
+funzioni di allocazione (\texttt{malloc()}, \texttt{free()}, \texttt{realloc()}),
+implementando controlli interni per verificare la correttezza delle operazioni e
+rilevare anomalie durante l'utilizzo della heap. Altre, come \textit{safestringlib}\protect\footnote{Repository
 GitHub: \url{https://github.com/intel/safestringlib}}, sostituiscono le funzioni
 standard per la manipolazione delle stringhe con versioni più sicure (\texttt{strcpy\_s},
 \texttt{memset\_s}, etc.), che includono verifiche esplicite sulla lunghezza dei
 buffer per evitare scritture fuori dai limiti. La libreria \textit{Sailfish Pool}\protect\footnote{Repository
-GitHub: \url{https://github.com/dyne/sailfish-pool}}, invece, introduce tecniche
-come la preallocazione di pool di memoria e la zeroization dei dati prima della deallocazione,
+GitHub: \url{https://github.com/dyne/sailfish-pool}} invece, introduce tecniche come
+la preallocazione di pool di memoria e la zeroization dei dati prima della deallocazione,
 particolarmente utili in contesti in cui la privacy e la protezione dei dati
 sono essenziali.
 
 La necessità di rafforzare la sicurezza della memoria non riguarda
-esclusivamente i linguaggi più esposti. Anche ambienti più moderni e progettati per
+esclusivamente i linguaggi più esposti: anche ambienti più moderni e progettati per
 prevenire questi errori, come Rust, offrono librerie che fungono da meccanismi di
 enforcement aggiuntivi. Un esempio significativo è rappresentato da \texttt{zeroize}\protect\footnote{Documentazione:
 \url{https://docs.rs/zeroize/latest/zeroize/}}, una libreria che consente di
@@ -230,34 +231,34 @@ nel contesto specifico dell'applicazione. Questo è dovuto al fatto che gli anal
 non riescono sempre a comprendere il contesto completo in cui il codice viene eseguito,
 portando a segnalazioni errate.
 
-Un esempio pratico può essere il seguente:
-
-\begin{lstlisting}[language=C]
-  #include <stdlib.h>
-  #include <string.h>
-  void copy_string(const char *input) {
-    char buffer[64];
-    if (strlen(input) < sizeof(buffer)){
-      strcpy(buffer, input); // Sicuro: controllato prima
-   }
-  }
-\end{lstlisting}
-
-In questo caso, l'analizzatore statico potrebbe segnalare un potenziale buffer
-overflow, nonostante il controllo esplicito della lunghezza della stringa di input.
-Questo potrebbe essere dovuto al fatto che l'analizzatore non tiene conto del
-legame semantico tra la condizione \texttt{if} e l'istruzione \texttt{strcpy}. Altri
-tool invece potrebbero adottare strategie conservative che segnalano sempre funzioni
-come \texttt{strcpy} come potenzialmente pericolose.
+Un esempio pratico può essere quello del~\autoref{lst:copy_string}: in questo caso,
+l'analizzatore statico potrebbe segnalare un potenziale buffer overflow, nonostante
+il controllo esplicito della lunghezza della stringa di input. Questa situazione
+si verifica, ad esempio, quando l'analizzatore non tiene conto del legame
+semantico tra la condizione \texttt{if} e l'istruzione \texttt{strcpy}. Altri tool
+invece potrebbero adottare strategie conservative che segnalano sempre funzioni come
+\texttt{strcpy} come potenzialmente pericolose.
 
 Allo stesso modo, l'analisi statica può anche portare a \textbf{falsi negativi},
 ossia la mancata rilevazione di problemi reali, specialmente per vulnerabilità
 complesse che dipendono da configurazioni di runtime o interazioni specifiche
 con input esterni non prevedibili staticamente.
 
-In conclusione, integrare l'analisi statica nel processo di sviluppo è una pratica
-altamente raccomandata, che può rilevare dimenticanze o falle introdotte dallo
+In sintesi, integrare l'analisi statica nel processo di sviluppo è una pratica altamente
+raccomandata, che può rilevare dimenticanze o falle introdotte dallo
 sviluppatore e dalle librerie usate, contribuendo al rafforzamento della sicurezza.
 Tuttavia, è fondamentale considerare i suoi limiti e continuare a migliorare il software
 anche nelle successive fasi del ciclo di vita, ovvero durante il testing, la distribuzione
 e la manutenzione.
+
+\bigskip
+\begin{lstlisting}[language=C, caption={Copia sicura di una stringa con \texttt{strcpy()}}, label={lst:copy_string}]
+#include <stdlib.h>
+#include <string.h>
+void copy_string(const char *input) {
+  char buffer[64];
+  if (strlen(input) < sizeof(buffer)){
+    strcpy(buffer, input); // Sicuro: controllato prima
+  }
+}
+\end{lstlisting}

@@ -1,4 +1,5 @@
 \documentclass[a4paper, 11pt, titlepage, twoside, openany]{book}
+% \documentclass[a4paper, 11pt, titlepage, oneside]{book}
 \usepackage{plain}
 \usepackage{setspace}
 
@@ -49,22 +50,11 @@
 % List
 \usepackage{enumitem}
 
-% Citation as superscript (replaces [N] notation)
-% \usepackage[superscript]{cite}
-
-% TODO - START: DELETE ME
-\usepackage{lipsum}
-% TODO - END: DELETE ME
-
-\lstset{
-  basicstyle=\ttfamily\small,
-  breaklines=true,
-  backgroundcolor=\color{gray!10},
-  frame=single,
-  rulecolor=\color{gray},
-  captionpos=b,
-  columns=fullflexible,
-}
+\lstset{ basicstyle=\ttfamily\small, breaklines=true, backgroundcolor=
+\color{gray!10}
+, frame=single, rulecolor=
+\color{gray}
+, captionpos=b, columns=fullflexible, }
 
 \lstset{ language=C, basicstyle=\footnotesize\ttfamily, % <== più piccolo di \small
 keywordstyle=
@@ -79,24 +69,18 @@ keywordstyle=
 showstringspaces=false, captionpos=b % caption sotto il codice
 }
 
-\lstdefinestyle{bash}{
-  language=bash,
-  basicstyle=\footnotesize\ttfamily,
-  keywordstyle=\color{blue}\bfseries,
-  commentstyle=\color{green!60!black}\itshape,
-  stringstyle=\color{red},
-  numberstyle=\tiny\color{gray},
-  numbers=left,
-  frame=single,
-  breaklines=true,
-  breakatwhitespace=false,
-  showstringspaces=false,
-  captionpos=b,
-  morekeywords={sudo, chmod, chown, grep, awk, sed, find, xargs, tar, gzip, curl, wget},
-  morecomment=[l]{\#},
-  morestring=[b]",
-  morestring=[b]'
-}
+\lstdefinestyle{bash}{ language=bash, basicstyle=\footnotesize\ttfamily,
+keywordstyle=
+\color{blue}
+\bfseries, commentstyle=
+\color{green!60!black}
+\itshape, stringstyle=
+\color{red}
+, numberstyle=\tiny
+\color{gray}
+, numbers=left, frame=single, breaklines=true, breakatwhitespace=false, showstringspaces=false,
+captionpos=b, morekeywords={sudo, chmod, chown, grep, awk, sed, find, xargs, tar, gzip, curl, wget},
+morecomment=[l]{\#}, morestring=[b]", morestring=[b]' }
 
 \lstdefinestyle{changes_in_c}{ language=C, moredelim=**[is][
 \color{green!40!black}

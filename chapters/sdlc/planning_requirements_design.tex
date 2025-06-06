@@ -3,22 +3,23 @@
 
 Le fasi preliminari del Software Development Life Cycle (SDLC) comprendono l'analisi
 dei requisiti, la pianificazione e il design del software. Sebbene queste attività
-non prevedano ancora la scrittura effettiva del codice, rivestono un ruolo
-cruciale nella definizione delle proprietà di sicurezza dell'intero sistema, incluse
-le garanzie di memory safety.
+non prevedano ancora la scrittura effettiva del codice, rivestono comunque un
+ruolo importante nella definizione delle proprietà di sicurezza dell'intero
+sistema, incluse le garanzie di memory safety.
 
 Una corretta impostazione in queste fasi consente di identificare precocemente i
 rischi legati all'uso della memoria e di predisporre adeguate strategie di mitigazione.
-Ad esempio, in un progetto che prevede l'implementazione di algoritmi crittografici,
-è fondamentale orientare le scelte tecniche (come linguaggi e librerie) verso
-strumenti che riducano al minimo la possibilità di errori di memoria. Una gestione
-errata in questo ambito può esporre l'applicazione a vulnerabilità gravi, come
-la possibilità di decrittare dati sensibili o di compromettere l'integrità del
-sistema.
+Ad esempio, nello sviluppo di applicazioni che gestiscono dati sensibili degli utenti,
+come sistemi di autenticazione o gestione di informazioni personali, è importante
+valutare fin dall'inizio quali requisiti di sicurezza siano necessari per prevenire
+vulnerabilità legate alla memoria. Una pianificazione attenta consente di
+selezionare strumenti, linguaggi e librerie che offrano protezioni adeguate,
+riducendo il rischio di errori che potrebbero compromettere la riservatezza o l'integrità
+dei dati.
 
-In particolare, già in fase di progettazione è possibile (e raccomandabile) condurre
+In particolare, già in fase di pianificazione è possibile (e raccomandabile) condurre
 un'analisi dei requisiti di sicurezza, esplicitando obiettivi orientati alla
-memory safety. Analogamente, durante la fase di pianificazione, è utile prevedere
+memory safety. Analogamente, durante la fase di progettazione, è utile prevedere
 misure difensive trasversali all'intero ciclo di vita, come l'uso di ambienti
 \textit{sandbox} durante il deployment per limitare i danni derivanti da eventuali
 vulnerabilità di memoria. Questi requisiti e decisioni guideranno poi tutte le
@@ -77,9 +78,9 @@ includere:
     distinguere i difetti memory-unsafe da altri tipi di bug
 \end{itemize}
 
-L'adozione di tali roadmap rappresenta un passo fondamentale verso la
-realizzazione di sistemi software più sicuri e resilienti, riducendo significativamente
-il rischio di vulnerabilità legate alla gestione della memoria.
+L'adozione di tali roadmap rappresenta un primo passo verso la realizzazione di
+sistemi software più sicuri e resilienti, riducendo significativamente il rischio
+di vulnerabilità legate alla gestione della memoria.
 
 \subsection{Scelta del Linguaggio}
 \label{sec:linguaggio}
@@ -112,10 +113,10 @@ nella pratica, ma può comunque fornire spunti per migliorare la sicurezza della
 e dare una panoramica dei linguaggi memory safe più diffusi.
 
 \paragraph{Criteri di confronto}
-Per offrire una panoramica concreta, è stata sviluppata la ~\autoref{tab:linguaggi_memory_safety},
+Per offrire una panoramica concreta, è stata sviluppata la~\autoref{tab:linguaggi_memory_safety},
 in collaborazione con i ricercatori del Centro per la CyberSecurity di FBK\footnotemark,
-che riassume alcune proprietà rilevanti per la memory safety. I criteri
-selezionati includono:
+che riassume alcune proprietà rilevanti per la memory safety. I criteri selezionati
+includono:
 \begin{itemize}
   \item \textbf{Controllo dei limiti} (Bounds Check), per prevenire accessi fuori
     dai confini di array;
@@ -126,8 +127,8 @@ selezionati includono:
   \item \textbf{Modello di proprietà e prestito} (Ownership/Borrowing), centrale
     in Rust per evitare accessi concorrenti e use-after-free;
 
-  \item \textbf{Sicurezza di tipo}, per ridurre i rischi di casting improprio o accessi
-    illegali alla memoria;
+  \item \textbf{Sicurezza di tipo} (Type Safety), per ridurre i rischi di casting
+    improprio o accessi illegali alla memoria;
 
   \item \textbf{\textit{Zeroization} della memoria}, ovvero la capacità del linguaggio
     o delle librerie di pulire automaticamente dati sensibili dopo l'uso; utile
@@ -143,10 +144,10 @@ selezionati includono:
     sviluppo;
 
   \item \textbf{Ecosistema e librerie}, riferito alla disponibilità e affidabilità
-    delle librerie disponibili; un ecosistema maturo offre componenti ben
-    testate, riducendo la necessità di implementazioni custom potenzialmente vulnerabili
-    e influenzando positivamente la sicurezza del progetto, nonostante non
-    riguardi direttamente la memory safety;
+    di librerie esterne; un ecosistema maturo offre componenti ben testate, riducendo
+    la necessità di implementazioni custom potenzialmente vulnerabili e influenzando
+    positivamente la sicurezza del progetto, nonostante non riguardi
+    direttamente la memory safety;
 \end{itemize}
 
 \footnotetext{\url{https://cs.fbk.eu/}}
@@ -175,13 +176,13 @@ selezionati includono:
 \end{table}
 
 \footnotetext{Supportata tramite il crate \texttt{zeroize}, mantenuto dal team
-\texttt{RustCrypto} e ampiamente usato per la gestione sicura di dati sensibili.}
+\texttt{RustCrypto} e ampiamente usato per la gestione sicura di dati sensibili}
 
-\bigskip
+\newpage
 \noindent
 
-Come si può osservare dalla tabella, emergono pattern interessanti che riflettono
-le diverse filosofie di design dei linguaggi analizzati.
+Come si può osservare dalla tabella, emergono pattern interessanti che
+riflettono le diverse filosofie di design dei linguaggi analizzati.
 
 \begin{itemize}
   \item \textbf{Rust e Go} si distinguono come i linguaggi più orientati alla
@@ -208,8 +209,8 @@ le diverse filosofie di design dei linguaggi analizzati.
     per mitigare i rischi intrinseci.
 \end{itemize}
 
-La scelta finale del linguaggio dovrebbe quindi considerare il trade-off tra
-controllo, performance, sicurezza e produttività, valutando attentamente il contesto
-specifico del progetto, le competenze del team e i requisiti di sicurezza. In molti
-casi, un approccio ibrido che combini linguaggi diversi per componenti
-specifiche può rappresentare la soluzione ottimale.
+La scelta finale del linguaggio dovrebbe quindi considerare il trade-off tra controllo,
+performance, sicurezza e produttività, valutando attentamente il contesto
+specifico del progetto, le competenze del team e i requisiti di sicurezza. In
+molti casi, un approccio ibrido che combini linguaggi diversi per componenti specifiche
+può rappresentare la soluzione ottimale.
