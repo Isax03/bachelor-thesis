@@ -18,42 +18,41 @@ soprattutto in modo combinato, per ridurre al minimo le possibilità di attacco.
 \subsection{Protezioni a livello di memoria}
 \label{sec:memory-protection}
 
-Le protezioni a livello di memoria sono tecniche fondamentali per prevenire gli
-attacchi che sfruttano vulnerabilità come buffer overflow, use-after-free e altre
-forme di corruzione della memoria. Queste tecniche mirano a rendere più
-difficile per un attaccante eseguire codice arbitrario o manipolare il flusso di
-esecuzione di un programma attraverso la corruzione dei dati.
+Il primo tipo di protezione trattato in questa sezione riguarda i meccanismi di
+difesa a livello di memoria. Queste tecniche mirano a ostacolare l'abuso di vulnerabilità
+come buffer overflow, use-after-free o corruzione dello stack, agendo sulla disposizione,
+i permessi e l'integrità delle aree di memoria durante l'esecuzione.
 
 Queste mitigazioni, implementate sia a livello di compilatore che di sistema operativo,
 rappresentano una prima linea di difesa essenziale contro molte classi di
-attacchi. I paragrafi seguenti esplorano le principali mitigazioni implementate in
-questo ambito.
+attacchi.
+
+I paragrafi seguenti illustrano le principali tecniche implementate in questo
+ambito: ASLR, DEP e Stack Canary.
 
 \paragraph{Address Space Layout Randomization (ASLR)}
-L'ASLR è una tecnica difensiva che mira a rendere imprevedibile la disposizione
-in memoria delle principali aree di un processo, come stack, heap e librerie
-condivise, al fine di ostacolare attacchi che si basano su indirizzi statici, e
-quindi prevedibili.
+L'ASLR è una tecnica difensiva che mira a rendere imprevedibile la disposizione in
+memoria delle principali aree di un processo, come stack, heap e librerie condivise,
+al fine di ostacolare attacchi che si basano su indirizzi statici, e quindi prevedibili.
 
-Nonostante introduca entropia a ogni avvio del processo, la sua efficacia risulta
-limitata sulle architetture a 32 bit. Lo studio di Shacham et al.~\cite{aslr_effectiveness}
-dimostra che in questi sistemi l'aleatorietà degli indirizzi per alcune regioni di
-memoria può ridursi a soli 16 bit, rendendo possibili attacchi \textit{brute-force}
+Nonostante introduca entropia a ogni avvio del processo, la sua efficacia
+risulta limitata sulle architetture a 32 bit. Lo studio di Shacham et al.~\cite{aslr_effectiveness}
+dimostra che in questi sistemi l'aleatorietà degli indirizzi per alcune regioni
+di memoria può ridursi a soli 16 bit, rendendo possibili attacchi \textit{brute-force}
 in grado di compromettere le difese in pochi minuti.
 
 Per questo motivo, è cruciale valutare l'architettura target del software: l'ASLR
 offre protezione più robusta sui sistemi a 64 bit, dove lo spazio d'indirizzamento
-più ampio consente una dispersione significativa delle aree memorizzate. La tecnica
-rimane comunque raccomandata come misura fondamentale, specialmente se integrata
+più ampio consente una dispersione significativa delle aree memorizzate. La
+tecnica rimane comunque raccomandata come misura fondamentale, specialmente se integrata
 con altre contromisure discusse in questa sezione, per aumentare sostanzialmente
 la resilienza contro exploit noti.
 
 \paragraph{Data Execution Prevention (DEP)\protect\footnote{Fonte: \url{https://www.datasunrise.com/knowledge-center/dep-data-execution-prevention/},
 ultimo accesso: 27 maggio 2025}}
 La DEP è una misura di sicurezza che consiste nel contrassegnare specifiche aree
-di memoria, come lo stack e l'heap, come non eseguibili. L'obiettivo è impedire l'esecuzione
-di codice arbitrario iniettato in regioni di memoria destinate esclusivamente alla
-conservazione di dati.
+di memoria, come non eseguibili. L'obiettivo è impedire l'esecuzione di codice arbitrario
+iniettato in regioni di memoria destinate esclusivamente alla conservazione di dati.
 
 Questa protezione è particolarmente efficace contro attacchi come i buffer overflow,
 nei quali un attaccante tenta di sovrascrivere l'indirizzo di ritorno di una
@@ -99,7 +98,7 @@ garantire che il codice eseguito sia quello previsto e che non sia stato manomes
 o alterato in alcun modo.
 
 \paragraph{Control Flow Integrity (CFI)}
-è una tecnica avanzata di protezione che mira a impedire che un attaccante possa
+È una tecnica avanzata di protezione che mira a impedire che un attaccante possa
 alterare il flusso di controllo di un programma attraverso vulnerabilità come i
 buffer overflow o gli use-after-free. L'idea alla base della CFI è quella di assicurarsi
 che durante l'esecuzione, un programma possa compiere solo i salti di controllo
@@ -141,15 +140,18 @@ rappresenta una misura di sicurezza efficace contro molte classi di attacchi.~\c
 Questa è la prima delle due funzionalità di sicurezza \textit{``architecture-dependent''}
 presenti in questa sezione. La MTE infatti, è una feature hardware introdotta da
 Google e ARM (v8.5+) che mira a rilevare e prevenire errori di accesso alla memoria,
-come buffer overflow e use-after-free, attraverso l'uso di tag di memoria.
+come buffer overflow e use-after-free, attraverso l'uso di \textit{tag di
+memoria}.
 
-Parlando ad alto livello, la Memory Tagging Extension funziona associando un tag
-a ogni area di memoria allocata. Questi tag sono utilizzati per identificare la proprietà
-e la validità dell'area di memoria. Quando un programma tenta di accedere a un'area
-di memoria, il processore verifica se il tag associato all'area corrisponde al tag
-previsto per quell'operazione. Se i tag non corrispondono, il processore genera un'eccezione,
-impedendo l'accesso non autorizzato e riducendo il rischio di exploit.
+A livello concettuale, la Memory Tagging Extension associa un tag (etichetta) a ogni
+area di memoria allocata. Questi tag sono utilizzati per identificare la
+proprietà e la validità dell'area di memoria. Quando un programma tenta di accedere
+a un'area di memoria, il processore verifica se il tag associato all'area
+corrisponde al tag previsto per quell'operazione. Se i tag non corrispondono, il
+processore genera un'eccezione, impedendo l'accesso non autorizzato e riducendo il
+rischio di exploit.
 
+\bigskip
 La MTE può lavorare in tre modalità differenti:
 \begin{itemize}
   \item \textbf{Synchronous}: il processore genera un'eccezione quando viene rilevato
@@ -159,7 +161,7 @@ La MTE può lavorare in tre modalità differenti:
 
   \item \textbf{Asynchronous}: il processore continua l'esecuzione quando viene rilevato
     un accesso non autorizzato, rimandando la generazione dell'eccezione fino al
-    più vicino ingresso nel kernel e solo a quel punto, il processo viene terminato.
+    più vicino ingresso nel kernel, e solo a quel punto il processo viene terminato.
     Questa modalità è ottimizzata per le prestazioni piuttosto che per l'accuratezza
     dei report di bug, ed è raccomandata per l'uso in produzione su codice ben testato.
 
@@ -170,24 +172,24 @@ La MTE può lavorare in tre modalità differenti:
 \end{itemize}
 
 \paragraph{Pointer Authentication Code (PAC)\protect\footnote{https://developer.arm.com/documentation/109576/0100/Pointer-Authentication-Code/Introduction-to-PAC}}
-La seconda funzionalità di sicurezza ``architecture-dependent'' è il PAC. Anche
-essa sviluppata da ARM (v8.3-A+), PAC è una tecnologia nata per prevenire in modo
+La seconda funzionalità di sicurezza ``architecture-dependent'' è il PAC. Anche essa
+sviluppata da ARM (v8.3-A+), PAC è una tecnologia nata per prevenire in modo
 efficace attacchi di tipo ROP o buffer overflow.
 
-PAC si basa sull'idea di associare una firma crittografica a ogni puntatore utilizzato
-nel programma. Questa firma viene calcolata in modo tale che qualsiasi modifica
-al puntatore stesso o alla memoria a cui punta, renda impossibile verificare la firma.
-In questo modo, se un attaccante tenta di manipolare un puntatore per eseguire codice
-malevolo, la firma non corrisponderà più e il processore genererà un'eccezione, impedendo
-l'esecuzione del codice non autorizzato.
+PAC si basa sull'idea di associare una firma crittografica a ogni puntatore
+utilizzato nel programma. Questa firma viene calcolata in modo tale che qualsiasi
+modifica al puntatore stesso o alla memoria a cui punta, renda impossibile
+verificare la firma. In questo modo, se un attaccante tenta di manipolare un
+puntatore per eseguire codice malevolo, la firma non corrisponderà più e il processore
+genererà un'eccezione, impedendo l'esecuzione del codice non autorizzato.
 
 PAC presenta due fasi principali:
 \begin{itemize}
   \item \textbf{Firma}: quando un puntatore viene creato, il processore calcola
     una firma basata sul valore del puntatore, su una chiave segreta mantenuta nel
-    processore e su un contesto opzionale(es. il valore dello stack pointer). La
-    firma viene poi salvata nei bit inutilizzati del puntatore stesso per
-    ridurre i tempi di verifica.
+    processore e su un contesto opzionale (es. il valore dello stack pointer). La
+    firma viene poi salvata nei bit inutilizzati del puntatore stesso per ridurre
+    i tempi di verifica.
 
   \item \textbf{Verifica}: quando un puntatore viene utilizzato, il processore
     verifica la firma associata al puntatore. Se la firma è valida, l'accesso
@@ -196,22 +198,22 @@ PAC presenta due fasi principali:
 
 \bigskip
 \noindent
-Entrambe le tecnologie di ARM, MTE e PAC, sono hardware-assisted e l'hoverhead introdotto
-è molto basso, rendendole adatte per l'uso in produzione. Tuttavia, è importante
-notare che queste tecnologie sono specifiche per l'architettura ARM e quindi non
-sempre disponibili come mitigazioni per rafforzare la memory safety.
+Entrambe le tecnologie sviluppate da ARM (MTE e PAC), sono hardware-assisted e l'hoverhead
+introdotto è molto basso, rendendole adatte per l'uso in produzione. Tuttavia, è
+importante notare che queste tecnologie sono specifiche per l'architettura ARM e
+quindi non sempre disponibili come mitigazioni per rafforzare la memory safety.
 
 \subsection{Isolamento del software}
 \label{sec:isolation}
 
-Il concetto di \textbf{isolamento} si riferisce alla separazione tra componenti
-software con l'obiettivo di limitare l'impatto di eventuali compromissioni. L'idea
-alla base è quella di confinare il danno in un'area ben definita, impedendo che
-un exploit possa propagarsi ad altri componenti del sistema.
+Il concetto di \textbf{isolamento} si riferisce alla separazione tra componenti software
+con l'obiettivo di limitare l'impatto di eventuali compromissioni. L'idea alla
+base è quella di confinare il danno in un'area ben definita, impedendo che un exploit
+possa propagarsi ad altri componenti del sistema.
 
-In ambito memory safety, l'isolamento rappresenta una misura efficace per mitigare
-vulnerabilità che, pur essendo presenti, non riescono a compromettere l'intero sistema
-grazie all'introduzione di barriere architetturali o software.
+In ambito memory safety, l'isolamento rappresenta una misura efficace per
+mitigare vulnerabilità che, pur essendo presenti, non riescono a compromettere l'intero
+sistema grazie all'introduzione di barriere architetturali o software.
 
 Le principali tecniche di isolamento includono:
 \begin{itemize}
@@ -235,7 +237,7 @@ Le principali tecniche di isolamento includono:
 \end{itemize}
 
 Un esempio concreto dell'efficacia dell'isolamento lo troviamo nel caso reale di
-WebAudio in Google Chrome, già menzionato nella ~\autoref{sec:vulnerability_types}.
+WebAudio in Google Chrome, già menzionato nella~\autoref{sec:vulnerability_types}.
 L'uso della sandbox del browser impediva all'attaccante di ottenere l'accesso
 completo al sistema, confinando l'esecuzione di codice arbitrario all'interno dell'ambiente
 ``sandboxed''.~\cite{webaudio_uaf}

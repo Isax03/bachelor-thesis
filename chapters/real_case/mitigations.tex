@@ -2,9 +2,9 @@
 \label{sec:mitigation_techniques}
 
 Una volta identificate le vulnerabilità presenti nel progetto File Tracker, si
-procede ora con l'applicazione delle tecniche di mitigazione illustrate nella~\autoref{sec:development}.
+procede con l'applicazione delle tecniche di mitigazione illustrate nella~\autoref{sec:development}.
 
-In questa fase verranno considerati due approcci distinti: da un lato, l'adozione
+In questa fase vengono considerati due approcci distinti: da un lato, l'adozione
 delle best practice per una gestione sicura della memoria (\autoref{sec:best-practices-codice});
 dall'altro, l'impiego di librerie esterne progettate per rafforzare la sicurezza
 delle operazioni su stringhe e memoria (\autoref{sec:librerie}). Entrambi gli approcci
@@ -17,6 +17,7 @@ vulnerabilità potrebbero essere mitigate efficacemente tramite un refactoring m
 anche senza ricorrere a strumenti esterni. Tuttavia, per finalità didattiche, l'utilizzo
 di librerie verrà comunque applicato e comparato con le best practice.
 
+\bigskip
 \begin{lstlisting}[language=C, caption={Codice originale vulnerabile}, label={lst:unsafe}, style=changes_in_c]
 file_tracker_t* tracker_init(const char* directory, const char* log_file) {
   file_tracker_t* tracker = malloc(sizeof(file_tracker_t));
@@ -110,14 +111,25 @@ seguenti librerie:
 
 Il procedimento di mitigazione in questo caso, è meno immediato rispetto alle best
 practice, poiché non consiste nella semplice riscrittura del codice, ma richiede
-l'installazione delle librerie. Nel contesto di questo esempio, questa configurazione
-non impiega molto tempo, ma in progetti reali e più complessi, l'integrazione delle
+l'installazione delle librerie. Nel contesto di questo esempio, la configurazione
+non occupa troppo tempo ma, in progetti reali e più complessi, l'integrazione delle
 librerie potrebbe richiedere uno sforzo non trascurabile.
 
 Per quanto riguarda la libreria \texttt{xmalloc}, è sufficiente scaricare un file
 header \texttt{xmalloc.h} e un file di implementazione \texttt{xmalloc.c} e includerli
 nel progetto. La libreria \texttt{safestringlib} invece, richiede l'installazione
 tramite alcuni comandi disponibili nel repository ufficiale.
+
+\medskip
+Oltre all'installazione, un altro aspetto da considerare, per quanto riguarda le
+librerie, è la compilazione del codice: infatti ci sono librerie esterne che
+richiedono l'aggiunta di flag specifici per la compilazione. In questo caso specifico,
+è necessario aggiungere il seguente testo ai comandi di compilazione: \begin{lstlisting}[language=bash, numbers=none]
+./lib/xmalloc/xmalloc.c -lsafestring-shared
+\end{lstlisting}
+Questa parte include infatti, il file \texttt{xmalloc.c} (salvato nella cartella
+\texttt{lib/xmalloc/}) e collega la libreria\\\texttt{safestringlib}, con la
+flag che indica al compilatore di cercare la libreria durante la fase di linking.
 
 Dopo aver installato le librerie, il codice è stato modificato come mostrato nel~\autoref{lst:safe-libraries}.
 \begin{lstlisting}[language=C, caption={Codice mitigato (librerie)}, label={lst:safe-libraries}, style=changes_in_c]
@@ -149,16 +161,13 @@ file_tracker_t* tracker_init(const char* directory, const char* log_file) {
 }
 \end{lstlisting}
 
-Oltre all'installazione, un altro aspetto da considerare, per quanto riguarda le
-librerie, è la compilazione del codice: infatti ci sono librerie esterne che richiedono
-l'aggiunta di flag specifici per la compilazione. In questo caso specifico, è necessario
-aggiungere il seguente testo ai comandi di compilazione:
-\begin{lstlisting}[language=bash]
-./lib/xmalloc/xmalloc.c -lsafestring-shared
-\end{lstlisting}
-Questa parte include infatti, il file \texttt{xmalloc.c} (salvato nella cartella
-\texttt{lib/xmalloc/}) e collega la libreria \texttt{safestringlib}, con la flag
-che indica al compilatore di cercare la libreria durante la fase di linking.
+Le modifiche principali consistono nell'utilizzo delle funzioni \texttt{xmalloc}
+e \texttt{xfree} per la gestione della memoria, che gestiscono automaticamente
+gli errori di allocazione e liberazione della memoria, e nell'uso della funzione
+\texttt{strncpy\_s} della libreria \texttt{safestringlib}, che permette di
+copiare le stringhe in modo simile a \texttt{strncpy}, ma con controlli
+automatici sui limiti e con la terminazione esplicita della stringa destinazione,
+restituendo codici specifici per ogni caso di errore.
 
 \subsection*{Test delle mitigazioni}
 \label{sec:test-mitigations}
@@ -168,9 +177,10 @@ dinamica, si può procedere a riprodurre lo stesso scenario per verificare che l
 funzione \texttt{tracker\_init} si comporti correttamente dopo le mitigazioni.
 
 Eseguendo quindi gli stessi comandi utilizzati in precedenza, sia per AddressSanitizer
-che per Valgrind, si ottiene lo stesso risultato: non sono state rilevate anomalie
-nell'esecuzione del programma e, grazie ai controlli implementati, il programma termina
-correttamente in modo controllato, senza crash.
+che per Valgrind, si ottiene un risultato simile per entrambi gli analizzatori: non
+vengono rilevate anomalie nell'esecuzione del programma e, grazie ai controlli
+implementati, il programma termina correttamente in modo controllato, senza
+crash.
 
 \subsection*{Confronto tra le due soluzioni}
 \label{sec:comparison-case-study}
@@ -183,10 +193,10 @@ Partendo dalle best practice, un aspetto sicuramente positivo è il fatto che pe
 di mantenere il codice sotto il pieno controllo dello sviluppatore. Inoltre, questo
 approccio non richiedel'integrazione di componenti esterni, rendendo il progetto
 più leggero, facilmente portabile e privo di dipendenze aggiuntive. D'altra
-parte, questo approccio richiede una maggiore attenzione e competenza da parte dello
-sviluppatore, poiché è facile introdurre errori anche banali. Un altro aspetto negativo
-riguarda la manutenzione: essa può risultare più onerosa nel tempo, soprattutto se
-non esistono linee guida interne chiare e consolidate.
+parte, richiede però una maggiore attenzione e competenza da parte dello sviluppatore,
+poiché è facile introdurre errori anche banali. Un altro aspetto negativo riguarda
+la manutenzione: essa può risultare più onerosa nel tempo, soprattutto se non esistono
+linee guida interne chiare e consolidate.
 
 Al contrario, l'utilizzo di librerie esterne introduce una forma di astrazione: molte
 delle operazioni a rischio sono delegate a componenti progettati appositamente per

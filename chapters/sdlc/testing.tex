@@ -68,9 +68,9 @@ significativo dell'esecuzione (fino a 10--50 volte più lento)\footnote{Manuale
 Valgrind: \url{https://valgrind.org/docs/manual/manual-core.html\#manual-core.whatdoes},
 ultimo accesso: 24 maggio 2025}.
 
-\paragraph{Limiti e considerazioni pratiche.}
-Nonostante la loro efficacia, gli strumenti di analisi dinamica presentano
-alcune limitazioni:
+\paragraph{Limiti e considerazioni pratiche}
+Nonostante la loro efficacia, gli strumenti di analisi dinamica presentano alcune
+limitazioni:
 
 \begin{itemize}
   \item Il loro funzionamento dipende fortemente dalla qualità e dalla copertura
@@ -82,36 +82,32 @@ alcune limitazioni:
   \item Introdurre strumentazione dinamica può alterare il comportamento temporale
     del programma, rendendo alcuni bug meno riproducibili
 
-  \item Per via dell'elevato overhead computazionale, questi strumenti sono
-    generalmente utilizzati esclusivamente in fase di \textit{testing} e non in ambienti
-    di produzione
-
   \item Il comportamento del software potrebbe essere influenzato dall'ambiente in
-    cui viene eseguito (es. architettura HW, OS, versioni del runtime, etc.). Per
-    questo motivo, è importante testare il software in ambienti quanto più
-    simili a quello di produzione
+    cui viene eseguito (es. architettura hardware, sistema operativo, etc.). Per
+    questo motivo, è importante eseguire tali strumenti di analisi in ambienti quanto
+    più simili a quello di produzione
 \end{itemize}
 
-Nonostante ciò, l'analisi dinamica rappresenta un complemento fondamentale all'analisi
-statica, permettendo di coprire una gamma più ampia di possibili vulnerabilità legate
-alla memoria. Nell'ambito di un approccio difensivo multilivello, l'impiego congiunto
-di più tecniche di testing aumenta significativamente la probabilità di intercettare
-errori prima del rilascio del software.
+Ciononostante, l'analisi dinamica rappresenta un complemento fondamentale all'analisi
+statica, permettendo di coprire una gamma più ampia di possibili vulnerabilità
+legate alla memoria. Nell'ambito di un approccio difensivo multilivello, l'impiego
+congiunto di più tecniche di testing aumenta significativamente la probabilità
+di intercettare errori prima del rilascio del software.
 
 \subsection{Fuzzing}
 \label{sec:fuzzing}
 
-Il \textit{fuzzing} (o fuzz testing) è una tecnica di testing automatizzato che consiste
-nel generare una grande quantità di input, spesso casuali o leggermente mutati a
-partire da casi validi, con l'obiettivo di far emergere comportamenti anomali,
-crash o vulnerabilità nel programma in esecuzione. Sebbene non sia stato concepito
-esclusivamente per individuare problemi di gestione della memoria, il fuzzing è
-particolarmente efficace nel rivelare condizioni di undefined behavior, spesso sintomatiche
-di bug memory-unsafe.
+Il \textit{fuzzing} (o fuzz testing) è una tecnica di testing automatizzato che
+consiste nel generare una grande quantità di input, spesso casuali o leggermente
+mutati a partire da casi validi, con l'obiettivo di far emergere comportamenti
+anomali, crash o vulnerabilità nel programma in esecuzione. Sebbene non sia
+stato concepito esclusivamente per individuare problemi di gestione della
+memoria, il fuzzing è particolarmente efficace nel rivelare condizioni di undefined
+behavior, spesso sintomatiche di bug memory unsafe.
 
 \smallskip
-Ci sono diversi tipi di fuzzing, ma in generale si possono distinguere due
-categorie principali:
+Ci sono diversi tipi di fuzzing, ma in generale si possono distinguere due categorie
+principali:
 
 \begin{itemize}
   \item \textbf{Fuzzing basato su generazione:} in questo approccio, gli input vengono
@@ -126,22 +122,22 @@ categorie principali:
     poiché sfrutta la conoscenza preesistente di un input valido.
 \end{itemize}
 
-Gran parte dei tool di fuzzing non identificano direttamente gli errori di memoria,
-ma si limitano a segnalare i crash o le anomalie comportamentali, associandoli agli
-input che li hanno provocati. Per rendere l'analisi più mirata ed efficace, i cosiddetti
-\textit{fuzzer} vengono comunemente usati in combinazione con strumenti di
-analisi dinamica come i \textit{sanitizer}, in grado di diagnosticare in modo
-più preciso gli errori sottostanti.
+Gran parte dei tool di fuzzing non identificano direttamente gli errori di
+memoria, ma si limitano a segnalare i crash o le anomalie comportamentali,
+associandoli agli input che li hanno provocati. Per rendere l'analisi più mirata
+ed efficace, i cosiddetti \textit{fuzzer} vengono comunemente usati in combinazione
+con strumenti di analisi dinamica come i \textit{sanitizer}, in grado di diagnosticare
+in modo più preciso gli errori sottostanti.
 
 Questa mancanza ha portato a sviluppare anche strumenti di fuzzing \textit{multi-purpose},
-che combinano le funzionalità di fuzzing con altre tecniche di testing. Un esempio
-è AFL++~\cite{afl_plus_plus} che, tra le sue funzionalità, include anche un AddressSanitizer
-(QASan~\cite{qasan}) integrato, in grado di rilevare errori di memoria durante
-il fuzzing.
+che combinano le funzionalità di fuzzing con altre tecniche di testing. Un
+esempio è AFL++~\cite{afl_plus_plus} che, tra le sue funzionalità, include anche
+un AddressSanitizer (QASan~\cite{qasan}) integrato, in grado di rilevare errori di
+memoria durante il fuzzing.
 
 Il fuzzing descritto finora è chiamato \textit{black-box fuzzing}, in quanto non
-richiede alcuna conoscenza del codice sorgente o della logica interna del
-programma sottoposto a test. Esistono anche approcci \textit{white-box} che, invece,
+richiede alcuna conoscenza del codice sorgente o della logica interna del programma
+sottoposto a test. Esistono anche approcci \textit{white-box}, i quali
 analizzano il codice sorgente per generare input più mirati e specifici, che riescono
 ad esplorare \textit{``l'albero di esecuzione''} del programma in modo più
 efficiente. Un esempio è la cosiddetta \textit{Dynamic Symbolic Execution} (DSE),
@@ -149,27 +145,29 @@ che consiste nell'eseguire il programma con input simbolici, riuscendo ad
 esplorare tutte le possibili esecuzioni e a generare input che portano a
 percorsi specifici.
 
-\paragraph{Limiti del fuzzing.}
+\paragraph{Limiti del fuzzing}
 Nonostante l'efficacia del fuzzing nel rilevare vulnerabilità, questa tecnica
 presenta alcune limitazioni significative:
 
 \begin{itemize}
-  \item \textbf{Configurazione complessa:} L'impostazione corretta degli
-    strumenti di fuzzing richiede competenze specifiche, soprattutto quando si tratta
-    di definire formati di input validi o vincoli per applicazioni complesse.
+  \item \textbf{Configurazione complessa:} la configurazione degli strumenti di
+    fuzzing può risultare non immediata, soprattutto quando è necessario definire
+    formati di input validi o vincoli per applicazioni complesse.
 
-  \item \textbf{Consumo di risorse:} Il fuzzing efficace richiede l'esecuzione
-    di milioni di test, con conseguente elevato consumo di tempo e risorse computazionali.
-    Questo può rendere il processo proibitivo per progetti con risorse limitate.
+  \item \textbf{Consumo di risorse:} il fuzzing efficace richiede l'esecuzione
+    di migliaia (se non milioni) di test, con conseguente elevato consumo di tempo
+    e risorse computazionali. Questo può rendere il processo proibitivo per
+    progetti con risorse limitate.
 
-  \item \textbf{Esplosione combinatoria:} Negli approcci più sofisticati come la
+  \item \textbf{Esplosione combinatoria:} negli approcci più sofisticati come la
     DSE, l'esplorazione di tutti i possibili percorsi di esecuzione può crescere
     esponenzialmente, rendendo impossibile una copertura completa per
     applicazioni di medie o grandi dimensioni.
 
-  \item \textbf{Coverage limitata:} Nonostante gli avanzamenti nelle tecniche di
+  \item \textbf{Coverage limitata:} nonostante gli avanzamenti nelle tecniche di
     generazione degli input, il fuzzing potrebbe non raggiungere porzioni di codice
-    che richiedono condizioni di ingresso molto specifiche.
+    che richiedono condizioni di ingresso molto specifiche o dipendenti da aspetti
+    diversi dal semplice input.
 \end{itemize}
 
 Per mitigare questi problemi, un approccio pragmatico consiste nell'integrare il

@@ -6,14 +6,14 @@
 
 Dopo aver illustrato nei capitoli precedenti le principali vulnerabilità legate alla
 gestione della memoria e le relative tecniche di mitigazione, questo capitolo
-presenta un caso studio pratico volto a dimostrare come i concetti teorici
-possano essere applicati concretamente a un progetto reale.
+presenta un caso studio pratico, volto a dimostrare come i concetti teorici possano
+essere applicati concretamente a un progetto reale.
 
 \subsection*{Metodologia di selezione del progetto}
 
-L'obiettivo iniziale era quello di selezionare un progetto open source scritto in
-C o C++, per analizzarlo e rafforzarne la memory safety mediante strumenti
-statici e dinamici. Tuttavia, durante la fase di selezione, sono emersi dei problemi
+L'obiettivo iniziale era quello di selezionare un progetto open source scritto
+in C o C++, per analizzarlo e rafforzarne la memory safety mediante strumenti statici
+e dinamici. Tuttavia, durante la fase di selezione, sono emersi dei problemi
 ricorrenti:
 \begin{itemize}
   \item I progetti realmente utilizzati in produzione risultavano già abbastanza
@@ -23,19 +23,20 @@ ricorrenti:
     per rappresentare scenari realistici
 \end{itemize}
 
-Per superare questo dilemma, si è optato per un approccio intermedio: la generazione
-di un progetto realistico ma deliberatamente vulnerabile. A tal fine, è stato impiegato
-\textit{GitHub Copilot}\footnote{\url{https://github.com/features/copilot}} in modalità
-\textit{Agent}, richiedendo esplicitamente la creazione di un'applicazione plausibile,
-scritta in C, che includesse vulnerabilità comuni di memory safety a fini educativi
-e dimostrativi. Per trasparenza, il prompt utilizzato è disponibile in appendice
-(\autoref{appendix:prompt}).
+Per superare questo dilemma, si è optato per un approccio intermedio: la
+generazione di un progetto realistico ma deliberatamente vulnerabile. A tal fine,
+è stato impiegato \textit{GitHub Copilot}\footnote{\url{https://github.com/features/copilot}}
+in modalità \textit{Agent}, richiedendo esplicitamente la creazione di un'applicazione
+plausibile, scritta in C, che includesse vulnerabilità comuni di memory safety a
+fini educativi e dimostrativi. Per trasparenza, il prompt utilizzato è
+disponibile in appendice (\autoref{appendix:prompt}).
 
 \subsection*{Descrizione del progetto}
 
 Il progetto risultante è un \textbf{file tracker}, ovvero un'applicazione a riga
-di comando che monitora una directory specificata, rilevando in tempo reale la creazione,
-modifica e cancellazione di file. Il programma supporta le seguenti funzionalità:
+di comando che monitora una directory specificata, rilevando in tempo reale la
+creazione, modifica e cancellazione di file. Il programma supporta le seguenti
+funzionalità:
 \begin{itemize}
   \item Filtraggio dei file mediante pattern
 
@@ -46,12 +47,12 @@ modifica e cancellazione di file. Il programma supporta le seguenti funzionalit�
   \item Modalità verbosa per debug
 \end{itemize}
 
-Nonostante la sua apparente semplicità, il codice è strutturato in più moduli e
-include numerosi bug intenzionali che rappresentano vulnerabilità tipiche del
-linguaggio C.
+Nonostante la sua apparente semplicità, il codice è strutturato in più moduli e include
+numerosi bug intenzionali che rappresentano vulnerabilità tipiche del linguaggio
+C.
 
-Nella \autoref{tab:tracker_vulnerabilities} è riportato un elenco delle
-vulnerabilità identificate, con le relative posizioni nel codice.
+Nella \autoref{tab:tracker_vulnerabilities} è riportato un elenco delle vulnerabilità
+identificate, con le relative posizioni nel codice.
 
 \begin{table}[htbp]
   \centering
@@ -68,7 +69,7 @@ vulnerabilità identificate, con le relative posizioni nel codice.
     \hline
     Out-of-Bounds Read         & \texttt{utils.c:55}            \\
     \hline
-    Dangling Pointer           & \texttt{utils.c:69-76}           \\
+    Dangling Pointer           & \texttt{utils.c:69-76}         \\
     \hline
     Buffer Overflow            & \texttt{tracker\_core.c:14,18} \\
     \hline
@@ -89,8 +90,8 @@ vulnerabilità identificate, con le relative posizioni nel codice.
   \label{tab:tracker_vulnerabilities}
 \end{table}
 
-Una descrizione dettagliata di ciascuna vulnerabilità è disponibile nel file
-\texttt{README.md} del progetto\footnote{Progetto GitHub: \url{https://github.com/Isax03/unsafe-file-tracker}}.
+Una descrizione dettagliata di ciascuna vulnerabilità è disponibile nel file \texttt{README.md}
+del progetto\footnote{Progetto GitHub: \url{https://github.com/Isax03/unsafe-file-tracker}}.
 
 \begin{quote}
   \textbf{Nota:} È importante sottolineare che, in un contesto reale di progettazione
@@ -109,29 +110,30 @@ Una descrizione dettagliata di ciascuna vulnerabilità è disponibile nel file
 
 Nel corso del capitolo vengono illustrati:
 \begin{itemize}
-  \item I principali difetti rilevati tramite analisi statica e dinamica
+  \item I principali difetti rilevati tramite analisi statica
 
-  \item Le correzioni apportate per eliminare le vulnerabilità
+  \item Tre scenari di test che scatenano il rilevamento di errori con l'analisi
+    dinamica
 
-  \item Il confronto tra l'esecuzione pre e post-mitigazione, utilizzando
-    strumenti di verifica
+  \item Il confronto tra l'applicazione di best practices e l'uso di librerie per
+    mitigare la vulnerabilità del primo scenario
 \end{itemize}
 
-Questo caso studio rappresenta quindi una dimostrazione concreta dell'approccio proposto
-nella tesi: identificare, analizzare e mitigare vulnerabilità di memoria lungo il
-ciclo di vita del software, anche in assenza di exploit attivi.
+Questo caso studio rappresenta quindi una dimostrazione concreta dell'approccio
+proposto nella tesi: identificare, analizzare e mitigare vulnerabilità di
+memoria lungo il ciclo di vita del software, anche in assenza di exploit attivi.
 
 \begin{quote}
   \textbf{Dettagli dell'ambiente:} Il progetto è stato analizzato, compilato ed eseguito
   su un sistema \textit{Linux} (Ubuntu 24.04.2 LTS). Di conseguenza, tutti i risultati
   presentati fanno riferimento a tale ambiente.
 
-  I tool utilizzati sono generalmente disponibili anche su altri sistemi operativi,
-  inclusi altri ambienti Linux, macOS e in parte Windows. Tuttavia, non si garantisce
-  il corretto funzionamento né la piena compatibilità su piattaforme diverse,
-  poiché potrebbero sussistere differenze nei compilatori, nelle librerie di sistema
-  o nei meccanismi di gestione della memoria che influenzano l'efficacia degli strumenti
-  e la riproducibilità dei risultati.
+  Nonostante i tool utilizzati siano generalmente disponibili anche su altri sistemi
+  operativi, non si garantisce il corretto funzionamento né la piena
+  compatibilità su piattaforme diverse, poiché potrebbero sussistere differenze nei
+  compilatori, nelle librerie di sistema o nei meccanismi di gestione della
+  memoria che influenzano l'efficacia degli strumenti e la riproducibilità dei
+  risultati.
 \end{quote}
 
 \input{chapters/real_case/initial_analysis.tex}
