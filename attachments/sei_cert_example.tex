@@ -1,0 +1,49 @@
+\chapter{Esempio SEI CERT}
+\label{appendix:sei_cert}
+
+\begin{quote}
+  \textbf{ARR30-C\protect\footnote{\url{https://wiki.sei.cmu.edu/confluence/display/c/ARR30-C.+Do+not+form+or+use+out-of-bounds+pointers+or+array+subscripts},
+  ultimo accesso: 26 maggio 2025}}: \textit{Do not form or use out-of-bounds
+  pointers or array subscripts}
+
+  Questa regola richiede che ogni accesso ad array avvenga esclusivamente all'interno
+  dei limiti dichiarati, evitando la formazione di puntatori che puntino oltre
+  la fine dell'array o prima del suo inizio.
+
+  \noindent
+  Il~\autoref{lst:non-compliant} mostra un esempio di codice che viola questa
+  regola, effettuando il controllo solo sul limite superiore dell'array (e non
+  su quello inferiore), mentre il~\autoref{lst:compliant} mostra una versione
+  conforme che verifica entrambi i limiti prima di accedere all'array.
+\end{quote}
+
+
+\begin{minipage}[t]{0.4\textwidth}
+  \begin{lstlisting}[language=C, caption={Codice \textit{Non-Compliant}}, label={lst:non-compliant}]
+enum { TABLESIZE = 100 };
+
+static int table[TABLESIZE];
+
+int *f(int index) {
+  if (index < TABLESIZE) {
+    return table + index;
+  }
+  return NULL;
+}
+\end{lstlisting}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.5\textwidth}
+  \begin{lstlisting}[language=C, caption={Codice \textit{Compliant}}, label={lst:compliant}, style=changes_in_c]
+enum { TABLESIZE = 100 };
+
+static int table[TABLESIZE];
+
+int *f(int index) {
+  if (@index >= 0 &&@ index < TABLESIZE) {
+    return table + index;
+  }
+  return NULL;
+}
+\end{lstlisting}
+\end{minipage}

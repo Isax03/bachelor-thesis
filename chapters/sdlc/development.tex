@@ -8,32 +8,33 @@ e qualità del software.
 
 Viene inoltre esaminata l'importanza di utilizzare librerie che implementano funzioni
 e metodi per rafforzare la memory safety anche in linguaggi considerati generalmente
-non memory safe, come C e C++.
+non memory safe.
 
 Infine, viene trattata l'analisi statica del codice, una tecnica che permette di
-rilevare vulnerabilità e problemi di qualità del codice senza la necessità di
-eseguire il programma.
+rilevare vulnerabilità e problemi di qualità del codice senza la necessità di eseguire
+il programma.
 
 \subsection{Best Practice nel Codice}
 \label{sec:best-practices-codice}
 
-La creazione di software con elevati standard di memory safety inizia dalle decisioni
-prese durante la fase di implementazione del codice. Per quanto si possano
+La creazione di software con elevati standard di memory safety inizia dalle
+decisioni prese durante la fase di implementazione del codice. Per quanto si possano
 utilizzare linguaggi moderni e progettati con meccanismi di sicurezza intrinseci,
-la qualità del software dipende inevitabilmente dalle decisioni adottate dallo sviluppatore.
-Per questo motivo esistono linee guida consolidate, note come \textit{secure
-coding practice}, che aiutano a prevenire vulnerabilità legate alla gestione della
-memoria. L'applicazione di queste buone pratiche consente di ridurre
-drasticamente il rischio di exploit e aumentare la robustezza del software, fin dalle
-sue fondamenta.
+la qualità del software dipende inevitabilmente dalle decisioni adottate dallo
+sviluppatore. Per questo motivo esistono linee guida consolidate, note come
+\textit{secure coding practice}, che aiutano a prevenire vulnerabilità legate
+alla gestione della memoria. L'applicazione di queste buone pratiche consente di
+ridurre drasticamente il rischio di exploit e aumentare la robustezza del software
+fin dalle sue fondamenta, costituendo un primo livello di difesa essenziale, specialmente
+in linguaggi notoriamente non memory safe.
 
 Una delle principali fonti di riferimento è la \textbf{OWASP Secure Coding
-Practices Quick Reference Guide}~\cite{owasp_best_practices}, che fornisce una checklist
-focalizzata su vari aspetti della sicurezza del software, tra cui la gestione
+Practices Quick Reference Guide}\cite{owasp_best_practices}, che fornisce una
+checklist focalizzata su vari aspetti della sicurezza del software, tra cui la gestione
 della memoria.
 
-Di seguito si riportano alcune delle principali best practice relative alla
-sicurezza della memoria:
+Di seguito si riportano alcune delle principali best practice relative alla sicurezza
+della memoria:
 
 \begin{itemize}
   \item \textbf{Validare input e output da fonti non affidabili}: tutti i dati esterni
@@ -72,167 +73,111 @@ sicurezza della memoria:
     sovrascrivere la memoria per evitare che rimangano accessibili in chiaro (zeroization).
 \end{itemize}
 
-Oltre alle regole già formalizzate, risulta opportuno considerare anche altre
-buone pratiche non sempre trattate esplicitamente, ma che possono contribuire a prevenire
-i bug descritti nella~\autoref{sec:vulnerability_types}. Un esempio
-significativo è il controllo degli \textbf{integer overflow} durante il calcolo degli
-indici di un array: un valore che supera il massimo rappresentabile da un intero
-può produrre un indice errato, portando a un accesso fuori dai limiti della memoria.
+Oltre alle regole già formalizzate, risulta opportuno considerare anche altre buone
+pratiche non sempre trattate esplicitamente, ma che possono contribuire a
+prevenire i bug descritti nella~\autoref{sec:vulnerability_types}. Un esempio significativo
+è il controllo degli \textbf{integer overflow} durante il calcolo degli indici
+di un array: un valore che supera il massimo rappresentabile da un intero può produrre
+un indice errato, portando a un accesso fuori dai limiti della memoria.
 
 A complemento della guida proposta da \textit{OWASP}, i \textbf{SEI CERT Coding
-Standard}~\cite{cert_coding_standard} offrono una raccolta di regole dettagliate,
+Standard}\cite{cert_coding_standard} offrono una raccolta di regole dettagliate,
 spesso accompagnate da esempi di codice non conforme (\textit{non-compliant}) e
 dalle relative soluzioni corrette (\textit{compliant}). Le regole di SEI CERT
 sono organizzate in base al linguaggio di programmazione e risultano molto più
 numerose rispetto a quelle di OWASP, rendendo difficile presentarle tutte in questo
 documento. Tuttavia, per fornire un'idea della loro struttura e approccio, viene
-di seguito presentato un esempio di regola SEI CERT relativa alla gestione
-sicura degli array in C:
-
-\begin{quote}
-  \textbf{ARR30-C\protect\footnote{\url{https://wiki.sei.cmu.edu/confluence/display/c/ARR30-C.+Do+not+form+or+use+out-of-bounds+pointers+or+array+subscripts},
-  ultimo accesso: 26 maggio 2025}}: \textit{Do not form or use out-of-bounds
-  pointers or array subscripts}
-
-  Questa regola richiede che ogni accesso ad array avvenga esclusivamente all'interno
-  dei limiti dichiarati, evitando la formazione di puntatori che puntino oltre
-  la fine dell'array o prima del suo inizio.
-
-  \bigskip
-  \noindent
-  Il~\autoref{lst:non-compliant} mostra un esempio di codice che viola questa
-  regola, effettuando il controllo solo sul limite superiore dell'array (e non
-  su quello inferiore), mentre il~\autoref{lst:compliant} mostra una versione
-  conforme che verifica entrambi i limiti prima di accedere all'array.
-\end{quote}
-
-\begin{minipage}[t]{0.4\textwidth}
-  \begin{lstlisting}[language=C, caption={Codice \textit{Non-Compliant}}, label={lst:non-compliant}]
-enum { TABLESIZE = 100 };
-
-static int table[TABLESIZE];
-
-int *f(int index) {
-  if (index < TABLESIZE) {
-    return table + index;
-  }
-  return NULL;
-}
-\end{lstlisting}
-\end{minipage}
-\hfill
-\begin{minipage}[t]{0.5\textwidth}
-  \begin{lstlisting}[language=C, caption={Codice \textit{Compliant}}, label={lst:compliant}, style=changes_in_c]
-enum { TABLESIZE = 100 };
-
-static int table[TABLESIZE];
-
-int *f(int index) {
-  if (@index >= 0 &&@ index < TABLESIZE) {
-    return table + index;
-  }
-  return NULL;
-}
-\end{lstlisting}
-\end{minipage}
-
-\medskip
-\noindent
-Queste pratiche, se correttamente implementate, costituiscono un primo livello
-di difesa essenziale nella costruzione di software robusto e sicuro, specialmente
-in linguaggi notoriamente non memory safe come C e C++.
+riportato nell'\autoref{appendix:sei_cert} un esempio di regola SEI CERT
+relativa alla gestione sicura degli array in C.
 
 \subsection{Librerie}
 \label{sec:librerie}
 
-Per migliorare la memory safety nei progetti software, risulta spesso vantaggioso
-affidarsi a librerie progettate per offrire un livello di controllo e protezione
-superiore rispetto a quello garantito dalle funzioni standard del linguaggio.
-Questo aspetto è particolarmente rilevante nei linguaggi storicamente non memory
-safe, come C e C++, dove l'allocazione manuale e la gestione esplicita della
-memoria espongono facilmente a vulnerabilità come buffer overflow, use-after-free
+Per migliorare la memory safety nei progetti software, risulta spesso
+vantaggioso affidarsi a librerie progettate per offrire un livello di controllo
+e protezione superiore rispetto a quello garantito dalle funzioni standard del
+linguaggio. Questo aspetto è particolarmente rilevante nei linguaggi storicamente
+non memory safe, come C e C++, dove l'allocazione manuale e la gestione esplicita
+della memoria espongono facilmente a vulnerabilità come buffer overflow, use-after-free
 o double free.
 
-Nel corso degli anni sono state sviluppate numerose librerie che affrontano direttamente
-queste problematiche. Alcune di esse, come \textit{safe-malloc}\protect\footnote{Repository
-GitHub: \url{https://github.com/cjhasselkus/safe-malloc}} o \textit{xmalloc}\protect\footnote{Repository
-GitHub: \url{https://github.com/rosingh/xmalloc}}, fungono da wrapper per le
-funzioni di allocazione (\texttt{malloc()}, \texttt{free()}, \texttt{realloc()}),
-implementando controlli interni per verificare la correttezza delle operazioni e
-rilevare anomalie durante l'utilizzo della heap. Altre, come \textit{safestringlib}\protect\footnote{Repository
+Nel corso degli anni sono state sviluppate numerose librerie che affrontano
+direttamente queste problematiche. Alcune di esse, come \textit{xmalloc}\footnote{Repository
+GitHub: \url{https://github.com/rosingh/xmalloc}}, fungono da wrapper per le funzioni
+di allocazione (\texttt{malloc()}, \texttt{free()}, \texttt{realloc()}), implementando
+controlli interni per verificare la correttezza delle operazioni e rilevare anomalie
+durante l'utilizzo della heap. Altre, come \textit{safestringlib}\footnote{Repository
 GitHub: \url{https://github.com/intel/safestringlib}}, sostituiscono le funzioni
 standard per la manipolazione delle stringhe con versioni più sicure (\texttt{strcpy\_s},
 \texttt{memset\_s}, etc.), che includono verifiche esplicite sulla lunghezza dei
-buffer per evitare scritture fuori dai limiti. La libreria \textit{Sailfish Pool}\protect\footnote{Repository
-GitHub: \url{https://github.com/dyne/sailfish-pool}} invece, introduce tecniche come
-la preallocazione di pool di memoria e la zeroization dei dati prima della deallocazione,
-particolarmente utili in contesti in cui la privacy e la protezione dei dati
-sono essenziali.
+buffer per evitare scritture fuori dai limiti. La libreria \textit{Sailfish Pool}\footnote{Repository
+GitHub: \url{https://github.com/dyne/sailfish-pool}} invece, introduce tecniche
+come la preallocazione di pool di memoria e la zeroization dei dati prima della
+deallocazione, particolarmente utili in contesti in cui la privacy e la protezione
+dei dati sono essenziali.
 
-La necessità di rafforzare la sicurezza della memoria non riguarda
-esclusivamente i linguaggi più esposti: anche ambienti più moderni e progettati per
-prevenire questi errori, come Rust, offrono librerie che fungono da meccanismi di
+La necessità di rafforzare la sicurezza della memoria non riguarda esclusivamente
+i linguaggi più esposti: anche ambienti più moderni e progettati per prevenire
+questi errori, come Rust, offrono librerie che fungono da meccanismi di
 enforcement aggiuntivi. Un esempio significativo è rappresentato da \texttt{zeroize}\protect\footnote{Documentazione:
-\url{https://docs.rs/zeroize/latest/zeroize/}}, una libreria che consente di
-azzerare in modo automatico e sicuro i contenuti di una variabile prima che
-venga rilasciata o vada fuori dallo scope, riducendo il rischio che dati sensibili
-permangano in memoria dopo l'uso.
+\url{https://docs.rs/zeroize/latest/zeroize/}}, una libreria che consente di azzerare
+in modo automatico e sicuro i contenuti di una variabile prima che venga rilasciata
+o vada fuori dallo scope, riducendo il rischio che dati sensibili permangano in
+memoria dopo l'uso.
 
-Un ulteriore aspetto rilevante da considerare nella selezione delle librerie è la
-\textit{trasparenza del codice}. L'adozione di librerie open source consente agli
-sviluppatori di ispezionare direttamente l'implementazione, aumentando la
-fiducia nei meccanismi adottati e offrendo la possibilità di verificarne il
-comportamento effettivo. Questo costituisce un vantaggio concreto rispetto a librerie
-closed source o scarsamente documentate, in quanto riduce il rischio di
-introdurre codice opaco o potenzialmente pericoloso all'interno del progetto.
+Un ulteriore aspetto rilevante da considerare nella selezione delle librerie è
+la \textit{trasparenza del codice}. L'adozione di librerie open source consente
+agli sviluppatori di ispezionare direttamente l'implementazione, aumentando la fiducia
+nei meccanismi adottati e offrendo la possibilità di verificarne il comportamento
+effettivo. Questo costituisce un vantaggio concreto rispetto a librerie closed
+source o scarsamente documentate, in quanto riduce il rischio di introdurre codice
+opaco o potenzialmente pericoloso all'interno del progetto.
 
-In conclusione, l'utilizzo consapevole di librerie progettate per migliorare la memory
-safety rappresenta una buona pratica, sia nei linguaggi tradizionalmente
-vulnerabili sia in quelli più moderni. L'integrazione di questi strumenti nel flusso
-di sviluppo consente di ridurre il margine di errore umano e incrementare la resilienza
-del software contro le vulnerabilità più comuni.
+In conclusione, l'utilizzo consapevole di librerie progettate per migliorare la
+memory safety rappresenta una buona pratica, sia nei linguaggi tradizionalmente vulnerabili
+sia in quelli più moderni.
 
 \subsection{Analisi Statica}
 \label{sec:analisi-statica}
 
 Dopo aver trattato le tecniche per scrivere codice sicuro, è utile introdurre un'ulteriore
-forma di mitigazione: l'\textbf{analisi statica}. Sebbene non intervenga
-direttamente nella scrittura del codice, questa tecnica è parte integrante della
-fase di sviluppo nel SDLC. L'analisi statica consiste nell'esaminare il codice
-sorgente (o, in alcuni casi, il bytecode o il codice compilato) alla ricerca di
-difetti, vulnerabilità di sicurezza e violazioni degli standard di codifica, il
-tutto senza eseguire il programma. Il vantaggio principale è la possibilità di individuare
-problemi in una fase precoce dello sviluppo, riducendo così i costi e la
-complessità delle successive correzioni.
+forma di mitigazione: l'\textit{analisi statica}. A prima vista, questa potrebbe
+sembrare una tecnica più affine alla fase di \textit{testing}, poiché si occupa di
+rilevare errori e vulnerabilità. Tuttavia, l'evoluzione degli strumenti di sviluppo
+e l'affermazione del principio di \textit{shift-left} hanno portato l'analisi
+statica a essere adottata sempre più precocemente nel ciclo di vita del software,
+al punto da diventare parte integrante della fase di sviluppo.
 
-L'adozione dell'analisi statica offre numerosi vantaggi. Permette un'individuazione
-precoce e automatizzata dei difetti, spesso integrabile direttamente negli
-ambienti di sviluppo (IDE) e nei sistemi di Continuous Integration/Continuous
-Deployment (CI/CD), fornendo un feedback rapido agli sviluppatori, prima che il
-software venga compilato o eseguito. L'assenza di compilazione o esecuzione porta
-un ulteriore vantaggio: il processo di analisi non dipende dall'ambiente di
-sviluppo o di esecuzione, ma solo dal codice e, di conseguenza, può essere effettuato
-anche al di fuori di contesti di esecuzione specifici.
+Con ``shift-left'' si intende una strategia che promuove l'anticipo delle attività
+di verifica e validazione, allo scopo di intercettare i problemi il prima
+possibile. In quest'ottica, l'analisi statica è oggi spesso integrata
+direttamente negli ambienti di sviluppo (IDE) e nei sistemi di Continuous
+Integration/Continuous Deployment (CI/CD), fornendo un feedback immediato agli sviluppatori
+durante la scrittura del codice stesso.
+
+L'analisi statica consiste nell'esaminare il codice sorgente (o, in alcuni casi,
+il bytecode o il codice compilato) alla ricerca di difetti, vulnerabilità di
+sicurezza e violazioni degli standard di codifica, il tutto senza eseguire il programma.
+Il vantaggio principale è la possibilità di individuare problemi in una fase
+precoce dello sviluppo, riducendo così i costi e la complessità delle successive
+correzioni.
 
 \begin{quote}
-  \textbf{\textit{Nota:}} L'analisi statica non è una tecnica esclusiva per la
-  memory safety. Infatti, i tool esistenti non si limitano a rilevare solo
-  vulnerabilità legate alla gestione della memoria, ma possono anche identificare
-  una vasta gamma di problemi di qualità del codice, bug logici e violazioni
-  delle best practice di programmazione, che tuttavia non rientrano nell'ambito di
-  questo elaborato.
+  \textbf{\textit{Nota:}} L'analisi statica rileva anche altri problemi di
+  qualità del codice oltre alle vulnerabilità di memory safety, che tuttavia non
+  sono trattati in questo elaborato.
 \end{quote}
 
 \noindent
-Nonostante la sua efficacia, l'analisi statica presenta alcune limitazioni: una
-delle sfide principali è la gestione dei \textbf{falsi positivi}, ovvero
-segnalazioni di problemi che in realtà non costituiscono errori o vulnerabilità
-nel contesto specifico dell'applicazione. Questo è dovuto al fatto che gli analizzatori
-non riescono sempre a comprendere il contesto completo in cui il codice viene eseguito,
-portando a segnalazioni errate.
+Nonostante la sua capacità di rilevazione precoce degli errori, l'analisi statica
+presenta alcune limitazioni: una delle sfide principali è la gestione dei
+\textbf{falsi positivi}, ovvero segnalazioni di problemi che in realtà non
+costituiscono errori o vulnerabilità nel contesto specifico dell'applicazione. Questo
+è dovuto al fatto che gli analizzatori non riescono sempre a comprendere il contesto
+completo in cui il codice viene eseguito, portando a segnalazioni errate.
 
 Un esempio pratico può essere quello del~\autoref{lst:copy_string}: in questo caso,
-l'analizzatore statico potrebbe segnalare un potenziale buffer overflow, nonostante
+alcuni analizzatori statici potrebbero segnalare un potenziale buffer overflow, nonostante
 il controllo esplicito della lunghezza della stringa di input. Questa situazione
 si verifica, ad esempio, quando l'analizzatore non tiene conto del legame
 semantico tra la condizione \texttt{if} e l'istruzione \texttt{strcpy}. Altri tool

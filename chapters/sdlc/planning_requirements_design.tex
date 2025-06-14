@@ -1,11 +1,11 @@
 \section{Pianificazione, Analisi dei Requisiti e Design}
 \label{sec:planning_requirements_design}
 
-Le fasi preliminari del Software Development Life Cycle (SDLC) comprendono l'analisi
-dei requisiti, la pianificazione e il design del software. Sebbene queste attività
-non prevedano ancora la scrittura effettiva del codice, rivestono comunque un
-ruolo importante nella definizione delle proprietà di sicurezza dell'intero
-sistema, incluse le garanzie di memory safety.
+Le fasi preliminari del Software Development Life Cycle (SDLC) comprendono la pianificazione,
+l'analisi dei requisiti e il design del software. Sebbene queste attività non prevedano
+ancora la scrittura effettiva del codice, rivestono comunque un ruolo importante
+nella definizione delle proprietà di sicurezza dell'intero sistema, incluse le garanzie
+di memory safety.
 
 Una corretta impostazione in queste fasi consente di identificare precocemente i
 rischi legati all'uso della memoria e di predisporre adeguate strategie di mitigazione.
@@ -32,29 +32,28 @@ strategia di sviluppo e di adozione delle tecnologie è uno dei primi passi per
 entrare nell'ottica di un approccio memory safe.
 
 In quest'ottica, la CyberSecurity and Infrastructure Security Agency (CISA), in
-collaborazione con agenzie internazionali, ha pubblicato un documento~\cite{memory_safe_roadmaps}
-che fornisce linee guida per i produttori di software su come creare e pubblicare
-roadmap per la transizione verso linguaggi di programmazione che garantiscano la
-sicurezza della memoria. Inoltre, viene fornita una serie di mitigazioni applicabili
-a linguaggi non memory safe.
+collaborazione con agenzie internazionali, ha pubblicato un documento\cite{memory_safe_roadmaps}
+che fornisce linee guida per i produttori di software su come creare e
+pubblicare roadmap per la transizione verso linguaggi di programmazione che
+garantiscano la sicurezza della memoria. Inoltre, viene fornita una serie di
+mitigazioni applicabili a linguaggi non memory safe.
 
-In particolare, secondo l'articolo, una roadmap efficace per la memory safety dovrebbe
-includere:
+In particolare, secondo l'articolo, una roadmap efficace per la memory safety
+dovrebbe includere:
 
 \begin{itemize}
   \item \textbf{Fasi definite con date e risultati attesi}: spezzare il processo
     di transizione in fasi chiare e più piccole come:
     \begin{itemize}
-      \item Valutazione dei linguaggi memory safe
+      \item la valutazione dei linguaggi memory safe;
 
-      \item Scrittura di un nuovo componente utilizzando un linguaggio memory safe
-        ``by default'' o incorporazione di un linguaggio memory safe in un componente
-        esistente per testare l'efficacia
+      \item la scrittura di un nuovo componente utilizzando un linguaggio memory
+        safe ``by default'' per testarne l'efficacia;
 
-      \item \textit{Threat modeling} per identificare il codice memory unsafe
-        più pericoloso
+      \item fare \textit{threat modeling} per identificare il codice memory
+        unsafe più esposto a rischi;
 
-      \item Refactoring del codice memory unsafe
+      \item il refactoring del codice memory unsafe.
     \end{itemize}
 
   \item \textbf{Scadenza per l'uso esclusivo di linguaggi memory safe nei nuovi
@@ -71,118 +70,127 @@ includere:
 
   \item \textbf{Piano di trasparenza}: aggiornamenti periodici (es. trimestrali/semestrali)
     per comunicare progressi, sfide e miglioramenti al SDLC, e ispirare altri ad
-    adottare approcci simili
+    adottare approcci simili.
 
   \item \textbf{Piano per il supporto ai CVE}: impegno a fornire CWE per il 100\%
     delle vulnerabilità pubblicate (CVE) e a offrire contesto tecnico utile per
-    distinguere i difetti memory-unsafe da altri tipi di bug
+    distinguere i difetti memory-unsafe da altri tipi di bug.
 \end{itemize}
 
-L'adozione di tali roadmap rappresenta un primo passo verso la realizzazione di
-sistemi software più sicuri e resilienti, riducendo significativamente il rischio
-di vulnerabilità legate alla gestione della memoria.
+L'adozione di tali roadmap rappresenta un primo passo verso la realizzazione di sistemi
+software più sicuri e resilienti, riducendo significativamente il rischio di
+vulnerabilità legate alla gestione della memoria.
 
 \subsection{Scelta del Linguaggio}
 \label{sec:linguaggio}
 
-La scelta del linguaggio di programmazione rappresenta una delle decisioni
-primarie nelle fasi preliminari dello sviluppo software. Essa influenza in modo diretto
-la qualità, la sicurezza e la manutenibilità del codice prodotto, ed è particolarmente
-rilevante quando si vogliono prevenire vulnerabilità legate alla memory safety.
+La scelta del linguaggio di programmazione rappresenta una delle decisioni primarie
+nelle fasi preliminari dello sviluppo software. Essa influenza in modo diretto
+la qualità, la sicurezza e la manutenibilità del codice prodotto, ed è
+particolarmente rilevante quando si vogliono prevenire vulnerabilità legate alla
+memory safety.
 
-Sebbene linguaggi come Rust siano stati progettati con l'obiettivo esplicito di garantire
-la memory safety, non esiste una soluzione unica valida per tutti i contesti. Ogni
-linguaggio presenta compromessi progettuali che ne influenzano l'idoneità in scenari
-specifici.
+Sebbene linguaggi come Rust siano stati progettati con l'obiettivo esplicito di
+garantire la memory safety, non esiste una soluzione unica valida per tutti i contesti.
+Ogni linguaggio presenta compromessi progettuali che ne influenzano l'idoneità
+in scenari specifici.
 
-Per esempio, C e C++ restano la scelta dominante nello sviluppo di firmware, driver
-o sistemi embedded, dove è richiesto un controllo a basso livello dell'hardware
-e delle risorse. Al contrario, Java e Kotlin trovano impiego in applicazioni
-mobili e enterprise, grazie alla loro portabilità e al supporto dell'ecosistema JVM.
-Le possibilità sono numerose, e ogni progetto potrebbe richiedere una combinazione
+Per esempio, C e C++ restano la scelta dominante nello sviluppo di firmware,
+driver o sistemi embedded, dove è richiesto un controllo a basso livello dell'hardware
+e delle risorse. Al contrario, Java e Kotlin trovano impiego in applicazioni mobili
+e enterprise, grazie alla loro portabilità e al supporto dell'ecosistema JVM. Le
+possibilità sono numerose, e ogni progetto potrebbe richiedere una combinazione
 diversa di criteri funzionali e non funzionali.
 
-Oltre alle caratteristiche tecniche, la scelta del linguaggio dipende spesso
-anche da fattori pragmatici come il know-how del team, la disponibilità di tool e
+Oltre alle caratteristiche tecniche, la scelta del linguaggio dipende spesso anche
+da fattori pragmatici come il know-how del team, la disponibilità di tool e
 librerie, i vincoli di tempo, o l'integrazione con sistemi esistenti e/o legacy.
-Infatti, vale la pena sottolineare che, sebbene la scelta del linguaggio sia
-cruciale, non è sempre possibile effettuarla. In alcuni casi, il linguaggio è vincolato
-dalla codebase esistente, da requisiti di interoperabilità o da standard di
-settore. Per tali situazioni, questa sezione della tesi può essere poco utile
-nella pratica, ma può comunque fornire spunti per migliorare la sicurezza della memoria
-e dare una panoramica dei linguaggi memory safe più diffusi.
+Infatti, vale la pena sottolineare che, sebbene la scelta del linguaggio sia cruciale,
+non è sempre possibile effettuarla. In alcuni casi, il linguaggio è vincolato
+dalla codebase esistente, da requisiti di interoperabilità o da standard di settore.
+Per tali situazioni, questa sezione della tesi può essere poco utile nella pratica,
+ma può comunque fornire spunti per migliorare la sicurezza della memoria e dare
+una panoramica dei linguaggi memory safe più diffusi.
 
 \paragraph{Criteri di confronto}
-Per offrire una panoramica concreta, è stata sviluppata la~\autoref{tab:linguaggi_memory_safety},
-in collaborazione con i ricercatori del Centro per la CyberSecurity di FBK\footnotemark,
-che riassume alcune proprietà rilevanti per la memory safety. I criteri selezionati
-includono:
+Per offrire una panoramica concreta sulla relazione tra linguaggi di programmazione
+e memory safety, è stata sviluppata la~\autoref{tab:linguaggi_memory_safety}, in
+collaborazione con i ricercatori del Centro per la CyberSecurity di FBK\footnote{\url{https://cs.fbk.eu/}},
+che riassume alcune proprietà rilevanti per la memory safety. I criteri
+selezionati includono:
 \begin{itemize}
   \item \textbf{Controllo dei limiti} (Bounds Check), per prevenire accessi fuori
-    dai confini di array;
+    dai confini di array.
 
-  \item \textbf{Gestione dei riferimenti nulli} (Null Safety), spesso causa di crash
-    e vulnerabilità;
+  \item \textbf{Gestione dei riferimenti nulli} (Null Safety), spesso causa di malfunzionamenti
+    o blocchi.
 
   \item \textbf{Modello di proprietà e prestito} (Ownership/Borrowing), centrale
-    in Rust per evitare accessi concorrenti e use-after-free;
+    in Rust per evitare accessi concorrenti e use-after-free.
 
   \item \textbf{Sicurezza di tipo} (Type Safety), per ridurre i rischi di casting
-    improprio o accessi illegali alla memoria;
+    improprio o accessi illegali alla memoria.
 
   \item \textbf{\textit{Zeroization} della memoria}, ovvero la capacità del linguaggio
     o delle librerie di pulire automaticamente dati sensibili dopo l'uso; utile
-    in contesti crittografici o per la gestione di credenziali;
+    in contesti crittografici o per la gestione di credenziali.
 
   \item \textbf{Integrità della memoria}, legata alla protezione da accessi fuori
-    contesto o non autorizzati;
+    contesto o non autorizzati.
 
-  \item \textbf{Curva di apprendimento}, indicativa della facilità di adozione;
-    linguaggi con una difficoltà più bassa tendono a ridurre il rischio di bug
-    nei primi cicli di sviluppo; non legata alla sicurezza in modo diretto, ma
-    utile per valutare l'impatto della scelta del linguaggio sul processo di
-    sviluppo;
+  \item \textbf{Curva di apprendimento} (Difficoltà), indicativa della facilità di
+    adozione; linguaggi più accessibili tendono a ridurre il rischio di bug nei
+    primi cicli di sviluppo; non legata alla sicurezza in modo diretto, ma utile
+    per valutare l'impatto della scelta del linguaggio sul processo di sviluppo.
 
-  \item \textbf{Ecosistema e librerie}, riferito alla disponibilità e affidabilità
-    di librerie esterne; un ecosistema maturo offre componenti ben testate, riducendo
-    la necessità di implementazioni custom potenzialmente vulnerabili e influenzando
-    positivamente la sicurezza del progetto, nonostante non riguardi
-    direttamente la memory safety;
+  \item \textbf{Ecosistema e librerie}, riferito alla disponibilità di librerie esterne
+    mature e ben testate, che riducono la necessità di implementazioni custom
+    potenzialmente vulnerabili.
 \end{itemize}
 
-\footnotetext{\url{https://cs.fbk.eu/}}
+Naturalmente esistono molti altri criteri di valutazione applicabili, sia di performance
+che di sicurezza, che tuttavia esulano dallo scopo di questa tesi.
 
-\small
 \setlength{\tabcolsep}{4pt}
 \begin{table}[H]
+  \small
   \centering
-  \begin{tabular}{l|c|c|c|c|c|c|}
-    \multicolumn{1}{l}{}                       & \textbf{C/C++}                & \textbf{Java}                 & \textbf{Kotlin}               & \textbf{Python}               & \textbf{Rust}                       & \textbf{Go}                      \\
-    \hline
-    \textbf{Bounds Check}                      & \cellcolor{red!20}No          & \cellcolor{green!20}Sì        & \cellcolor{green!20}Sì        & \cellcolor{green!20}Sì        & \cellcolor{green!20}Sì              & \cellcolor{green!20}Sì           \\
-    \textbf{Null Safety}                       & \cellcolor{red!20}No          & \cellcolor{red!20}No          & \cellcolor{green!20}Sì        & \cellcolor{yellow!20}Parziale & \cellcolor{green!20}Sì              & \cellcolor{green!20}Sì           \\
-    \textbf{Ownership/Borrowing}               & \cellcolor{red!20}No          & \cellcolor{red!20}No          & \cellcolor{red!20}No          & \cellcolor{red!20}No          & \cellcolor{green!20}Sì              & \cellcolor{red!20}No             \\
-    \textbf{Type Safety}                       & \cellcolor{yellow!20}Parziale & \cellcolor{yellow!20}Parziale & \cellcolor{yellow!20}Parziale & \cellcolor{green!20}Sì        & \cellcolor{green!20}Sì              & \cellcolor{green!20}Sì           \\
-    \textbf{Memory Zeroization}                & \cellcolor{red!20}No          & \cellcolor{red!20}No          & \cellcolor{red!20}No          & \cellcolor{red!20}No          & \cellcolor{green!20}Sì\footnotemark & \cellcolor{red!20}No             \\
-    \textbf{Memory Integrity}                  & \cellcolor{red!20}No          & \cellcolor{yellow!20}Parziale & \cellcolor{yellow!20}Parziale & \cellcolor{red!20}No          & \cellcolor{green!20}Sì              & \cellcolor{green!20}Sì           \\
-    \hline
-    \textbf{Difficoltà}~\cite{learning_curves} & \cellcolor{red!20}Alta        & \cellcolor{yellow!20}Media    & \cellcolor{yellow!20}Media    & \cellcolor{green!20}Bassa     & \cellcolor{red!20}Alta              & \cellcolor{green!20}Bassa        \\
-    \textbf{Ecosistema e Librerie}             & \cellcolor{green!20}Vasto     & \cellcolor{green!20}Vasto     & \cellcolor{green!20}Vasto     & \cellcolor{green!20}Vasto     & \cellcolor{yellow!20}In crescita    & \cellcolor{yellow!20}In crescita \\
-    \hline
-  \end{tabular}
-  \caption{Confronto delle caratteristiche legate alla memory safety tra
-  linguaggi di programmazione}
+  \begin{threeparttable}
+    \begin{tabular}{l|c|c|c|c|c|c|}
+      \multicolumn{1}{l}{}           & \textbf{C/C++}                & \textbf{Java}                 & \textbf{Kotlin}               & \textbf{Python}               & \textbf{Rust}                    & \textbf{Go}                      \\
+      \hline
+      \textbf{Bounds Check}          & \cellcolor{red!20}No          & \cellcolor{green!20}Sì        & \cellcolor{green!20}Sì        & \cellcolor{green!20}Sì        & \cellcolor{green!20}Sì           & \cellcolor{green!20}Sì           \\
+      \textbf{Null Safety}           & \cellcolor{red!20}No          & \cellcolor{red!20}No          & \cellcolor{green!20}Sì        & \cellcolor{yellow!20}Parziale & \cellcolor{green!20}Sì           & \cellcolor{green!20}Sì           \\
+      \textbf{Ownership/Borrowing}   & \cellcolor{red!20}No          & \cellcolor{red!20}No          & \cellcolor{red!20}No          & \cellcolor{red!20}No          & \cellcolor{green!20}Sì           & \cellcolor{red!20}No             \\
+      \textbf{Type Safety}           & \cellcolor{yellow!20}Parziale & \cellcolor{yellow!20}Parziale & \cellcolor{yellow!20}Parziale & \cellcolor{green!20}Sì        & \cellcolor{green!20}Sì           & \cellcolor{green!20}Sì           \\
+      \textbf{Memory Zeroization}    & \cellcolor{red!20}No          & \cellcolor{red!20}No          & \cellcolor{red!20}No          & \cellcolor{red!20}No          & \cellcolor{green!20}Sì\tnote{a}  & \cellcolor{red!20}No             \\
+      \textbf{Memory Integrity}      & \cellcolor{red!20}No          & \cellcolor{yellow!20}Parziale & \cellcolor{yellow!20}Parziale & \cellcolor{red!20}No          & \cellcolor{green!20}Sì           & \cellcolor{green!20}Sì           \\
+      \hline
+      \textbf{Difficoltà}\tnote{b}   & \cellcolor{red!20}Alta        & \cellcolor{yellow!20}Media    & \cellcolor{yellow!20}Media    & \cellcolor{green!20}Bassa     & \cellcolor{red!20}Alta           & \cellcolor{green!20}Bassa        \\
+      \textbf{Ecosistema e Librerie} & \cellcolor{green!20}Vasto     & \cellcolor{green!20}Vasto     & \cellcolor{green!20}Vasto     & \cellcolor{green!20}Vasto     & \cellcolor{yellow!20}In crescita & \cellcolor{yellow!20}In crescita \\
+      \hline
+    \end{tabular}
+    \begin{tablenotes}
+      \footnotesize \item[a] Supportata tramite il crate \texttt{zeroize}, mantenuto
+      dal team \texttt{RustCrypto} sensibili. \item[b] Fonte:
+      \url{https://www.learningcardano.com/...}, ultimo accesso: 13 maggio 2025.
+    \end{tablenotes}
+  \end{threeparttable}
+  \caption{Confronto tra linguaggi delle caratteristiche legate alla memory
+  safety}
   \label{tab:linguaggi_memory_safety}
 \end{table}
 
-\footnotetext{Supportata tramite il crate \texttt{zeroize}, mantenuto dal team
-\texttt{RustCrypto} e ampiamente usato per la gestione sicura di dati sensibili}
+\footnotetext[2]{Supportata tramite il crate \texttt{zeroize}, mantenuto dal
+team \texttt{RustCrypto} e ampiamente usato per la gestione sicura di dati sensibili}
 
-\newpage
+\footnotetext[3]{Fonte: \url{https://www.learningcardano.com/how-long-does-it-take-to-learn-the-most-popular-programming-languages/},
+ultimo accesso: 13 maggio 2025}
+
 \noindent
 
-Come si può osservare dalla tabella, emergono pattern interessanti che
-riflettono le diverse filosofie di design dei linguaggi analizzati.
+Come si può osservare dalla tabella, emergono pattern interessanti che riflettono
+le diverse filosofie di design dei linguaggi analizzati.
 
 \begin{itemize}
   \item \textbf{Rust e Go} si distinguono come i linguaggi più orientati alla
@@ -209,8 +217,8 @@ riflettono le diverse filosofie di design dei linguaggi analizzati.
     per mitigare i rischi intrinseci.
 \end{itemize}
 
-La scelta finale del linguaggio dovrebbe quindi considerare il trade-off tra controllo,
-performance, sicurezza e produttività, valutando attentamente il contesto
-specifico del progetto, le competenze del team e i requisiti di sicurezza. In
-molti casi, un approccio ibrido che combini linguaggi diversi per componenti specifiche
+La scelta finale del linguaggio dovrebbe quindi considerare il \textit{trade-off}
+tra controllo, performance, sicurezza e produttività, valutando attentamente il
+contesto specifico del progetto, le competenze del team e i requisiti di sicurezza.
+In molti casi, un approccio ibrido che combini linguaggi diversi per componenti specifiche
 può rappresentare la soluzione ottimale.

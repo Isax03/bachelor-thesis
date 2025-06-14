@@ -1,4 +1,4 @@
-\chapter{Memory Safety nel SDLC}
+\chapter{Memory Safety nel Ciclo di Sviluppo}
 \label{cha:sdlc}
 
 Dopo aver introdotto i concetti fondamentali legati alla memory safety e
@@ -6,26 +6,25 @@ analizzato le conseguenze che una gestione inadeguata della memoria può
 comportare in termini di sicurezza, affidabilità e stabilità del software,
 questo capitolo si propone di illustrare principi e approcci pratici da
 integrare nelle diverse fasi del ciclo di vita dello sviluppo software \textit{(Software
-Development Life Cycle, SDLC)} (~\autoref{fig:sdlc_img}), al fine di prevenire e
+Development Life Cycle, SDLC)} (\autoref{fig:sdlc_img}), al fine di prevenire e
 mitigare le vulnerabilità legate alla gestione della memoria.
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.7\textwidth]{images/sdlc.png}
-  \caption[Schema SDLC]{Schema SDLC\protect\footnotemark}
+  \includegraphics[width=1\textwidth]{images/sdlc_recap.png}
+  \caption[Schema SDLC]{Mitigazioni nel SDLC\protect}
   \label{fig:sdlc_img}
 \end{figure}
-\footnotetext{Fonte: \url{https://uniquesoftwaredev.com/the-software-development-life-cycle-sdlc-7-phases-and-models/}}
 
 Diversi studi nella letteratura confermano che la sicurezza del software non può
-essere trattata come un'attività riservata solo alle fasi finali del ciclo di
-sviluppo. In particolare, secondo la revisione sistematica di Chin Eian et al.~\cite{security_in_sdlc},
+essere trattata come un'attività riservata solo alle fasi finali del ciclo di sviluppo.
+In particolare, secondo la revisione sistematica di Chin Eian et al.\cite{security_in_sdlc},
 una delle principali conclusioni è che l'integrazione degli aspetti di sicurezza
-all'interno di tutte le fasi del SDLC è essenziale per ridurre il rischio di
-introdurre vulnerabilità gravi e costose da mitigare nelle fasi successive. In linea
-con questa visione, il seguente capitolo analizza come i principi di memory
-safety possano essere incorporati concretamente lungo l'intero ciclo di vita
-dello sviluppo software.
+ciao all'interno di tutte le fasi del SDLC è essenziale per ridurre il rischio
+di introdurre vulnerabilità gravi e costose da mitigare nelle fasi successive. In
+linea con questa visione, il seguente capitolo analizza come i principi di
+memory safety possano essere incorporati concretamente lungo l'intero ciclo di
+vita dello sviluppo software.
 
 Va sottolineato fin da subito che le tecniche, gli strumenti e i linguaggi eventualmente
 citati \textit{non} vanno intesi come universali o necessariamente ottimali per

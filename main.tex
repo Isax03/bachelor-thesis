@@ -3,8 +3,7 @@
 \usepackage{plain}
 \usepackage{setspace}
 
-% Ragged bottom: avoid page stretching
-% \raggedbottom
+\usepackage{threeparttable}
 
 \usepackage{float}
 \usepackage{makecell}
@@ -145,8 +144,9 @@ morecomment=[l]{\#}, morestring=[b]", morestring=[b]' }
   \bibliography{bibliography.bib}
 
   % Attachments
-  \titleformat{\chapter} {\normalfont\Huge\bfseries}{Appendix \thechapter}{1em}{}
+  \titleformat{\chapter} {\normalfont\Huge\bfseries}{Appendice \thechapter}{1em}{}
   \appendix
   \input{attachments/prompt.tex}
   \input{attachments/asan_output.tex}
+  \input{attachments/sei_cert_example.tex}
 \end{document}
