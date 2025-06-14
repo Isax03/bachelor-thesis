@@ -10,36 +10,36 @@ dall'altro, l'impiego di librerie esterne progettate per rafforzare la sicurezza
 delle operazioni su stringhe e memoria (\autoref{sec:librerie}). Entrambi gli approcci
 saranno applicati al codice responsabile della vulnerabilità di buffer overflow identificata
 nel primo scenario di test dell'analisi dinamica, situata nelle righe 14 e 18
-del file \texttt{tracker\_core.c} (\autoref{lst:unsafe}).
+del file \texttt{tracker\_core.c} (disponibile nella repository del progetto).
 
 È importante notare che, poiché il progetto è di dimensioni contenute, molte delle
 vulnerabilità potrebbero essere mitigate efficacemente tramite un refactoring mirato,
 anche senza ricorrere a strumenti esterni. Tuttavia, per finalità didattiche, l'utilizzo
 di librerie verrà comunque applicato e comparato con le best practice.
 
-\bigskip
-\begin{lstlisting}[language=C, caption={Codice originale vulnerabile}, label={lst:unsafe}, style=changes_in_c]
-file_tracker_t* tracker_init(const char* directory, const char* log_file) {
-  file_tracker_t* tracker = malloc(sizeof(file_tracker_t));
-  if (!tracker) {
-    return NULL;
-  }
+% \bigskip
+% \begin{lstlisting}[language=C, caption={Codice originale vulnerabile}, label={lst:unsafe}, style=changes_in_c]
+% file_tracker_t* tracker_init(const char* directory, const char* log_file) {
+%   file_tracker_t* tracker = malloc(sizeof(file_tracker_t));
+%   if (!tracker) {
+%     return NULL;
+%   }
 
-  tracker->monitored_directory = malloc(256);
-  strcpy(tracker->monitored_directory, directory);
-  tracker->log_file_path = malloc(256);
-  strcpy(tracker->log_file_path, log_file);
+%   tracker->monitored_directory = malloc(256);
+%   strcpy(tracker->monitored_directory, directory);
+%   tracker->log_file_path = malloc(256);
+%   strcpy(tracker->log_file_path, log_file);
 
-  // resto del codice
-}
-\end{lstlisting}
+%   // resto del codice
+% }
+% \end{lstlisting}
 
 \subsection*{Best Practice}
 \label{sec:best-practices-case-study}
 
-Partendo dalla guida di OWASP~\cite{owasp_best_practices}, si può notare che il
-codice in questione (\autoref{lst:unsafe}) non rispetta nessuna delle linee
-guida citate nella~\autoref{sec:best-practices-codice}. In particolare:
+Partendo dalla guida di OWASP\cite{owasp_best_practices}, si può notare che il codice
+preso in considerazione, non rispetta nessuna delle linee guida citate nella~\autoref{sec:best-practices-codice}.
+In particolare:
 \begin{itemize}
   \item non viene effettuato alcun controllo sulla lunghezza delle stringhe di input;
 
@@ -49,48 +49,50 @@ guida citate nella~\autoref{sec:best-practices-codice}. In particolare:
   \item non viene liberata la memoria allocata dinamicamente in caso di errore;
 
   \item vengono utilizzate funzioni di manipolazione delle stringhe comunemente considerate
-    vulnerabili (\texttt{strcpy});
+    vulnerabili (\texttt{strcpy}).
 \end{itemize}
 
 Per mitigare la vulnerabilità di buffer overflow, si è proceduto a un
-refactoring del codice, seguendo questi quattro punti, come mostrato nel~\autoref{lst:safe-best-practices}.
-In particolare le modifiche consistono nell'introduzione di controlli sulla lunghezza
-delle stringhe e nell'uso della variante più sicura di \texttt{strcpy}, ovvero \texttt{strncpy},
-che permette di specificare il numero massimo di caratteri da copiare; è stato
-inoltre forzato l'inserimento di un terminatore nullo alla fine della stringa, per
-evitare che la stringa possa essere troncata senza un terminatore, nonostante la
-lunghezza sia corretta; infine, sono stati scritti controlli per gestire
-eventuali errori di allocazione della memoria, liberando le risorse allocate precedentemente.
+refactoring del codice, seguendo questi quattro punti, ottenendo il codice
+mostrato nel branch git \texttt{mitigations/best-practices} della repository del
+progetto. In particolare le modifiche consistono nell'introduzione di controlli
+sulla lunghezza delle stringhe e nell'uso della variante più sicura di \texttt{strcpy},
+ovvero \texttt{strncpy}, che permette di specificare il numero massimo di
+caratteri da copiare; è stato inoltre forzato l'inserimento di un terminatore nullo
+alla fine della stringa, per evitare che la stringa possa essere troncata senza
+un terminatore, nonostante la lunghezza sia corretta; infine, sono stati scritti
+controlli per gestire eventuali errori di allocazione della memoria, liberando
+le risorse allocate precedentemente.
 
-\begin{lstlisting}[language=C, caption={Codice mitigato (best practices)}, label={lst:safe-best-practices}, style=changes_in_c]
-file_tracker_t* tracker_init(const char* directory, const char* log_file) {
-  file_tracker_t* tracker = malloc(sizeof(file_tracker_t));
-  if (!tracker) {
-      return NULL;
-  }
-  if (strlen(directory) >= 256 || strlen(log_file) >= 256) {
-      free(tracker);
-      return NULL;
-  }
+% \begin{lstlisting}[language=C, caption={Codice mitigato (best practices)}, label={lst:safe-best-practices}, style=changes_in_c]
+% file_tracker_t* tracker_init(const char* directory, const char* log_file) {
+%   file_tracker_t* tracker = malloc(sizeof(file_tracker_t));
+%   if (!tracker) {
+%       return NULL;
+%   }
+%   if (strlen(directory) >= 256 || strlen(log_file) >= 256) {
+%       free(tracker);
+%       return NULL;
+%   }
 
-  if((tracker->monitored_directory = malloc(256)) == NULL) {
-      free(tracker);
-      return NULL;
-  }
-  strncpy(tracker->monitored_directory, directory, 256);
-  tracker->monitored_directory[255] = '\0';
+%   if((tracker->monitored_directory = malloc(256)) == NULL) {
+%       free(tracker);
+%       return NULL;
+%   }
+%   strncpy(tracker->monitored_directory, directory, 256);
+%   tracker->monitored_directory[255] = '\0';
 
-  if((tracker->log_file_path = malloc(256)) == NULL) {
-      free(tracker->monitored_directory);
-      free(tracker);
-      return NULL;
-  }
-  strncpy(tracker->log_file_path, log_file, 256);
-  tracker->log_file_path[255] = '\0';
+%   if((tracker->log_file_path = malloc(256)) == NULL) {
+%       free(tracker->monitored_directory);
+%       free(tracker);
+%       return NULL;
+%   }
+%   strncpy(tracker->log_file_path, log_file, 256);
+%   tracker->log_file_path[255] = '\0';
 
-  // resto del codice
-}
-\end{lstlisting}
+%   // resto del codice
+% }
+% \end{lstlisting}
 
 \subsection*{Librerie esterne}
 \label{sec:librerie-case-study}
@@ -99,14 +101,15 @@ Dal momento che i due problemi principali del codice unsafe sono legati alla ges
 della memoria e alla manipolazione delle stringhe, si è deciso di utilizzare le
 seguenti librerie:
 \begin{itemize}
-  \item \texttt{xmalloc}~\footnote{Repository: \url{https://github.com/rosingh/xmalloc}}
-    per la gestione sicura della memoria, che fornisce funzioni di allocazione che
-    gestiscono automaticamente gli errori e terminano il programma in caso di errori
+  \item \texttt{xmalloc}\footnote{Repository: \url{https://github.com/rosingh/xmalloc}}
+    per la gestione sicura della memoria, che fornisce funzioni di allocazione
+    che gestiscono automaticamente gli errori e terminano il programma in caso
+    di errori;
 
-  \item \texttt{safestringlib}~\footnote{Repository: https://github.com/intel/safestringlib}
+  \item \texttt{safestringlib}\footnote{Repository: https://github.com/intel/safestringlib}
     per la manipolazione sicura delle stringhe, che fornisce funzioni di copia e
-    concatenazione che gestiscono automaticamente i controlli sui limiti e le terminazioni
-    delle stringhe
+    concatenazione che gestiscono automaticamente i controlli sui limiti e le
+    terminazioni delle stringhe.
 \end{itemize}
 
 Il procedimento di mitigazione in questo caso, è meno immediato rispetto alle best
@@ -118,7 +121,7 @@ librerie potrebbe richiedere uno sforzo non trascurabile.
 Per quanto riguarda la libreria \texttt{xmalloc}, è sufficiente scaricare un file
 header \texttt{xmalloc.h} e un file di implementazione \texttt{xmalloc.c} e includerli
 nel progetto. La libreria \texttt{safestringlib} invece, richiede l'installazione
-tramite alcuni comandi disponibili nel repository ufficiale.
+tramite alcuni comandi disponibili nella repository ufficiale.
 
 \medskip
 Oltre all'installazione, un altro aspetto da considerare, per quanto riguarda le
@@ -128,38 +131,40 @@ richiedono l'aggiunta di flag specifici per la compilazione. In questo caso spec
 ./lib/xmalloc/xmalloc.c -lsafestring-shared
 \end{lstlisting}
 Questa parte include infatti, il file \texttt{xmalloc.c} (salvato nella cartella
-\texttt{lib/xmalloc/}) e collega la libreria\\\texttt{safestringlib}, con la
-flag che indica al compilatore di cercare la libreria durante la fase di linking.
+\texttt{lib/xmalloc/}) e collega la libreria \texttt{safestringlib}, con la flag
+che indica al compilatore di cercare la libreria durante la fase di linking.
 
-Dopo aver installato le librerie, il codice è stato modificato come mostrato nel~\autoref{lst:safe-libraries}.
-\begin{lstlisting}[language=C, caption={Codice mitigato (librerie)}, label={lst:safe-libraries}, style=changes_in_c]
-#include "lib/xmalloc/xmalloc.h"
-#include <safe_lib.h>
+Dopo aver installato le librerie, il codice è stato modificato come mostrato nel
+branch git \\ \texttt{mitigations/libraries} della repository del progetto.
 
-file_tracker_t* tracker_init(const char* directory, const char* log_file) {
-  file_tracker_t* tracker = xmalloc(sizeof(file_tracker_t));
-  if (!tracker) {
-    return NULL;
-  }
-  
-  tracker->monitored_directory = xmalloc(256);
-  if(strncpy_s(tracker->monitored_directory, 256, directory, strlen(directory)) != EOK){
-    xfree(tracker->monitored_directory);
-    xfree(tracker);
-    return NULL;
-  }
+% \begin{lstlisting}[language=C, caption={Codice mitigato (librerie)}, label={lst:safe-libraries}, style=changes_in_c]
+% #include "lib/xmalloc/xmalloc.h"
+% #include <safe_lib.h>
 
-  tracker->log_file_path = xmalloc(256);
-  if(strncpy_s(tracker->log_file_path, 256, log_file, strlen(log_file)) != EOK){
-    xfree(tracker->monitored_directory);
-    xfree(tracker->log_file_path);
-    xfree(tracker);
-    return NULL;
-  }
+% file_tracker_t* tracker_init(const char* directory, const char* log_file) {
+%   file_tracker_t* tracker = xmalloc(sizeof(file_tracker_t));
+%   if (!tracker) {
+%     return NULL;
+%   }
 
-  // resto del codice
-}
-\end{lstlisting}
+%   tracker->monitored_directory = xmalloc(256);
+%   if(strncpy_s(tracker->monitored_directory, 256, directory, strlen(directory)) != EOK){
+%     xfree(tracker->monitored_directory);
+%     xfree(tracker);
+%     return NULL;
+%   }
+
+%   tracker->log_file_path = xmalloc(256);
+%   if(strncpy_s(tracker->log_file_path, 256, log_file, strlen(log_file)) != EOK){
+%     xfree(tracker->monitored_directory);
+%     xfree(tracker->log_file_path);
+%     xfree(tracker);
+%     return NULL;
+%   }
+
+%   // resto del codice
+% }
+% \end{lstlisting}
 
 Le modifiche principali consistono nell'utilizzo delle funzioni \texttt{xmalloc}
 e \texttt{xfree} per la gestione della memoria, che gestiscono automaticamente
@@ -180,14 +185,13 @@ Eseguendo quindi gli stessi comandi utilizzati in precedenza, sia per AddressSan
 che per Valgrind, si ottiene un risultato simile per entrambi gli analizzatori: non
 vengono rilevate anomalie nell'esecuzione del programma e, grazie ai controlli
 implementati, il programma termina correttamente in modo controllato, senza
-crash.
+bloccarsi.
 
 \subsection*{Confronto tra le due soluzioni}
 \label{sec:comparison-case-study}
 
-Dopo aver applicato le mitigazioni, è possibile confrontare le due soluzioni (\autoref{lst:safe-best-practices}
-e \autoref{lst:safe-libraries}) per valutare i pro e i contro di ciascun
-approccio.
+Dopo aver applicato le mitigazioni, è possibile confrontare le due soluzioni per
+valutare i pro e i contro di ciascun approccio.
 
 Partendo dalle best practice, un aspetto sicuramente positivo è il fatto che permette
 di mantenere il codice sotto il pieno controllo dello sviluppatore. Inoltre, questo

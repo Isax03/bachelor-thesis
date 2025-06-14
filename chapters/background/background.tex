@@ -1,14 +1,19 @@
 \chapter{Background}
 \label{cha:background}
 
-In questa sezione vengono fornite le nozioni fondamentali necessarie per
-comprendere il tema della memory safety e il suo impatto nello sviluppo software.
+In questa sezione si presentano le nozioni fondamentali necessarie per
+comprendere la memory safety e il suo impatto nello sviluppo software.
 
-Vengono quindi chiariti i principi di base legati alla memory safety, le tipologie
-più comuni di vulnerabilità dovute a una gestione scorretta della memoria, e il
-modo in cui tali vulnerabilità possano impattare l'integrità di sistemi reali. Questa
-analisi fornisce il contesto necessario per comprendere l'importanza delle tecniche
-e degli strumenti di mitigazione che sono presentati nei capitoli successivi.
+In particolare, vengono illustrati il concetto di memory safety (\autoref{sec:memory_safety}),
+le tipologie più comuni di vulnerabilità dovute a una gestione scorretta della
+memoria, e il modo in cui tali vulnerabilità possano impattare l'integrità di sistemi
+reali (\autoref{sec:vulnerability_types}).
+
+Non vengono tuttavia approfonditi i concetti alla base della gestione della memoria
+come la sua struttura (stack, heap, etc.) e i meccanismi di allocazione/deallocazione,
+al fine di mantenere la concentrazione sugli aspetti specifici di questo elaborato.
+Per un approfondimento su tali argomenti si rimanda a testi di riferimento come
+\textit{``Operating system concepts''}\cite{os_concepts} o simili.
 
 % Definizione di memory safety
 \input{chapters/background/definition.tex}

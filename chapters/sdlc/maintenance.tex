@@ -20,25 +20,20 @@ Un aspetto critico per la sicurezza della memoria nel lungo periodo è la gestio
 delle dipendenze software, specialmente quando si utilizzano librerie esterne, spesso
 sviluppate in linguaggi memory-unsafe come C e C++.
 
-Sistemi moderni possono contare su strumenti di dependency tracking automatizzati,
-in grado di:
-\begin{itemize}
-  \item identificare vulnerabilità note tramite l'integrazione con database CVE
+I sistemi moderni, a tal proposito, possono contare su strumenti di dependency tracking
+automatizzati, in grado di identificare vulnerabilità note tramite l'integrazione
+con database CVE, notificarne la presenza di versioni obsolete o insicure e suggerire
+aggiornamenti sicuri o alternative memory-safe.
 
-  \item notificare la presenza di versioni obsolete o insicure
-
-  \item suggerire aggiornamenti sicuri o alternative memory-safe
-\end{itemize}
-
-Framework come OWASP Dependency-Check\footnotemark o strumenti integrati nei sistemi
-di CI/CD (es. GitHub Dependabot) automatizzano parte di questo processo, facilitando
-la gestione reattiva delle vulnerabilità. In contesti critici è inoltre
-consigliabile: \footnotetext{\url{https://owasp.org/www-project-dependency-check/}}
+Framework come OWASP Dependency-Check\footnote{\url{https://owasp.org/www-project-dependency-check/}}
+o strumenti integrati nei sistemi di CI/CD (es. GitHub Dependabot) automatizzano
+parte di questo processo, facilitando la gestione reattiva delle vulnerabilità. In
+contesti critici è inoltre consigliabile:
 \begin{itemize}
   \item ridurre il numero di dipendenze esterne inutili (minimizzazione della
-    superficie di attacco)
+    superficie di attacco);
 
-  \item preferire librerie attivamente manutenute e con audit pubblici di sicurezza
+  \item preferire librerie attivamente manutenute e con audit pubblici di sicurezza;
 
   \item mantenere un \textit{Software Bill of Materials} (SBOM), per avere un inventario
     trasparente delle dipendenze. \\ Uno SBOM è utile per la verifica continua
@@ -47,28 +42,28 @@ consigliabile: \footnotetext{\url{https://owasp.org/www-project-dependency-check
     della sostituzione o dell'aggiornamento di una libreria.
 \end{itemize}
 
-In linguaggi come Rust, che enfatizzano la sicurezza di tipo e l'ownership, è
-comunque fondamentale monitorare i crate esterni, specialmente quelli che usano blocchi
+In linguaggi come Rust, che enfatizzano la sicurezza di tipo e l'ownership, è comunque
+fondamentale monitorare i crate esterni, specialmente quelli che usano blocchi
 \texttt{unsafe} o effettuano Foreign Function Interface (FFI), ovvero l'invocazione
-di funzioni scritte in altri linguaggi, verso codice legacy. Il tracciamento deve
-essere quindi parte integrante del workflow di mantenimento.
+di funzioni scritte in altri linguaggi, verso codice legacy. Il tracciamento
+deve essere quindi parte integrante del workflow di mantenimento.
 
 \subsection{Monitoraggio e Logging}
 \label{sec:monitoraggio-logging}
 
-Oltre al tracciamento delle dipendenze, una strategia efficace di mantenimento prevede
-l'adozione di sistemi di monitoraggio e logging, con l'obiettivo di individuare
+Oltre al tracciamento delle dipendenze, una strategia efficace di mantenimento
+prevede l'adozione di sistemi di monitoraggio e logging, con l'obiettivo di individuare
 comportamenti anomali potenzialmente legati a vulnerabilità di memoria.
 
 In particolare, i meccanismi di logging possono aiutare a:
 \begin{itemize}
-  \item rilevare accessi fuori dai limiti o crash ripetuti
+  \item rilevare accessi fuori dai limiti o malfunzionamenti ripetuti;
 
-  \item diagnosticare memory leak persistenti
+  \item diagnosticare memory leak persistenti;
 
-  \item correlare anomalie a specifici aggiornamenti di codice o librerie
+  \item correlare anomalie a specifici aggiornamenti di codice o librerie.
 \end{itemize}
 
-In sintesi, adottare tecniche di osservabilità avanzata permette di fare
-manutenzione in modo più proattivo, prevenendo problemi prima che diventino gravi
-e rendendo il sistema più robusto.
+In sintesi, adottare tecniche di osservabilità avanzata permette di fare manutenzione
+in modo più proattivo, prevenendo problemi prima che diventino gravi e rendendo
+il sistema più robusto.

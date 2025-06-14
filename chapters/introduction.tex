@@ -1,109 +1,132 @@
 \chapter{Introduzione}
 \label{cha:introduction}
 
-\section*{Motivazioni e obiettivo}
-\label{sec:motivation} La sicurezza della memoria (comunemente, \textit{memory
+\section*{Motivazioni e obiettivi}
+\label{sec:motivation} La sicurezza della memoria (in inglese, \textit{memory
 safety}) è un principio cardine nella programmazione moderna e nella sicurezza
 informatica. Essa comprende un insieme di pratiche e tecniche volte a garantire una
 gestione sicura della memoria nelle applicazioni, prevenendo errori e
 vulnerabilità che potrebbero causare comportamenti anomali o compromettere la
 sicurezza del sistema.
 
-Stime recenti di Microsoft~\cite{microsoft_proactive_approach} e Google~\cite{chromium_memory_safety}
-indicano che circa il 70\% delle vulnerabilità nei software moderni riguardano problematiche
-legate alla gestione della memoria. Questo dato sottolinea quanto sia cruciale
-adottare strategie e strumenti in grado di mitigare tali classi di errori prima
-che il codice entri in produzione.
+Stime di Microsoft\cite{microsoft_proactive_approach} indicano che circa il 70\%
+delle vulnerabilità nei loro prodotti deriva da problemi di memory safety. Analisi
+di Google\cite{google_memory_safety} riportano percentuali simili per software
+come iOS e macOS. Questi dati sottolineano l'importanza di adottare strategie efficaci
+per prevenire errori di gestione della memoria prima della messa in produzione.
 
-Un'ulteriore conferma dell'importanza della memory safety si ricava dalla
-classifica \textit{CWE Top 25 Most Dangerous Software Weaknesses}~\cite{cwe_top25_2024}
-stilata da MITRE per il 2024. Numerose posizioni sono occupate da debolezze legate
-alla memory safety:
+Un'ulteriore conferma dell'importanza della memory safety si ricava dalla classifica
+\textit{CWE Top 25 Most Dangerous Software Weaknesses}\cite{cwe_top25_2024} stilata
+dalla MITRE Corporation\footnote{Sito: https://www.mitre.org/} per il 2024.
+Numerose posizioni sono occupate da debolezze legate alla memory safety:
 \begin{itemize}
-  \item \textbf{CWE-787} Out-of-bounds Write (2° posto)
+  \item \textbf{CWE-787} Out-of-bounds Write (2° posto): scrittura di dati oltre
+    i limiti di un buffer, un array o una struttura dati.
 
-  \item \textbf{CWE-125} Out-of-bounds Read (6° posto)
+  \item \textbf{CWE-125} Out-of-bounds Read (6° posto): lettura di dati al di fuori
+    dei limiti di un buffer, un array o una struttura dati.
 
-  \item \textbf{CWE-416} Use After Free (8° posto)
+  \item \textbf{CWE-416} Use After Free (8° posto): accesso a blocchi di memoria
+    deallocati e contrassegnati come liberi, potenzialmente già riutilizzati e
+    contenenti dati diversi da quelli precedenti.
 
   \item \textbf{CWE-119} Improper Restriction of Operations within the Bounds of
-    a Memory Buffer (20° posto)
+    a Memory Buffer (20° posto): mancato controllo dei limiti di un buffer durante
+    operazioni di lettura o scrittura (può portare alle CWE-787 e CWE-125).
 
-  \item \textbf{CWE-476} NULL Pointer Dereference (21° posto)
+  \item \textbf{CWE-476} NULL Pointer Dereference (21° posto): dereferenziazione
+    di un puntatore nullo.
 
-  \item \textbf{CWE-190} Integer Overflow or Wraparound (23° posto)
+  \item \textbf{CWE-190} Integer Overflow or Wraparound (23° posto): superamento
+    dei limiti di rappresentazione di un intero; non è una vulnerabilità
+    direttamente legata alla memoria, ma può causare errori di allocazione o accesso
+    a memoria se non gestita correttamente.
 \end{itemize}
-La persistenza e la gravità delle vulnerabilità legate alla gestione della
-memoria ne fanno una delle principali cause sia di exploit attivi che di
-incidenti su scala globale.
+La persistenza e la gravità delle vulnerabilità legate alla gestione della memoria
+ne fanno una delle principali cause sia di exploit attivi che di incidenti su scala
+globale.
 
 \bigskip
 \noindent
-Due casi emblematici, accaduti a distanza di anni ma accomunati dalla natura della
-vulnerabilità, aiutano a comprendere l'importanza critica della memory safety: uno
-riguarda una debolezza strutturale del linguaggio e dell'ecosistema in cui è stato
-scritto il software; l'altro evidenzia come anche in ambienti moderni, apparentemente
-più sicuri, l'errore umano possa causare incidenti su scala globale.
+Due casi emblematici, accaduti a distanza di anni ma accomunati dalla natura
+della vulnerabilità, aiutano a comprendere l'importanza critica della memory safety:
+uno riguarda una debolezza strutturale del linguaggio e dell'ecosistema in cui è
+stato scritto il software; l'altro evidenzia come anche in ambienti moderni,
+apparentemente più sicuri, l'errore umano possa portare a conseguenze disastrose.
 
 \paragraph{WannaCry (maggio 2017)}
 
-L'attacco ransomware WannaCry sfruttò una vulnerabilità di \textit{buffer
-overflow} nel protocollo SMBv1 di Windows, nota come EternalBlue (CVE-2017-0144),
-per propagarsi rapidamente tra sistemi non aggiornati. Si trattava di una tipica
-debolezza legata alla gestione della memoria, comune in software scritto in C/C++,
-in cui il controllo sui limiti dei buffer è lasciato completamente al
+L'attacco ransomware\footnote{Tipo di malware che cripta i file del sistema
+vittima e richiede un riscatto per fornire la chiave di decrittazione} WannaCry
+sfruttò una vulnerabilità di \textit{buffer overflow} nel protocollo SMBv1\footnote{Protocollo
+di rete utilizzato per la condivisione di file, stampanti e altre risorse tra dispositivi
+in una rete} di Windows, nota come EternalBlue (CVE-2017-0144), che corrisponde
+alla debolezza CWE-787 (Out-of-bounds Write). Microsoft aveva rilasciato una patch
+di sicurezza per questa vulnerabilità nel marzo 2017, ma molti sistemi rimasero
+non aggiornati, permettendo al malware di propagarsi rapidamente. Si trattava di
+una tipica debolezza legata alla gestione della memoria, comune in software scritto
+in C/C++, in cui il controllo sui limiti dei buffer è lasciato completamente al
 programmatore.
 
-Il malware ha infettato oltre 300.000 computer in oltre 150 Paesi, criptando i dati
-e richiedendo un riscatto in Bitcoin. Tra le vittime più colpite vi è stato il
-Servizio Sanitario Nazionale del Regno Unito (NHS), che ha dovuto cancellare migliaia
-di appuntamenti e deviare ambulanze, con un impatto stimato di circa 92 milioni
-di sterline. I danni economici globali sono stati stimati fino a 4 miliardi di dollari.~\cite{wannacry_kaspersky}
+Il malware infettò oltre 300.000 computer in oltre 150 Paesi, criptando i dati e
+richiedendo un riscatto in Bitcoin. Tra le vittime più colpite vi fu il Servizio
+Sanitario Nazionale del Regno Unito (NHS), che dovette cancellare migliaia di appuntamenti
+e deviare ambulanze, con un impatto stimato di circa 92 milioni di sterline. I danni
+economici globali furono stimati fino a 4 miliardi di dollari.\cite{wannacry_kaspersky}
 
-L'attacco evidenzia come l'utilizzo di linguaggi a gestione manuale della memoria,
-come C e C++, possa esporre i sistemi a vulnerabilità critiche se non vengono adottate
-pratiche rigorose di sicurezza e aggiornamento.
+L'attacco evidenzia come l'utilizzo di linguaggi a gestione manuale della
+memoria, come C e C++, possa esporre i sistemi a vulnerabilità critiche quando
+non vengono adottate pratiche rigorose di sicurezza e aggiornamento tempestivo.
 
 \paragraph{CrowdStrike Falcon Sensor (luglio 2024)}
 
-Nel luglio 2024, un aggiornamento difettoso del software di sicurezza
-CrowdStrike Falcon Sensor ha causato crash di sistema su scala globale, colpendo
-circa 8,5 milioni di dispositivi Windows. L'incidente è stato causato da un
-errore di accesso alla memoria (lettura \textit{out-of-bounds}) nel codice,
-sfuggito ai controlli e ai test prima del rilascio.
+Recentemente, un aggiornamento difettoso del software di sicurezza CrowdStrike Falcon
+Sensor ha causato malfunzionamenti e blocchi di sistema su vasta scala, colpendo
+circa 8,5 milioni di dispositivi aventi installato Windows. L'incidente è stato causato
+da un errore di accesso alla memoria (lettura \textit{out-of-bounds}) nel codice,
+corrispondente alla debolezza CWE-125 (Out-of-bounds Read), sfuggito ai
+controlli e ai test prima del rilascio.
 
 L'incidente ha paralizzato infrastrutture critiche in diversi settori come
 compagnie aeree, banche e strutture sanitarie, con danni economici stimati
-intorno ai 15 miliardi di dollari.~\cite{crowdstrike_bug_wired}~\cite{crowdstrike_bug_wired_cost}
+intorno ai 15 miliardi di dollari.\cite{crowdstrike_bug_wired}\cite{crowdstrike_bug_wired_cost}
 
-Questo episodio dimostra come anche errori interni nei software di sicurezza, derivanti
-da sviste umane nella gestione della memoria, possano generare conseguenze
-disastrose su scala globale, evidenziando che la memory safety rimane un requisito
-critico anche per i sistemi più avanzati e affidabili.
+Questo episodio dimostra come anche errori interni nei software, derivanti da sviste
+umane nella gestione della memoria, possano generare conseguenze disastrose a
+livello internazionale, evidenziando che la memory safety rimane un requisito critico
+anche per i sistemi più avanzati e affidabili.
 
 \bigskip
 \noindent
-Questo lavoro si propone di offrire una panoramica critica delle tecniche di mitigazione
-attualmente disponibili per rafforzare la memory safety, dai linguaggi a
-gestione automatica della memoria agli strumenti di verifica statica e dinamica,
-fornendo una guida pratica per gli sviluppatori. La tesi propone anche un caso
-studio di un'applicazione scritta in C intenzionalmente bacata, su cui sono stati
-applicati gli strumenti e le tecniche illustrate.
+I principali contributi di questo elaborato sono:
+\begin{itemize}
+  \item L'\textbf{analisi critica} delle tecniche di mitigazione secondo le fasi
+    del SDLC, fornendo un framework operativo per introdurre la sicurezza \textit{by
+    design}.
+
+  \item La \textbf{dimostrazione pratica} dell'efficacia e delle limitazioni
+    degli strumenti di analisi attraverso un caso studio replicabile su un'applicazione
+    C vulnerabile.
+
+  \item Il \textbf{confronto} tra approcci di mitigazione (best practice vs.
+    librerie specializzate) con valutazione di vantaggi/svantaggi per diversi contesti
+    applicativi.
+\end{itemize}
 
 \section*{Struttura del lavoro}
 \label{sec:structure} La tesi è divisa in quattro capitoli principali.
 Inizialmente, viene fornita una panoramica generale del concetto di memory safety
-e di quali siano le principali vulnerabilità legate alla memoria.
+e di quali siano le principali vulnerabilità legate alla memoria (\autoref{cha:background}).
 
-Successivamente, verranno illustrate tecniche di mitigazione per rafforzare la
+Successivamente, vengono illustrate tecniche di mitigazione per rafforzare la
 memory safety, dividendole tra le varie fasi del ciclo di vita del software,
-dalla progettazione al mantenimento.
+dalla progettazione al mantenimento (\autoref{cha:sdlc}).
 
 Il terzo capitolo è dedicato a un caso studio pratico, in cui viene presentata un'applicazione
 scritta in C con vulnerabilità di memory safety. Viene illustrato il processo di
 analisi e correzione delle vulnerabilità, utilizzando strumenti e tecniche discusse
-nei capitoli precedenti.
+nei capitoli precedenti (\autoref{cha:real_case}).
 
 Infine, il capitolo conclusivo prevede una sintesi dei risultati ottenuti e l'esplorazione
 di possibili sviluppi futuri, con l'obiettivo di migliorare ulteriormente la memory
-safety nei progetti software.
+safety nei progetti software (\autoref{cha:conclusioni}).

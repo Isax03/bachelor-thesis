@@ -428,3 +428,6 @@ TSWLatexianTemp*
 **/build/
 **/node_modules/
 !/images/**/*.pdf
+
+*.py
+*.svg
