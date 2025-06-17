@@ -9,13 +9,11 @@ statica). Vista l'inclinazione agli errori delle metodologie proposte, queste po
 non essere sufficienti a garantire la sicurezza della memoria ed è quindi fondamentale
 soffermarsi anche sulla parte di testing.
 
-Il testing è l'altra fase principale del ciclo di vita del software dopo lo sviluppo.
-In generale, il fine dei test è quello di rilevare \textit{undefined behavior}
-generici, che possono variare da errori di formattazione presenti negli output fino
-a blocchi dell'esecuzione o vulnerabilità di sicurezza del software. Nel
-contesto di questo documento, la cui attenzione è rivolta alla memory safety,
-sono presentati strumenti e tecniche sviluppati appositamente per rilevare
-problematiche legate alla memoria.
+Il testing è una delle fasi principali del ciclo di vita del software e ha lo scopo
+di verificare che il comportamento del programma sia conforme ai requisiti e alle
+specifiche funzionali e non funzionali. Nel contesto di questo documento, la cui
+attenzione è rivolta alla memory safety, sono presentati strumenti e tecniche
+sviluppati appositamente per rilevare problematiche legate alla memoria.
 
 \subsection{Analisi Dinamica}
 \label{sec:analisi-dinamica}
@@ -150,11 +148,11 @@ ad esplorare \textit{``l'albero di esecuzione''} del programma in modo più
 efficiente. Un esempio è la cosiddetta \textit{Dynamic Symbolic Execution} (DSE),
 che consiste nell'eseguire il programma con input simbolici, riuscendo ad
 esplorare tutte le possibili esecuzioni e a generare input che portano a
-percorsi specifici.
+percorsi specifici.\cite{dynamic_symbolic_execution}
 
 \paragraph{Limiti del fuzzing}
-Nonostante l'efficacia del fuzzing nel rilevare vulnerabilità, questa tecnica
-presenta alcune limitazioni significative:
+Nonostante l'efficacia del fuzzing nel rilevare vulnerabilità, questa tecnica presenta
+alcune limitazioni significative:
 
 \begin{itemize}
   \item \textbf{Configurazione complessa:} la configurazione degli strumenti di
@@ -178,15 +176,15 @@ presenta alcune limitazioni significative:
 \end{itemize}
 
 Per mitigare questi problemi, un approccio pragmatico consiste nell'integrare il
-fuzzing in pipeline di CI/CD continuative, focalizzandosi inizialmente sui componenti
-più critici o storicamente vulnerabili del software.
+fuzzing in pipeline di CI/CD continuative, focalizzandosi inizialmente sui
+componenti più critici o storicamente vulnerabili del software.
 
 \bigskip
 \noindent
-Sebbene queste tecniche di testing siano più comunemente impiegate con codice C o
-C++, esse sono applicabili anche ad altri linguaggi. Ad esempio, strumenti come
+Sebbene queste tecniche di testing siano più comunemente impiegate con codice C
+o C++, esse sono applicabili anche ad altri linguaggi. Ad esempio, strumenti come
 Valgrind e ASan sono stati adattati per supportare l'analisi di programmi Rust\cite{valgrind_rust}\cite{rust_manual_san}
-che, pur offrendo garanzie elevate in termini di memory safety, supporta il
-cosiddetto \textit{Unsafe Rust}\footnote{Manuale Rust: \url{https://doc.rust-lang.org/book/ch20-01-unsafe-rust.html},
-ultimo accesso: 26 maggio 2025}, permettendo operazioni a basso livello, ma
-anche potenziali errori di memoria
+che, pur offrendo garanzie elevate in termini di memory safety, supporta il cosiddetto
+\textit{Unsafe Rust}\footnote{Manuale Rust: \url{https://doc.rust-lang.org/book/ch20-01-unsafe-rust.html},
+ultimo accesso: 26 maggio 2025}, permettendo operazioni a basso livello, ma anche
+potenziali errori di memoria

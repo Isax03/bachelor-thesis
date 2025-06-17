@@ -17,28 +17,11 @@ vulnerabilità potrebbero essere mitigate efficacemente tramite un refactoring m
 anche senza ricorrere a strumenti esterni. Tuttavia, per finalità didattiche, l'utilizzo
 di librerie verrà comunque applicato e comparato con le best practice.
 
-% \bigskip
-% \begin{lstlisting}[language=C, caption={Codice originale vulnerabile}, label={lst:unsafe}, style=changes_in_c]
-% file_tracker_t* tracker_init(const char* directory, const char* log_file) {
-%   file_tracker_t* tracker = malloc(sizeof(file_tracker_t));
-%   if (!tracker) {
-%     return NULL;
-%   }
-
-%   tracker->monitored_directory = malloc(256);
-%   strcpy(tracker->monitored_directory, directory);
-%   tracker->log_file_path = malloc(256);
-%   strcpy(tracker->log_file_path, log_file);
-
-%   // resto del codice
-% }
-% \end{lstlisting}
-
 \subsection*{Best Practice}
 \label{sec:best-practices-case-study}
 
-Partendo dalla guida di OWASP\cite{owasp_best_practices}, si può notare che il codice
-preso in considerazione, non rispetta nessuna delle linee guida citate nella~\autoref{sec:best-practices-codice}.
+Partendo dalla guida di OWASP\cite{owasp_best_practices}, si può notare che il
+codice preso in considerazione, non rispetta nessuna delle linee guida citate nella~\autoref{sec:best-practices-codice}.
 In particolare:
 \begin{itemize}
   \item non viene effettuato alcun controllo sulla lunghezza delle stringhe di input;
@@ -52,54 +35,23 @@ In particolare:
     vulnerabili (\texttt{strcpy}).
 \end{itemize}
 
-Per mitigare la vulnerabilità di buffer overflow, si è proceduto a un
-refactoring del codice, seguendo questi quattro punti, ottenendo il codice
-mostrato nel branch git \texttt{mitigations/best-practices} della repository del
-progetto. In particolare le modifiche consistono nell'introduzione di controlli
-sulla lunghezza delle stringhe e nell'uso della variante più sicura di \texttt{strcpy},
-ovvero \texttt{strncpy}, che permette di specificare il numero massimo di
-caratteri da copiare; è stato inoltre forzato l'inserimento di un terminatore nullo
-alla fine della stringa, per evitare che la stringa possa essere troncata senza
-un terminatore, nonostante la lunghezza sia corretta; infine, sono stati scritti
-controlli per gestire eventuali errori di allocazione della memoria, liberando
-le risorse allocate precedentemente.
-
-% \begin{lstlisting}[language=C, caption={Codice mitigato (best practices)}, label={lst:safe-best-practices}, style=changes_in_c]
-% file_tracker_t* tracker_init(const char* directory, const char* log_file) {
-%   file_tracker_t* tracker = malloc(sizeof(file_tracker_t));
-%   if (!tracker) {
-%       return NULL;
-%   }
-%   if (strlen(directory) >= 256 || strlen(log_file) >= 256) {
-%       free(tracker);
-%       return NULL;
-%   }
-
-%   if((tracker->monitored_directory = malloc(256)) == NULL) {
-%       free(tracker);
-%       return NULL;
-%   }
-%   strncpy(tracker->monitored_directory, directory, 256);
-%   tracker->monitored_directory[255] = '\0';
-
-%   if((tracker->log_file_path = malloc(256)) == NULL) {
-%       free(tracker->monitored_directory);
-%       free(tracker);
-%       return NULL;
-%   }
-%   strncpy(tracker->log_file_path, log_file, 256);
-%   tracker->log_file_path[255] = '\0';
-
-%   // resto del codice
-% }
-% \end{lstlisting}
+Per mitigare la vulnerabilità di buffer overflow, si è proceduto a un refactoring
+del codice, seguendo questi quattro punti, ottenendo il codice mostrato nel branch
+git \texttt{mitigations/best-practices} della repository del progetto. In particolare
+le modifiche consistono nell'introduzione di controlli sulla lunghezza delle stringhe
+e nell'uso della variante più sicura di \texttt{strcpy}, ovvero \texttt{strncpy},
+che permette di specificare il numero massimo di caratteri da copiare; è stato
+inoltre forzato l'inserimento di un terminatore nullo alla fine della stringa, per
+evitare che la stringa possa essere troncata senza un terminatore, nonostante la
+lunghezza sia corretta; infine, sono stati scritti controlli per gestire
+eventuali errori di allocazione della memoria, liberando le risorse allocate precedentemente.
 
 \subsection*{Librerie esterne}
 \label{sec:librerie-case-study}
 
-Dal momento che i due problemi principali del codice unsafe sono legati alla gestione
-della memoria e alla manipolazione delle stringhe, si è deciso di utilizzare le
-seguenti librerie:
+Dal momento che i due problemi principali del codice unsafe sono legati alla
+gestione della memoria e alla manipolazione delle stringhe, si è deciso di utilizzare
+le seguenti librerie:
 \begin{itemize}
   \item \texttt{xmalloc}\footnote{Repository: \url{https://github.com/rosingh/xmalloc}}
     per la gestione sicura della memoria, che fornisce funzioni di allocazione
@@ -112,22 +64,23 @@ seguenti librerie:
     terminazioni delle stringhe.
 \end{itemize}
 
-Il procedimento di mitigazione in questo caso, è meno immediato rispetto alle best
-practice, poiché non consiste nella semplice riscrittura del codice, ma richiede
-l'installazione delle librerie. Nel contesto di questo esempio, la configurazione
-non occupa troppo tempo ma, in progetti reali e più complessi, l'integrazione delle
-librerie potrebbe richiedere uno sforzo non trascurabile.
+Il procedimento di mitigazione in questo caso, è meno immediato rispetto alle
+best practice, poiché non consiste nella semplice riscrittura del codice, ma
+richiede l'installazione delle librerie. Nel contesto di questo esempio, la
+configurazione non occupa troppo tempo ma, in progetti reali e più complessi, l'integrazione
+delle librerie potrebbe richiedere uno sforzo non trascurabile.
 
-Per quanto riguarda la libreria \texttt{xmalloc}, è sufficiente scaricare un file
-header \texttt{xmalloc.h} e un file di implementazione \texttt{xmalloc.c} e includerli
-nel progetto. La libreria \texttt{safestringlib} invece, richiede l'installazione
+Per quanto riguarda la libreria \texttt{xmalloc}, è sufficiente scaricare un
+file header \texttt{xmalloc.h} e un file di implementazione \texttt{xmalloc.c} e
+includerli nel progetto. La libreria \texttt{safestringlib} invece, richiede l'installazione
 tramite alcuni comandi disponibili nella repository ufficiale.
 
 \medskip
 Oltre all'installazione, un altro aspetto da considerare, per quanto riguarda le
-librerie, è la compilazione del codice: infatti ci sono librerie esterne che
-richiedono l'aggiunta di flag specifici per la compilazione. In questo caso specifico,
-è necessario aggiungere il seguente testo ai comandi di compilazione: \begin{lstlisting}[language=bash, numbers=none]
+librerie, è la compilazione del codice: infatti ci sono librerie esterne che richiedono
+l'aggiunta di flag specifici per la compilazione. In questo caso specifico, è necessario
+aggiungere il seguente testo ai comandi di compilazione:
+\begin{lstlisting}[language=bash, numbers=none]
 ./lib/xmalloc/xmalloc.c -lsafestring-shared
 \end{lstlisting}
 Questa parte include infatti, il file \texttt{xmalloc.c} (salvato nella cartella
@@ -136,35 +89,6 @@ che indica al compilatore di cercare la libreria durante la fase di linking.
 
 Dopo aver installato le librerie, il codice è stato modificato come mostrato nel
 branch git \\ \texttt{mitigations/libraries} della repository del progetto.
-
-% \begin{lstlisting}[language=C, caption={Codice mitigato (librerie)}, label={lst:safe-libraries}, style=changes_in_c]
-% #include "lib/xmalloc/xmalloc.h"
-% #include <safe_lib.h>
-
-% file_tracker_t* tracker_init(const char* directory, const char* log_file) {
-%   file_tracker_t* tracker = xmalloc(sizeof(file_tracker_t));
-%   if (!tracker) {
-%     return NULL;
-%   }
-
-%   tracker->monitored_directory = xmalloc(256);
-%   if(strncpy_s(tracker->monitored_directory, 256, directory, strlen(directory)) != EOK){
-%     xfree(tracker->monitored_directory);
-%     xfree(tracker);
-%     return NULL;
-%   }
-
-%   tracker->log_file_path = xmalloc(256);
-%   if(strncpy_s(tracker->log_file_path, 256, log_file, strlen(log_file)) != EOK){
-%     xfree(tracker->monitored_directory);
-%     xfree(tracker->log_file_path);
-%     xfree(tracker);
-%     return NULL;
-%   }
-
-%   // resto del codice
-% }
-% \end{lstlisting}
 
 Le modifiche principali consistono nell'utilizzo delle funzioni \texttt{xmalloc}
 e \texttt{xfree} per la gestione della memoria, che gestiscono automaticamente

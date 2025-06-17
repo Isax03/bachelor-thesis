@@ -1,0 +1,50 @@
+\section{Riepilogo delle mitigazioni}
+\label{sec:recap}
+
+Le mitigazioni per la memory safety presentate in questo capitolo sono numerose e
+variegate, ciascuna con specifiche caratteristiche di applicabilità e efficacia.
+In un contesto reale, la scelta e l'implementazione di queste mitigazioni deve
+essere guidata dalla fase del ciclo di vita del software in cui ci si trova, dalle
+risorse disponibili e dalle specifiche esigenze del progetto. La~\autoref{tab:recap_table}
+fornisce un riepilogo strutturato e una checklist pratica che offre una
+panoramica immediata delle mitigazioni disponibili per ciascuna fase del
+Software Development Life Cycle, facilitando la valutazione e la selezione delle
+strategie più appropriate per ogni contesto specifico.
+
+È importante considerare lo stato attuale del progetto quando si valutano queste
+mitigazioni: ogni software si trova in un momento specifico del suo ciclo di
+vita e presenta caratteristiche uniche che influenzano l'applicabilità delle
+diverse strategie. La colonna "Considerazioni" fornisce indicazioni per adattare
+ciascuna mitigazione al contesto del progetto, tenendo conto delle limitazioni
+pratiche, dei vincoli temporali e delle risorse disponibili.
+
+\begin{table}[htbp]
+  \centering
+  \footnotesize
+  
+  \renewcommand{\arraystretch}{1.2}
+  \begin{tabular}{|p{2.5cm}|p{2.25cm}|p{8.25cm}|p{2.8cm}|}
+    \hline
+    \textbf{Fase SDLC}                                                        & \textbf{Mitigazione}                   & \textbf{Considerazioni}                                                                                                                                                                    & \textbf{Sezione}                      \\
+    \hline % --- Riga Pianificazione ---
+    \multirow{2}{2.5cm}{\centering\arraybackslash Fasi iniziali}              & Definizione di roadmap                 & Fondamentale per nuovi progetti per integrare la memory safety fin dall'inizio. Per progetti esistenti, definire una roadmap mirata in base alle risorse e allo stato del codice.          & \autoref{sec:roadmap}                 \\
+    \cline{2-4}                                                               & Scelta del linguaggio                  & Per progetti nuovi, privilegiare linguaggi memory-safe e pianificare la formazione del team. Per codice esistente (legacy, C/C++), rafforzare le altre mitigazioni o migrare gradualmente. & \autoref{sec:linguaggio}              \\
+    \hline % --- Riga Sviluppo ---
+    \multirow{3}{2.5cm}{\centering\arraybackslash Sviluppo}                   & Best Practice                          & Cruciali in linguaggi non sicuri. Richiedono disciplina, formazione continua e code review sistematiche per minimizzare l'errore umano.                                                    & \autoref{sec:best-practices-codice}   \\
+    \cline{2-4}                                                               & Librerie                               & Usare librerie verificate e mantenute attivamente, specialmente per operazioni rischiose (es. gestione di stringhe, accesso diretto alla memoria).                                         & \autoref{sec:librerie}                \\
+    \cline{2-4}                                                               & Analisi Statica                        & Integrare nella pipeline CI/CD per un feedback preventivo. Usare più tool combinati per ridurre falsi positivi e negativi. Usare IDE avanzati con analizzatori integrati.                  & \autoref{sec:analisi-statica}         \\
+    \hline % --- Riga Testing ---
+    \multirow{2}{2.5cm}{\centering\arraybackslash Testing}                    & Analisi Dinamica                       & Essenziale per rilevare errori a runtime (es. out-of-bounds). L'overhead la rende più adatta agli ambienti di test e staging.                                                              & \autoref{sec:analisi-dinamica}        \\
+    \cline{2-4}                                                               & Fuzzing                                & Efficace su codice che processa input esterni. Richiede risorse computazionali ma è eccellente per scovare vulnerabilità. La configurazione può risultare complessa.                       & \autoref{sec:fuzzing}                 \\
+    \hline % --- Riga Distribuzione ---
+    \multirow{3}{2.5cm}{\centering\arraybackslash Distribuzione e Esecuzione} & Protezioni a livello di memoria        & Abilitare di default le protezioni di compilatore e OS (es. ASLR, DEP). Rappresentano una difesa di base a basso costo.                                                                    & \autoref{sec:memory-protection}       \\
+    \cline{2-4}                                                               & Controlli di integrità dell'esecuzione & Mitigazione avanzata (es. CFI) contro attacchi control-flow. Valutare il supporto del compilatore e il possibile overhead in caso di requisiti di performance.                             & \autoref{sec:execution-integrity}     \\
+    \cline{2-4}                                                               & Isolamento del software                & Adottare sandboxing o container per confinare i processi e limitare i danni di un attacco. In casi più critici ricorrere a macchine virtuali (VM).                                         & \autoref{sec:isolation}               \\
+    \hline % --- Riga Mantenimento ---
+    \multirow{2}{2.5cm}{\centering\arraybackslash Mantenimento}               & Tracciamento delle dipendenze          & Automatizzare la scansione per identificare e aggiornare componenti con vulnerabilità note (CVE).                                                                                          & \autoref{sec:tracciamento-dipendenze} \\
+    \cline{2-4}                                                               & Monitoraggio e logging                 & Implementare logging strutturato per l'identificazione di anomalie in produzione e per l'analisi forense post-incidente.                                                                   & \autoref{sec:monitoraggio-logging}    \\
+    \hline
+  \end{tabular}
+  \caption{Tabella di Riepilogo delle Mitigazioni per la Memory Safety}
+  \label{tab:recap_table}
+\end{table}

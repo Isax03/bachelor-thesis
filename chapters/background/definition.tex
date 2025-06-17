@@ -11,17 +11,16 @@ Di seguito, vengono presentate sia una definizione formale di memory safety che 
 definizione intuitiva derivante da aspetti più pratici, al fine di fornire una
 visione completa del concetto e delle sue implicazioni.
 
-\subsection{Definizione formale}
-\label{sec:formal_definition}
+\paragraph{Definizione formale}
 
 Una delle definizioni formali di memory safety più accreditate è quella proposta
-da A. Azevedo de Amorim et al.\cite{meaning_memory_safety}, che si basa su una formalizzazione
-rigorosa del concetto, attraverso un framework matematico basato su semantica
-operazionale e strutture formali per ragionare sulla sicurezza della memoria in
-modo verificabile.
+da A. Azevedo de Amorim et al.\cite{meaning_memory_safety}, che si basa su una
+formalizzazione rigorosa del concetto, attraverso un framework matematico basato
+su semantica operazionale e strutture formali per ragionare sulla sicurezza della
+memoria in modo verificabile.
 
-Nel modello proposto, un programma è considerato \textbf{memory safe} se, durante
-la sua esecuzione, preserva le seguenti proprietà:
+Nel modello proposto, un programma è considerato \textbf{memory safe} se,
+durante la sua esecuzione, preserva le seguenti proprietà:
 \begin{enumerate}
   \item \textbf{Isolamento spaziale e temporale}:
     \begin{itemize}
@@ -32,15 +31,15 @@ la sua esecuzione, preserva le seguenti proprietà:
         poiché le porzioni di memoria fuori dai limiti di un array non fanno
         parte del suo footprint}
 
-      \item I \textit{Frame Theorems} (Sezione 3 del paper), sviluppati e dimostrati
-        nel paper stesso, garantiscono che l'estensione dello heap iniziale con
-        blocchi non raggiungibili non alteri il comportamento del programma.
+      \item I \textit{Frame Theorems}, sviluppati e dimostrati in~\cite{meaning_memory_safety},
+        garantiscono che l'estensione dello heap iniziale con blocchi non
+        raggiungibili non alteri il comportamento del programma.
     \end{itemize}
 
-  \item \textbf{Non-interferenza} (Corollario 1):
+  \item \textbf{Non-interferenza}:
     \begin{itemize}
       \item Nel modello ideale proposto, la memoria non raggiungibile non può
-        modificare né essere modificata dall'esecuzione. Ciò assicura sia \textit{integrità}
+        modificare né essere modificata durante l'esecuzione. Ciò assicura sia \textit{integrità}
         (impossibilità di alterare dati isolati), sia \textit{segretezza} (impossibilità
         di dedurne l'esistenza).
     \end{itemize}
@@ -53,27 +52,25 @@ la sua esecuzione, preserva le seguenti proprietà:
     \end{itemize}
 \end{enumerate}
 
-Questo modello consente di dimostrare proprietà come la protezione tra moduli e
-l'assenza di comportamenti indefiniti. Conseguentemente, esso fornisce anche un
-solido framework matematico per specificare e dimostrare le garanzie di
-sicurezza implementate da un sistema (come proprietà del \textit{type system} o
-del \textit{memory model}). Tale formalizzazione guida inoltre lo sviluppo di strumenti
-verificati per l'enforcement della memory safety, come i monitor hardware/software
-descritti nel paper (Sezione 5).
+Questo modello consente di dimostrare proprietà come la protezione tra moduli e l'assenza
+di comportamenti indefiniti. Conseguentemente, esso fornisce anche un solido framework
+matematico per specificare e dimostrare le garanzie di sicurezza implementate da
+un sistema (come proprietà del \textit{type system} o del \textit{memory model}).
+Tale formalizzazione guida inoltre lo sviluppo di strumenti verificati per l'enforcement
+della memory safety, come i monitor hardware/software descritti in~\cite{meaning_memory_safety}.
 
-Tuttavia, questa definizione si basa su ipotesi idealizzate, come memoria
-illimitata, assenza di side-channel\footnote{Canale di informazione non
-intenzionale che permette di estrarre dati sensibili attraverso l'osservazione
-di caratteristiche fisiche o temporali del sistema (es. consumo energetico, timing
-delle operazioni, emissioni elettromagnetiche) piuttosto che attraverso l'accesso
-diretto ai dati.} sfruttabili dagli attaccanti e assenza di aritmetica sui
-puntatori o di cast a interi (che permettono la manipolazione diretta degli indirizzi),
-che lo rendono parzialmente distante dai linguaggi e dagli ambienti reali. Per
-questo motivo una definizione più intuitiva e pratica può essere più utile per
-comprendere il concetto di memory safety in contesti reali.
+Tuttavia, questa definizione si basa su ipotesi idealizzate, come memoria illimitata,
+assenza di side-channel\footnote{Canale di informazione non intenzionale che
+permette di estrarre dati sensibili attraverso l'osservazione di caratteristiche
+fisiche o temporali del sistema (es. consumo energetico, timing delle operazioni,
+emissioni elettromagnetiche) piuttosto che attraverso l'accesso diretto ai dati.}
+sfruttabili dagli attaccanti e assenza di aritmetica sui puntatori o di cast a interi
+(che permettono la manipolazione diretta degli indirizzi), che lo rendono
+parzialmente allineato ai linguaggi e agli ambienti reali. Per questo motivo una
+definizione più intuitiva e pratica può essere utile per comprendere il concetto
+di memory safety in contesti reali.
 
-\subsection{Definizione pratica}
-\label{sec:practical_definition}
+\paragraph{Definizione pratica}
 
 Dal punto di vista pratico, la memory safety viene comunemente intesa come la
 capacità di un programma di evitare vulnerabilità o comportamenti errati legati
@@ -107,22 +104,21 @@ adottata in contesti divulgativi, dove la memory safety è intesa come l'assenza
 specifiche classi di vulnerabilità anziché come una proprietà rigorosamente formale.
 
 % Memory Safety Continuum %
-\subsection{Memory safety come spettro continuo}
-\label{sec:continuum_definition}
+\paragraph{Memory safety come spettro continuo}
 
-Il divario tra modelli teorici e implementazioni reali suggerisce che la memory
-safety non sia una proprietà assoluta o binaria, ma una condizione che può essere
+Il divario tra modelli teorici e implementazioni reali suggerisce che la memory safety
+non sia una proprietà assoluta o binaria, ma una condizione che può essere
 raggiunta in misura variabile in contesti di applicazione reali.
 
 Mentre la definizione formale fornisce garanzie assolute all'interno del proprio
-modello matematico, le limitazioni e le idealizzazioni di tale modello rendono
-difficile il raggiungimento di una memory safety completa nei sistemi pratici.
+modello matematico, le limitazioni e le idealizzazioni di tale modello rendono difficile
+il raggiungimento di una memory safety completa nei sistemi pratici.
 
 Questa idea viene esplicitamente sviluppata dalla \textit{Open Source Security
 Foundation} (OpenSSF)\cite{memory_safety_continuum}, che propone di interpretare
 la memory safety come uno spettro continuo. In tale visione, sistemi e linguaggi
-possono offrire livelli differenti di protezione, a seconda delle garanzie
-fornite e delle mitigazioni adottate.
+possono offrire livelli differenti di protezione, a seconda delle garanzie fornite
+e delle mitigazioni adottate.
 
-Questo approccio sottolinea come la memory safety possa essere rafforzata
-progressivamente, piuttosto che garantita in modo assoluto.
+Questo approccio sottolinea come la memory safety possa essere rafforzata progressivamente,
+piuttosto che garantita in modo assoluto.

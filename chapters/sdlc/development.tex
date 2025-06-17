@@ -21,12 +21,11 @@ La creazione di software con elevati standard di memory safety inizia dalle
 decisioni prese durante la fase di implementazione del codice. Per quanto si possano
 utilizzare linguaggi moderni e progettati con meccanismi di sicurezza intrinseci,
 la qualità del software dipende inevitabilmente dalle decisioni adottate dallo
-sviluppatore. Per questo motivo esistono linee guida consolidate, note come
-\textit{secure coding practice}, che aiutano a prevenire vulnerabilità legate
-alla gestione della memoria. L'applicazione di queste buone pratiche consente di
-ridurre drasticamente il rischio di exploit e aumentare la robustezza del software
-fin dalle sue fondamenta, costituendo un primo livello di difesa essenziale, specialmente
-in linguaggi notoriamente non memory safe.
+sviluppatore. Per questo motivo esistono linee guida consolidate, che aiutano a
+prevenire vulnerabilità legate alla gestione della memoria. L'applicazione di queste
+buone pratiche consente di ridurre drasticamente il rischio di exploit e aumentare
+la robustezza del software fin dalle sue fondamenta, costituendo un primo
+livello di difesa essenziale, specialmente in linguaggi notoriamente non memory safe.
 
 Una delle principali fonti di riferimento è la \textbf{OWASP Secure Coding
 Practices Quick Reference Guide}\cite{owasp_best_practices}, che fornisce una
@@ -62,7 +61,8 @@ della memoria:
 
   \item \textbf{Evitare l'uso di funzioni note come vulnerabili}: funzioni standard
     come \texttt{gets}, \texttt{strcpy} e \texttt{sprintf} sono intrinsecamente pericolose
-    e dovrebbero essere sostituite con alternative più sicure.
+    e dovrebbero essere sostituite con alternative più sicure (a tal proposito
+    si veda la~\autoref{sec:librerie} nel seguito).
 
   \item \textbf{Liberare correttamente la memoria}: la memoria dinamica va liberata
     in tutti i punti di uscita del programma, compresi quelli dovuti a
@@ -156,19 +156,13 @@ Integration/Continuous Deployment (CI/CD), fornendo un feedback immediato agli s
 durante la scrittura del codice stesso.
 
 L'analisi statica consiste nell'esaminare il codice sorgente (o, in alcuni casi,
-il bytecode o il codice compilato) alla ricerca di difetti, vulnerabilità di
-sicurezza e violazioni degli standard di codifica, il tutto senza eseguire il programma.
-Il vantaggio principale è la possibilità di individuare problemi in una fase
-precoce dello sviluppo, riducendo così i costi e la complessità delle successive
-correzioni.
+il bytecode o il codice compilato) \textbf{senza eseguirlo}, alla ricerca di difetti
+e problemi che spaziano dalle vulnerabilità legate alla memory safety fino ad altri
+tipi di errori come divisioni per zero, codice morto o violazioni delle
+convenzioni di stile. Il vantaggio principale è la possibilità di individuare problemi
+in una fase precoce dello sviluppo, riducendo così i costi e la complessità
+delle successive correzioni.
 
-\begin{quote}
-  \textbf{\textit{Nota:}} L'analisi statica rileva anche altri problemi di
-  qualità del codice oltre alle vulnerabilità di memory safety, che tuttavia non
-  sono trattati in questo elaborato.
-\end{quote}
-
-\noindent
 Nonostante la sua capacità di rilevazione precoce degli errori, l'analisi statica
 presenta alcune limitazioni: una delle sfide principali è la gestione dei
 \textbf{falsi positivi}, ovvero segnalazioni di problemi che in realtà non
@@ -177,12 +171,13 @@ costituiscono errori o vulnerabilità nel contesto specifico dell'applicazione. 
 completo in cui il codice viene eseguito, portando a segnalazioni errate.
 
 Un esempio pratico può essere quello del~\autoref{lst:copy_string}: in questo caso,
-alcuni analizzatori statici potrebbero segnalare un potenziale buffer overflow, nonostante
-il controllo esplicito della lunghezza della stringa di input. Questa situazione
-si verifica, ad esempio, quando l'analizzatore non tiene conto del legame
-semantico tra la condizione \texttt{if} e l'istruzione \texttt{strcpy}. Altri tool
-invece potrebbero adottare strategie conservative che segnalano sempre funzioni come
-\texttt{strcpy} come potenzialmente pericolose.
+alcuni analizzatori statici, come Frama-C, Clang o cppcheck, approfonditi nella~\autoref{sec:initial_analysis},
+potrebbero segnalare un potenziale buffer overflow, nonostante il controllo esplicito
+della lunghezza della stringa di input. Questa situazione si verifica, ad esempio,
+quando l'analizzatore non tiene conto del legame semantico tra la condizione
+\texttt{if} e l'istruzione \texttt{strcpy}. Altri tool invece potrebbero adottare
+strategie conservative che segnalano sempre funzioni come \texttt{strcpy} come
+potenzialmente pericolose.
 
 Allo stesso modo, l'analisi statica può anche portare a \textbf{falsi negativi},
 ossia la mancata rilevazione di problemi reali, specialmente per vulnerabilità

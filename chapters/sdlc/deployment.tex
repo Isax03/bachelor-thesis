@@ -232,18 +232,19 @@ Le principali tecniche di isolamento includono:
 \end{itemize}
 
 Un esempio concreto dell'efficacia dell'isolamento lo troviamo nel caso reale di
-WebAudio in Google Chrome, già menzionato nella~\autoref{sec:vulnerability_types}.
-L'uso della sandbox del browser impediva all'attaccante di ottenere l'accesso completo
-al sistema, confinando l'esecuzione di codice arbitrario all'interno dell'ambiente
-``sandboxed''.\cite{webaudio_uaf}
+WebAudio in Google Chrome, in cui uno use after free premetteva l'esecuzione
+remota di codice. Tuttavia, l'uso della sandbox del browser impediva all'attaccante
+di ottenere l'accesso completo al sistema, confinando l'esecuzione di codice arbitrario
+all'interno dell'ambiente ``sandboxed''.\cite{webaudio_uaf}
 
-È importante sottolineare che queste tecnologie non sono state progettate specificamente
-per garantire la memory safety, ma la loro architettura consente di limitare l'impatto
-di eventuali vulnerabilità isolando i processi e le risorse. Ad esempio, la
-containerizzazione è nata principalmente per esigenze di portabilità e
-scalabilità delle applicazioni, ma fornisce anche un utile livello di confinamento.
+È importante sottolineare che queste tecnologie non sono state progettate
+specificamente per garantire la memory safety, ma la loro architettura consente di
+limitare l'impatto di eventuali vulnerabilità isolando i processi e le risorse.
+Ad esempio, la containerizzazione è nata principalmente per esigenze di portabilità
+e scalabilità delle applicazioni, ma fornisce anche un utile livello di
+confinamento.
 
-Tuttavia, l'isolamento non elimina completamente le vulnerabilità, e introduce un
-costo aggiuntivo in termini di complessità gestionale e prestazioni. Pertanto, la
-scelta della tecnica più appropriata deve basarsi su una valutazione del contesto
-applicativo e dei requisiti di sicurezza specifici.
+Tuttavia, l'isolamento non elimina completamente le vulnerabilità, e introduce
+un costo aggiuntivo in termini di complessità gestionale e prestazioni. Pertanto,
+la scelta della tecnica più appropriata deve basarsi su una valutazione del
+contesto applicativo e dei requisiti di sicurezza specifici.

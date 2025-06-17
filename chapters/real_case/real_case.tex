@@ -1,4 +1,4 @@
-\chapter{Caso studio}
+\chapter{Caso di studio}
 \label{cha:real_case}
 
 \section{Presentazione}
@@ -6,14 +6,14 @@
 
 Dopo aver illustrato nei capitoli precedenti le principali vulnerabilità legate alla
 gestione della memoria e le relative tecniche di mitigazione, questo capitolo
-presenta un caso studio pratico, volto a dimostrare come i concetti teorici possano
+presenta un caso di studio pratico, volto a dimostrare come i concetti teorici possano
 essere applicati concretamente a un progetto reale.
 
 \subsection*{Metodologia di selezione del progetto}
 
 Per condurre un'analisi efficace delle vulnerabilità di memory safety, esistono due
-alternative principali nella scelta del caso studio: utilizzare un progetto open
-source esistente oppure crearne uno appositamente per scopi dimostrativi.
+alternative principali nella scelta del caso di studio: utilizzare un progetto
+open source esistente oppure crearne uno appositamente per scopi dimostrativi.
 
 L'analisi di progetti open source presenta tuttavia alcune problematiche
 ricorrenti:
@@ -56,21 +56,6 @@ C.
 Una descrizione dettagliata di ciascuna vulnerabilità è disponibile nel file \texttt{README.md}
 del progetto\footnote{Progetto GitHub: \url{https://github.com/Isax03/unsafe-file-tracker}}.
 
-\begin{quote}
-  \textbf{Nota:} È importante sottolineare che, in un contesto reale di progettazione
-  ex novo, molte delle vulnerabilità analizzate in questo capitolo avrebbero
-  potuto essere evitate scegliendo un linguaggio memory safe già in fase di
-  design (\autoref{sec:linguaggio}).
-
-  Tuttavia, l'approccio adottato in questo caso studio è deliberatamente diverso:
-  si è scelto di partire da un'applicazione scritta in C, linguaggio storicamente
-  vulnerabile ma ancora ampiamente utilizzato, per illustrare concretamente l'efficacia
-  (e le limitazioni) degli strumenti di analisi e delle tecniche di mitigazione
-  nel contesto di un progetto esistente. Questo consente di simulare un caso realistico
-  di refactoring e messa in sicurezza di software legacy, situazione frequente
-  nel mondo industriale.
-\end{quote}
-
 Nel corso del capitolo vengono illustrati:
 \begin{itemize}
   \item I principali difetti rilevati tramite analisi statica
@@ -82,22 +67,9 @@ Nel corso del capitolo vengono illustrati:
     mitigare la vulnerabilità del primo scenario
 \end{itemize}
 
-Questo caso studio rappresenta quindi una dimostrazione concreta dell'approccio
-proposto nella tesi: identificare, analizzare e mitigare vulnerabilità di
-memoria lungo il ciclo di vita del software, anche in assenza di exploit attivi.
-
-\begin{quote}
-  \textbf{Dettagli dell'ambiente:} Il progetto è stato analizzato, compilato ed eseguito
-  su un sistema \textit{Linux} (Ubuntu 24.04.2 LTS). Di conseguenza, tutti i risultati
-  presentati fanno riferimento a tale ambiente.
-
-  Nonostante i tool utilizzati siano generalmente disponibili anche su altri sistemi
-  operativi, non si garantisce il corretto funzionamento né la piena
-  compatibilità su piattaforme diverse, poiché potrebbero sussistere differenze nei
-  compilatori, nelle librerie di sistema o nei meccanismi di gestione della
-  memoria che influenzano l'efficacia degli strumenti e la riproducibilità dei
-  risultati.
-\end{quote}
+Questo caso di studio rappresenta quindi una dimostrazione concreta dell'approccio
+proposto nella tesi: identificare, analizzare e mitigare vulnerabilità di memoria
+lungo il ciclo di vita del software, anche in assenza di exploit attivi.
 
 \input{chapters/real_case/initial_analysis.tex}
 \input{chapters/real_case/mitigations.tex}
