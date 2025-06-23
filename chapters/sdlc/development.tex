@@ -28,12 +28,12 @@ la robustezza del software fin dalle sue fondamenta, costituendo un primo
 livello di difesa essenziale, specialmente in linguaggi notoriamente non memory safe.
 
 Una delle principali fonti di riferimento è la \textbf{OWASP Secure Coding
-Practices Quick Reference Guide}\cite{owasp_best_practices}, che fornisce una
-checklist focalizzata su vari aspetti della sicurezza del software, tra cui la gestione
+Practices Quick Reference Guide}~\cite{owasp_best_practices}, che fornisce una checklist
+focalizzata su vari aspetti della sicurezza del software, tra cui la gestione
 della memoria.
 
-Di seguito si riportano alcune delle principali best practice relative alla sicurezza
-della memoria:
+Di seguito si riportano alcune delle principali best practice relative alla
+sicurezza della memoria:
 
 \begin{itemize}
   \item \textbf{Validare input e output da fonti non affidabili}: tutti i dati esterni
@@ -73,15 +73,15 @@ della memoria:
     sovrascrivere la memoria per evitare che rimangano accessibili in chiaro (zeroization).
 \end{itemize}
 
-Oltre alle regole già formalizzate, risulta opportuno considerare anche altre buone
-pratiche non sempre trattate esplicitamente, ma che possono contribuire a
-prevenire i bug descritti nella~\autoref{sec:vulnerability_types}. Un esempio significativo
-è il controllo degli \textbf{integer overflow} durante il calcolo degli indici
-di un array: un valore che supera il massimo rappresentabile da un intero può produrre
-un indice errato, portando a un accesso fuori dai limiti della memoria.
+Oltre alle regole già formalizzate, risulta opportuno considerare anche altre
+buone pratiche non sempre trattate esplicitamente, ma che possono contribuire a prevenire
+i bug descritti nella~\autoref{sec:vulnerability_types}. Un esempio
+significativo è il controllo degli \textbf{integer overflow} durante il calcolo degli
+indici di un array: un valore che supera il massimo rappresentabile da un intero
+può produrre un indice errato, portando a un accesso fuori dai limiti della memoria.
 
 A complemento della guida proposta da \textit{OWASP}, i \textbf{SEI CERT Coding
-Standard}\cite{cert_coding_standard} offrono una raccolta di regole dettagliate,
+Standard}~\cite{cert_coding_standard} offrono una raccolta di regole dettagliate,
 spesso accompagnate da esempi di codice non conforme (\textit{non-compliant}) e
 dalle relative soluzioni corrette (\textit{compliant}). Le regole di SEI CERT
 sono organizzate in base al linguaggio di programmazione e risultano molto più
@@ -98,8 +98,8 @@ vantaggioso affidarsi a librerie progettate per offrire un livello di controllo
 e protezione superiore rispetto a quello garantito dalle funzioni standard del
 linguaggio. Questo aspetto è particolarmente rilevante nei linguaggi storicamente
 non memory safe, come C e C++, dove l'allocazione manuale e la gestione esplicita
-della memoria espongono facilmente a vulnerabilità come buffer overflow, use-after-free
-o double free.
+della memoria espongono facilmente a vulnerabilità come buffer overflow, use
+after free o double free.
 
 Nel corso degli anni sono state sviluppate numerose librerie che affrontano
 direttamente queste problematiche. Alcune di esse, come \textit{xmalloc}\footnote{Repository

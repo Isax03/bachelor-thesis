@@ -42,7 +42,7 @@ Due esempi noti sono:
 \begin{itemize}
   \item \textbf{AddressSanitizer (ASan)\footnote{Sito: \url{https://github.com/google/sanitizers/wiki/addresssanitizer}}:}
     uno strumento integrato nei compilatori \texttt{clang} e \texttt{gcc}, in grado
-    di rilevare errori comuni come buffer overflow, use-after-free, e heap/stack
+    di rilevare errori comuni come buffer overflow, use after free, e heap/stack
     out-of-bounds. ASan aggiunge al codice binario delle istruzioni extra per
     controllare la validità degli accessi in memoria durante l'esecuzione.
 
@@ -136,8 +136,8 @@ in modo più preciso gli errori sottostanti.
 
 Questa mancanza ha portato a sviluppare anche strumenti di fuzzing \textit{multi-purpose},
 che combinano le funzionalità di fuzzing con altre tecniche di testing. Un
-esempio è AFL++\cite{afl_plus_plus} che, tra le sue funzionalità, include anche un
-AddressSanitizer (QASan\cite{qasan}) integrato, in grado di rilevare errori di memoria
+esempio è AFL++~\cite{afl_plus_plus} che, tra le sue funzionalità, include anche un
+AddressSanitizer (QASan~\cite{qasan}) integrato, in grado di rilevare errori di memoria
 durante il fuzzing.
 
 Il fuzzing descritto finora è chiamato \textit{black-box fuzzing}, in quanto non
@@ -148,7 +148,7 @@ ad esplorare \textit{``l'albero di esecuzione''} del programma in modo più
 efficiente. Un esempio è la cosiddetta \textit{Dynamic Symbolic Execution} (DSE),
 che consiste nell'eseguire il programma con input simbolici, riuscendo ad
 esplorare tutte le possibili esecuzioni e a generare input che portano a
-percorsi specifici.\cite{dynamic_symbolic_execution}
+percorsi specifici~\cite{dynamic_symbolic_execution}.
 
 \paragraph{Limiti del fuzzing}
 Nonostante l'efficacia del fuzzing nel rilevare vulnerabilità, questa tecnica presenta
@@ -183,7 +183,7 @@ componenti più critici o storicamente vulnerabili del software.
 \noindent
 Sebbene queste tecniche di testing siano più comunemente impiegate con codice C
 o C++, esse sono applicabili anche ad altri linguaggi. Ad esempio, strumenti come
-Valgrind e ASan sono stati adattati per supportare l'analisi di programmi Rust\cite{valgrind_rust}\cite{rust_manual_san}
+Valgrind e ASan sono stati adattati per supportare l'analisi di programmi Rust~\cite{valgrind_rust}~\cite{rust_manual_san}
 che, pur offrendo garanzie elevate in termini di memory safety, supporta il cosiddetto
 \textit{Unsafe Rust}\footnote{Manuale Rust: \url{https://doc.rust-lang.org/book/ch20-01-unsafe-rust.html},
 ultimo accesso: 26 maggio 2025}, permettendo operazioni a basso livello, ma anche

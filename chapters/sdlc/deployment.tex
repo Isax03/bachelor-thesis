@@ -20,7 +20,7 @@ soprattutto in modo combinato, per ridurre al minimo le possibilità di attacco.
 
 Il primo tipo di protezione trattato in questa sezione riguarda i meccanismi di
 difesa a livello di memoria. Queste tecniche mirano a ostacolare l'abuso di vulnerabilità
-come buffer overflow, use-after-free o corruzione dello stack, agendo sulla disposizione,
+come buffer overflow, use after free o corruzione dello stack, agendo sulla disposizione,
 i permessi e l'integrità delle aree di memoria durante l'esecuzione.
 
 Queste mitigazioni, implementate sia a livello di compilatore che di sistema operativo,
@@ -38,7 +38,7 @@ memoria delle principali aree di un processo, come stack, heap e librerie condiv
 al fine di ostacolare attacchi che si basano su indirizzi statici, e quindi prevedibili.
 
 Nonostante introduca entropia a ogni avvio del processo, la sua efficacia
-risulta limitata sulle architetture a 32 bit. Lo studio di Shacham et al.\cite{aslr_effectiveness}
+risulta limitata sulle architetture a 32 bit. Lo studio di Shacham et al.~\cite{aslr_effectiveness}
 dimostra che in questi sistemi l'aleatorietà degli indirizzi per alcune regioni di
 memoria può ridursi a soli 16 bit, rendendo possibili attacchi \textit{brute-force}
 in grado di compromettere le difese in pochi minuti.
@@ -90,7 +90,7 @@ Questa protezione è efficace nel mitigare un'ampia classe di vulnerabilità
 legate allo stack overflow, ma presenta alcune limitazioni: non protegge infatti
 da overflow su heap o da altre forme di corruzione della memoria, né è efficace contro
 attacchi che sfruttano tecniche più sofisticate come il ROP, che non modificano
-direttamente il canary ma riutilizzano codice legittimo.\cite{stack_canaries}
+direttamente il canary ma riutilizzano codice legittimo~\cite{stack_canaries}.
 
 \subsection{Controlli di integrità dell'esecuzione}
 \label{sec:execution-integrity} Le tecniche presentate in questa sezione mirano a
@@ -100,7 +100,7 @@ o alterato in alcun modo.
 \paragraph{Control Flow Integrity (CFI)}
 È una tecnica avanzata di protezione che mira a impedire che un attaccante possa
 alterare il flusso di controllo di un programma attraverso vulnerabilità come i
-buffer overflow o gli use-after-free. L'idea alla base della CFI è quella di assicurarsi
+buffer overflow o gli use after free. L'idea alla base della CFI è quella di assicurarsi
 che durante l'esecuzione, un programma possa compiere solo i salti di controllo
 (es. chiamate indirette, ritorni di funzione) che sono stati previsti e
 autorizzati in fase di compilazione.
@@ -129,13 +129,13 @@ Anche per la CFI gli svantaggi non mancano: essa può introdurre un overhead
 significativo in termini di prestazioni e potrebbe essere aggirata se i
 controlli sono troppo generici o se l'attaccante riesce a manipolare i metadati
 di controllo. Tuttavia, se implementata correttamente, la CFI rappresenta una misura
-di sicurezza efficace contro molte classi di attacchi.\cite{control_flow_integrity}
+di sicurezza efficace contro molte classi di attacchi~\cite{control_flow_integrity}.
 
 \paragraph{Memory Tagging Extension (MTE)\protect\footnote{https://developer.arm.com/documentation/108035/0100/Introduction-to-the-Memory-Tagging-Extension}}
 Questa è la prima delle due funzionalità di sicurezza \textit{``architecture-dependent''}
 presenti in questa sezione. La MTE infatti, è una feature hardware introdotta da
 Google e ARM (v8.5+) che mira a rilevare e prevenire errori di accesso alla
-memoria, come buffer overflow e use-after-free, attraverso l'uso di \textit{tag
+memoria, come buffer overflow e use after free, attraverso l'uso di \textit{tag
 di memoria}.
 
 A livello concettuale, la MTE associa un tag (etichetta) a ogni area di memoria
@@ -235,7 +235,7 @@ Un esempio concreto dell'efficacia dell'isolamento lo troviamo nel caso reale di
 WebAudio in Google Chrome, in cui uno use after free premetteva l'esecuzione
 remota di codice. Tuttavia, l'uso della sandbox del browser impediva all'attaccante
 di ottenere l'accesso completo al sistema, confinando l'esecuzione di codice arbitrario
-all'interno dell'ambiente ``sandboxed''.\cite{webaudio_uaf}
+all'interno dell'ambiente ``sandboxed''~\cite{webaudio_uaf}.
 
 È importante sottolineare che queste tecnologie non sono state progettate
 specificamente per garantire la memory safety, ma la loro architettura consente di
