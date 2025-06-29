@@ -13,16 +13,16 @@ dereference, etc.. Tuttavia, esistono anche definizioni formali che ne
 caratterizzano rigorosamente le proprietà matematiche, che però sono meno diffuse.
 
 Stime di Microsoft~\cite{microsoft_proactive_approach} indicano che circa il 70\%
-delle vulnerabilità nei loro prodotti deriva da problemi di memory safety.
-Analisi di Google~\cite{google_memory_safety} riportano percentuali simili per software
-come iOS e macOS. Questi dati sottolineano l'importanza di adottare strategie
+delle vulnerabilità nei loro prodotti deriva da problemi di memory safety. Analisi
+di Google~\cite{google_memory_safety} riportano percentuali simili per software come
+iOS e macOS. Questi dati sottolineano l'importanza di adottare strategie
 efficaci per prevenire errori di gestione della memoria prima della messa in
 produzione.
 
 Un'ulteriore conferma dell'importanza della memory safety si ricava dalla
 classifica \textit{CWE Top 25 Most Dangerous Software Weaknesses}~\cite{cwe_top25_2024}
-stilata dalla MITRE Corporation\footnote{Sito: https://www.mitre.org/} per il 2024.
-Numerose posizioni sono occupate da debolezze legate alla memory safety:
+stilata dalla MITRE Corporation\footnote{Sito: https://www.mitre.org/} per il
+2024. Numerose posizioni sono occupate da debolezze legate alla memory safety:
 \begin{itemize}
   \item \textbf{CWE-787} Out-of-bounds Write (2° posto): scrittura di dati oltre
     i limiti di un buffer, un array o una struttura dati.
@@ -46,9 +46,9 @@ Numerose posizioni sono occupate da debolezze legate alla memory safety:
     direttamente legata alla memoria, ma può causare errori di allocazione o accesso
     a memoria se non gestita correttamente.
 \end{itemize}
-La persistenza e la gravità delle vulnerabilità legate alla gestione della
-memoria ne fanno una delle principali cause sia di exploit attivi che di
-incidenti su scala globale.
+La persistenza e la gravità delle vulnerabilità legate alla gestione della memoria,
+ne fanno una delle principali cause sia di exploit attivi che di incidenti su
+larga scala.
 
 \bigskip
 \noindent
@@ -68,8 +68,8 @@ L'attacco ransomware\footnote{Tipo di malware che cripta i file del sistema
 vittima e richiede un riscatto per fornire la chiave di decrittazione} WannaCry
 sfruttò una vulnerabilità di \textit{buffer overflow} nel protocollo SMBv1\footnote{Protocollo
 di rete utilizzato per la condivisione di file, stampanti e altre risorse tra dispositivi
-in una rete} di Windows, nota come EternalBlue (CVE-2017-0144), che corrisponde
-alla debolezza CWE-787 (Out-of-bounds Write)\footnote{Dettagli del codice: https://www.scademy.com/the-legacy-code-behind-wannacry-the-skeleton-in-the-closet/,
+in una rete} di Windows, nota come EternalBlue, che corrisponde alla debolezza
+CWE-787 (Out-of-bounds Write)\footnote{Dettagli del codice: https://www.scademy.com/the-legacy-code-behind-wannacry-the-skeleton-in-the-closet/,
 ultimo accesso: 17 giugno 2025}. Microsoft aveva rilasciato una patch di
 sicurezza per questa vulnerabilità nel marzo 2017, ma molti sistemi rimasero non
 aggiornati, permettendo al malware di propagarsi rapidamente. Si trattava di una
@@ -82,27 +82,27 @@ Sanitario Nazionale del Regno Unito (NHS), che dovette cancellare migliaia di
 appuntamenti e deviare ambulanze, con un impatto stimato di circa 92 milioni di sterline.
 I danni economici globali furono stimati fino a 4 miliardi di dollari~\cite{wannacry_kaspersky}.
 
-L'attacco evidenzia come l'utilizzo di linguaggi a gestione manuale della memoria,
-come C e C++, possa esporre i sistemi a vulnerabilità critiche quando non vengono
-adottate pratiche rigorose di sicurezza e aggiornamento tempestivo.
+L'attacco evidenzia come l'utilizzo di linguaggi a gestione manuale della
+memoria, come C e C++, possa esporre i sistemi a vulnerabilità critiche quando
+non vengono adottate pratiche rigorose di sicurezza e aggiornamento tempestivo.
 
 \paragraph{CrowdStrike Falcon Sensor (luglio 2024)}
 
-Recentemente, un aggiornamento difettoso del software di sicurezza CrowdStrike
-Falcon Sensor ha causato malfunzionamenti e blocchi di sistema su vasta scala, colpendo
-circa 8,5 milioni di dispositivi aventi installato Windows. L'incidente è stato
-causato da un errore di accesso alla memoria (lettura \textit{out-of-bounds}) nel
-codice, corrispondente alla debolezza CWE-125 (Out-of-bounds Read), sfuggito ai controlli
-e ai test prima del rilascio~\cite{crowdstrike2024incident}.
+Recentemente, un aggiornamento difettoso del software di sicurezza CrowdStrike Falcon
+Sensor ha causato malfunzionamenti e blocchi di sistema su vasta scala, colpendo
+circa 8,5 milioni di dispositivi aventi installato Windows. L'incidente è stato causato
+da un errore di accesso alla memoria (lettura \textit{out-of-bounds}) nel codice,
+corrispondente alla debolezza CWE-125 (Out-of-bounds Read), sfuggito ai
+controlli e ai test prima del rilascio~\cite{crowdstrike2024incident}.
 
 L'incidente ha paralizzato infrastrutture critiche in diversi settori come
 compagnie aeree, banche e strutture sanitarie, con danni economici stimati
 intorno ai 15 miliardi di dollari~\cite{crowdstrike_bug_wired_cost}.
 
-Questo episodio dimostra come anche errori interni nei software, derivanti da
-sviste umane nella gestione della memoria, possano generare conseguenze disastrose
-a livello internazionale, evidenziando che la memory safety rimane un requisito
-critico anche per i sistemi più avanzati e affidabili.
+Questo episodio dimostra come anche errori interni nei software, derivanti da sviste
+umane nella gestione della memoria, possano generare conseguenze disastrose a
+livello internazionale, evidenziando che la memory safety rimane un requisito critico
+anche per i sistemi più avanzati e affidabili.
 
 \bigskip
 \noindent
@@ -122,19 +122,19 @@ I principali contributi di questo elaborato sono:
 \end{itemize}
 
 \section*{Struttura del lavoro}
-\label{sec:structure} La tesi è divisa in quattro capitoli principali. Inizialmente,
-viene fornita una panoramica generale del concetto di memory safety e di quali
-siano le principali vulnerabilità legate alla memoria (\autoref{cha:background}).
+\label{sec:structure} La tesi è divisa in quattro capitoli principali.
+Inizialmente, viene fornita una panoramica generale del concetto di memory safety
+e di quali siano le principali vulnerabilità legate alla memoria (\autoref{cha:background}).
 
-Successivamente, vengono illustrate tecniche di mitigazione per rafforzare la memory
-safety, dividendole tra le varie fasi del ciclo di vita del software, dalla progettazione
-al mantenimento (\autoref{cha:sdlc}).
+Successivamente, vengono illustrate tecniche di mitigazione per rafforzare la
+memory safety, dividendole tra le varie fasi del ciclo di vita del software,
+dalla progettazione al mantenimento (\autoref{cha:sdlc}).
 
-Il terzo capitolo è dedicato a un caso di studio pratico, in cui viene
-presentata un'applicazione scritta in C con vulnerabilità di memory safety. Viene
-illustrato il processo di analisi e correzione delle vulnerabilità, utilizzando
-strumenti e tecniche discusse nei capitoli precedenti (\autoref{cha:real_case}).
+Il terzo capitolo è dedicato a un caso di studio pratico, in cui viene presentata
+un'applicazione scritta in C con vulnerabilità di memory safety. Viene
+illustrato il processo di analisi e correzione delle vulnerabilità, utilizzando strumenti
+e tecniche discusse nei capitoli precedenti (\autoref{cha:real_case}).
 
 Infine, il capitolo conclusivo prevede una sintesi dei risultati ottenuti e l'esplorazione
-di possibili sviluppi futuri, con l'obiettivo di migliorare ulteriormente la
-memory safety nei progetti software (\autoref{cha:conclusioni}).
+di possibili sviluppi futuri, con l'obiettivo di migliorare ulteriormente la memory
+safety nei progetti software (\autoref{cha:conclusioni}).

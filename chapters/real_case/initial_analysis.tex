@@ -184,12 +184,12 @@ codice potrebbe essere a rischio.
 \end{table}
 
 \subsection*{Analisi dinamica}
-Dopo aver analizzato il codice sorgente, la fase successiva è osservare il
-comportamento del programma durante l'esecuzione tramite l'analisi dinamica.
+Dopo aver analizzato il codice sorgente, la fase successiva prevede di osservare
+il comportamento del programma durante l'esecuzione tramite l'analisi dinamica.
 
-Seguendo criteri simili a quelli utilizzati per la selezione degli strumenti di
-analisi statica, sono stati scelti due strumenti di analisi dinamica, entrambi
-già citati nella~\autoref{sec:analisi-dinamica}:
+Seguendo criteri analoghi a quelli utilizzati per la selezione degli strumenti
+di analisi statica, sono stati scelti due strumenti di analisi dinamica,
+entrambi già citati nella~\autoref{sec:analisi-dinamica}:
 \begin{itemize}
   \item \textbf{AddressSanitizer (ASan)}, uno strumento di analisi dinamica integrato
     in Clang e GCC, progettato per rilevare errori di memoria come buffer
@@ -202,7 +202,7 @@ già citati nella~\autoref{sec:analisi-dinamica}:
 
 \noindent
 Poiché entrambi gli strumenti di analisi dinamica dipendono strettamente dagli
-input forniti al programma durante l'esecuzione e richiedono scenari specifici
+input forniti al programma durante l'esecuzione, e richiedono scenari specifici
 per attivare le diverse vulnerabilità, sono stati testati solamente tre casi d'uso
 mirati che permettono agli analizzatori di rilevare le seguenti vulnerabilità:
 \begin{itemize}

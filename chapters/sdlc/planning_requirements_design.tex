@@ -21,9 +21,9 @@ In particolare, già in fase di pianificazione è possibile (e raccomandabile) c
 un'analisi dei requisiti di sicurezza, esplicitando obiettivi orientati alla
 memory safety. Analogamente, durante la fase di progettazione, è utile prevedere
 misure difensive trasversali all'intero ciclo di vita, come l'uso di ambienti
-\textit{sandbox} durante il deployment per limitare i danni derivanti da eventuali
-vulnerabilità di memoria. Questi requisiti e decisioni guideranno poi tutte le
-fasi successive dello sviluppo.
+\textit{sandbox} durante l'esecuzione per limitare i danni derivanti da eventuali vulnerabilità
+di memoria. Questi requisiti e decisioni guideranno poi tutte le fasi successive
+dello sviluppo.
 
 \subsection{Definizione di roadmap}
 \label{sec:roadmap} Un'attività essenziale ma spesso trascurata è la definizione
@@ -33,13 +33,13 @@ entrare nell'ottica di un approccio memory safe.
 
 In quest'ottica, la CyberSecurity and Infrastructure Security Agency (CISA), in
 collaborazione con agenzie internazionali, ha pubblicato un documento~\cite{memory_safe_roadmaps}
-che fornisce linee guida per i produttori di software su come creare e
-pubblicare roadmap per la transizione verso linguaggi di programmazione che
-garantiscano la sicurezza della memoria. Inoltre, viene fornita una serie di
-mitigazioni applicabili a linguaggi non memory safe.
+che fornisce linee guida per i produttori di software su come creare e pubblicare
+roadmap per la transizione verso linguaggi di programmazione che garantiscano la
+sicurezza della memoria. Inoltre, viene fornita una serie di mitigazioni applicabili
+a linguaggi non memory safe.
 
-In particolare, secondo l'articolo, una roadmap efficace per la memory safety
-dovrebbe includere:
+In particolare, secondo l'articolo, una roadmap efficace per la memory safety dovrebbe
+includere:
 
 \begin{itemize}
   \item \textbf{Fasi definite con date e risultati attesi}: decomporre il processo
@@ -77,47 +77,46 @@ dovrebbe includere:
     distinguere i difetti memory-unsafe da altri tipi di bug.
 \end{itemize}
 
-L'adozione di tali roadmap rappresenta un primo passo verso la realizzazione di sistemi
-software più sicuri e resilienti, riducendo significativamente il rischio di
-vulnerabilità legate alla gestione della memoria.
+L'adozione di tali roadmap rappresenta un primo passo verso la realizzazione di
+sistemi software più sicuri e resilienti, riducendo significativamente il rischio
+di vulnerabilità legate alla gestione della memoria.
 
 \subsection{Scelta del linguaggio}
 \label{sec:linguaggio}
 
-La scelta del linguaggio di programmazione rappresenta una delle decisioni primarie
-nelle fasi preliminari dello sviluppo software. Essa influenza in modo diretto
-la qualità, la sicurezza e la manutenibilità del codice prodotto, ed è
-particolarmente rilevante quando si vogliono prevenire vulnerabilità legate alla
-memory safety.
+La scelta del linguaggio di programmazione rappresenta una delle decisioni
+primarie nelle fasi preliminari dello sviluppo software. Essa influenza in modo diretto
+la qualità, la sicurezza e la manutenibilità del codice prodotto, ed è particolarmente
+rilevante quando si vogliono prevenire vulnerabilità legate alla memory safety.
 
-Sebbene linguaggi come Rust siano stati progettati con l'obiettivo esplicito di
-garantire la memory safety, non esiste una soluzione unica valida per tutti i contesti.
-Ogni linguaggio presenta compromessi progettuali che ne influenzano l'idoneità
-in scenari specifici.
+Sebbene linguaggi come Rust siano stati progettati con l'obiettivo esplicito di garantire
+la memory safety, non esiste una soluzione unica valida per tutti i contesti. Ogni
+linguaggio presenta compromessi progettuali che ne influenzano l'idoneità in scenari
+specifici.
 
-Per esempio, C e C++ restano la scelta dominante nello sviluppo di firmware,
-driver o sistemi embedded, dove è richiesto un controllo a basso livello dell'hardware
-e delle risorse. Al contrario, Java e Kotlin trovano impiego in applicazioni mobili
-e enterprise, grazie alla loro portabilità e al supporto dell'ecosistema JVM. Le
-possibilità sono numerose, e ogni progetto potrebbe richiedere una combinazione
+Per esempio, C e C++ restano la scelta dominante nello sviluppo di firmware, driver
+o sistemi embedded, dove è richiesto un controllo a basso livello dell'hardware
+e delle risorse. Al contrario, Java e Kotlin trovano impiego in applicazioni
+mobili e enterprise, grazie alla loro portabilità e al supporto dell'ecosistema JVM.
+Le possibilità sono numerose, e ogni progetto potrebbe richiedere una combinazione
 diversa di criteri funzionali e non funzionali.
 
-Oltre alle caratteristiche tecniche, la scelta del linguaggio dipende spesso anche
-da fattori pragmatici come il know-how del team, la disponibilità di tool e
+Oltre alle caratteristiche tecniche, la scelta del linguaggio dipende spesso
+anche da fattori pragmatici come il know-how del team, la disponibilità di tool e
 librerie, i vincoli di tempo, o l'integrazione con sistemi esistenti e/o legacy.
-Infatti, vale la pena sottolineare che, sebbene la scelta del linguaggio sia cruciale,
-non è sempre possibile effettuarla. In alcuni casi, il linguaggio è vincolato
-dalla codebase esistente, da requisiti di interoperabilità o da standard di settore.
-Per tali situazioni, questa sezione della tesi può essere poco utile nella pratica,
-ma può comunque fornire spunti per migliorare la sicurezza della memoria e dare
-una panoramica dei linguaggi memory safe più diffusi.
+Infatti, vale la pena sottolineare che, sebbene la scelta del linguaggio sia
+cruciale, non è sempre possibile effettuarla: in alcuni casi, il linguaggio è vincolato
+dalla codebase esistente, da requisiti di interoperabilità o da standard di
+settore. Per tali situazioni, questa sezione della tesi può essere poco utile
+nella pratica, ma può comunque fornire spunti per migliorare la sicurezza della memoria
+e dare una visione generale dei linguaggi memory safe più diffusi.
 
 \paragraph{Criteri di confronto}
-Per offrire una panoramica concreta sulla relazione tra linguaggi di programmazione
-e memory safety, è stata sviluppata la~\autoref{tab:linguaggi_memory_safety}, in
-collaborazione con i ricercatori del Centro per la CyberSecurity di FBK\footnote{\url{https://cs.fbk.eu/}},
-che riassume alcune proprietà rilevanti per la memory safety. I criteri
-selezionati includono:
+Per offrire una panoramica concreta sulla relazione tra linguaggi di
+programmazione e memory safety, è stata sviluppata la~\autoref{tab:linguaggi_memory_safety},
+in collaborazione con i ricercatori del Centro per la CyberSecurity di FBK\footnote{\url{https://cs.fbk.eu/}},
+che riassume alcune proprietà rilevanti per la memory safety. I criteri selezionati
+includono:
 \begin{itemize}
   \item \textbf{Controllo dei limiti} (Bounds Check), per prevenire accessi fuori
     dai confini di array.
@@ -148,8 +147,8 @@ selezionati includono:
     potenzialmente vulnerabili.
 \end{itemize}
 
-Naturalmente esistono molti altri criteri di valutazione applicabili, sia di performance
-che di sicurezza, che tuttavia esulano dallo scopo di questa tesi.
+Naturalmente esistono molti altri criteri di valutazione applicabili, sia di
+performance che di sicurezza, che tuttavia esulano dallo scopo di questa tesi.
 
 \setlength{\tabcolsep}{4pt}
 \begin{table}[H]
@@ -172,7 +171,7 @@ che di sicurezza, che tuttavia esulano dallo scopo di questa tesi.
     \end{tabular}
     \begin{tablenotes}
       \footnotesize \item[a] Supportata tramite il crate \texttt{zeroize}, mantenuto
-      dal team \texttt{RustCrypto} sensibili. \item[b] Fonte:
+      dal team \texttt{RustCrypto}. \item[b] Fonte:
       \url{https://www.learningcardano.com/how-long-does-it-take-to-learn-the-most-popular-programming-languages/},
       ultimo accesso: 13 maggio 2025.
     \end{tablenotes}
@@ -185,8 +184,8 @@ che di sicurezza, che tuttavia esulano dallo scopo di questa tesi.
 \newpage
 \noindent
 
-Come si può osservare dalla tabella, emergono pattern interessanti che riflettono
-le diverse filosofie di design dei linguaggi analizzati.
+Come si può osservare dalla tabella, emergono pattern interessanti che
+riflettono le diverse filosofie di design dei linguaggi analizzati.
 
 \begin{itemize}
   \item \textbf{Rust e Go} si distinguono come i linguaggi più orientati alla
@@ -214,7 +213,7 @@ le diverse filosofie di design dei linguaggi analizzati.
 \end{itemize}
 
 La scelta finale del linguaggio dovrebbe quindi considerare il \textit{trade-off}
-tra controllo, performance, sicurezza e produttività, valutando attentamente il
-contesto specifico del progetto, le competenze del team e i requisiti di sicurezza.
-In molti casi, un approccio ibrido che combini linguaggi diversi per componenti specifiche
-può rappresentare la soluzione ottimale.
+tra controllo, performance, sicurezza e produttività, valutando attentamente il contesto
+specifico del progetto, le competenze del team e i requisiti di sicurezza. In molti
+casi, un approccio ibrido che combini linguaggi diversi per componenti
+specifiche può rappresentare la soluzione ottimale.

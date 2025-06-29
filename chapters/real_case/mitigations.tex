@@ -20,8 +20,8 @@ di librerie verrà comunque applicato e comparato con le best practice.
 \subsection*{Best Practice}
 \label{sec:best-practices-case-study}
 
-Partendo dalla guida di OWASP~\cite{owasp_best_practices}, si può notare che il
-codice preso in considerazione, non rispetta nessuna delle linee guida citate nella~\autoref{sec:best-practices-codice}.
+Partendo dalla guida di OWASP~\cite{owasp_best_practices}, si può notare che il codice
+preso in considerazione, non rispetta nessuna delle linee guida citate nella~\autoref{sec:best-practices-codice}.
 In particolare:
 \begin{itemize}
   \item non viene effettuato alcun controllo sulla lunghezza delle stringhe di input;
@@ -35,52 +35,51 @@ In particolare:
     vulnerabili (\texttt{strcpy}).
 \end{itemize}
 
-Per mitigare la vulnerabilità di buffer overflow, si è proceduto a un refactoring
-del codice, seguendo questi quattro punti, ottenendo il codice mostrato nel branch
-git \texttt{mitigations/best-practices} della repository del progetto. In particolare
-le modifiche consistono nell'introduzione di controlli sulla lunghezza delle stringhe
-e nell'uso della variante più sicura di \texttt{strcpy}, ovvero \texttt{strncpy},
-che permette di specificare il numero massimo di caratteri da copiare; è stato
-inoltre forzato l'inserimento di un terminatore nullo alla fine della stringa, per
-evitare che la stringa possa essere troncata senza un terminatore, nonostante la
-lunghezza sia corretta; infine, sono stati scritti controlli per gestire
-eventuali errori di allocazione della memoria, liberando le risorse allocate precedentemente.
+Per mitigare la vulnerabilità di buffer overflow, si è proceduto a un
+refactoring del codice, seguendo questi quattro punti, ottenendo il codice
+mostrato nel branch git \texttt{mitigations/best-practices} della repository del
+progetto. In particolare le modifiche consistono nell'introduzione di controlli
+sulla lunghezza delle stringhe e nell'uso della variante più sicura di \texttt{strcpy},
+ovvero \texttt{strncpy}, che permette di specificare il numero massimo di
+caratteri da copiare; è stato inoltre forzato l'inserimento di un terminatore nullo
+alla fine della stringa, per evitare che la stringa possa essere troncata senza
+un terminatore, nonostante la lunghezza sia corretta; infine, sono stati scritti
+controlli per gestire eventuali errori di allocazione della memoria, liberando
+le risorse allocate precedentemente.
 
 \subsection*{Librerie esterne}
 \label{sec:librerie-case-study}
 
-Dal momento che i due problemi principali del codice unsafe sono legati alla
-gestione della memoria e alla manipolazione delle stringhe, si è deciso di utilizzare
-le seguenti librerie:
+Dal momento che i due problemi principali del codice unsafe sono legati alla gestione
+della memoria e alla manipolazione delle stringhe, si è deciso di utilizzare le
+seguenti librerie:
 \begin{itemize}
   \item \texttt{xmalloc}\footnote{Repository: \url{https://github.com/rosingh/xmalloc}}
     per la gestione sicura della memoria, che fornisce funzioni di allocazione
-    che gestiscono automaticamente gli errori e terminano il programma in caso
-    di errori;
+    in grado di rilevare automaticamente eventuali problemi e terminare il
+    programma in caso di fallimento;
 
   \item \texttt{safestringlib}\footnote{Repository: https://github.com/intel/safestringlib}
-    per la manipolazione sicura delle stringhe, che fornisce funzioni di copia e
-    concatenazione che gestiscono automaticamente i controlli sui limiti e le
-    terminazioni delle stringhe.
+    per la manipolazione sicura, offrendo funzioni di copia e concatenazione che
+    gestiscono automaticamente i controlli sui limiti e la corretta terminazione.
 \end{itemize}
 
-Il procedimento di mitigazione in questo caso, è meno immediato rispetto alle
-best practice, poiché non consiste nella semplice riscrittura del codice, ma
-richiede l'installazione delle librerie. Nel contesto di questo esempio, la
-configurazione non occupa troppo tempo ma, in progetti reali e più complessi, l'integrazione
-delle librerie potrebbe richiedere uno sforzo non trascurabile.
+Il procedimento di mitigazione in questo caso, è meno immediato rispetto alle best
+practice, poiché non consiste nella semplice riscrittura del codice, ma richiede
+l'installazione delle librerie. Nel contesto di questo esempio, la configurazione
+non occupa troppo tempo ma, in progetti reali e più complessi, l'integrazione delle
+librerie potrebbe richiedere uno sforzo non trascurabile.
 
-Per quanto riguarda la libreria \texttt{xmalloc}, è sufficiente scaricare un
-file header \texttt{xmalloc.h} e un file di implementazione \texttt{xmalloc.c} e
-includerli nel progetto. La libreria \texttt{safestringlib} invece, richiede l'installazione
+Per quanto riguarda la libreria \texttt{xmalloc}, è sufficiente scaricare un file
+header \texttt{xmalloc.h} e un file di implementazione \texttt{xmalloc.c} e includerli
+nel progetto. La libreria \texttt{safestringlib} invece, richiede l'installazione
 tramite alcuni comandi disponibili nella repository ufficiale.
 
 \medskip
 Oltre all'installazione, un altro aspetto da considerare, per quanto riguarda le
-librerie, è la compilazione del codice: infatti ci sono librerie esterne che richiedono
-l'aggiunta di flag specifici per la compilazione. In questo caso specifico, è necessario
-aggiungere il seguente testo ai comandi di compilazione:
-\begin{lstlisting}[language=bash, numbers=none]
+librerie, è la compilazione del codice: infatti ci sono librerie esterne che
+richiedono l'aggiunta di flag specifici per la compilazione. In questo caso specifico,
+è necessario aggiungere il seguente testo in coda ai comandi di compilazione: \begin{lstlisting}[language=bash, numbers=none]
 ./lib/xmalloc/xmalloc.c -lsafestring-shared
 \end{lstlisting}
 Questa parte include infatti, il file \texttt{xmalloc.c} (salvato nella cartella
@@ -91,53 +90,52 @@ Dopo aver installato le librerie, il codice è stato modificato come mostrato ne
 branch git \\ \texttt{mitigations/libraries} della repository del progetto.
 
 Le modifiche principali consistono nell'utilizzo delle funzioni \texttt{xmalloc}
-e \texttt{xfree} per la gestione della memoria, che gestiscono automaticamente
-gli errori di allocazione e liberazione della memoria, e nell'uso della funzione
-\texttt{strncpy\_s} della libreria \texttt{safestringlib}, che permette di
-copiare le stringhe in modo simile a \texttt{strncpy}, ma con controlli
-automatici sui limiti e con la terminazione esplicita della stringa destinazione,
-restituendo codici specifici per ogni caso di errore.
+e \texttt{xfree} per la gestione della memoria, che gestiscono automaticamente gli
+errori di allocazione e liberazione della memoria, e nell'uso della funzione
+\texttt{strncpy\_s} della libreria \texttt{safestringlib}, che permette di copiare
+le stringhe in modo simile a \texttt{strncpy}, ma con controlli automatici sui limiti
+e con la terminazione esplicita della stringa destinazione, restituendo codici
+specifici per ogni caso di errore.
 
 \subsection*{Test delle mitigazioni}
 \label{sec:test-mitigations}
 
-Poiché che la porzione di codice modificata è già stata testata durante l'analisi
-dinamica, si può procedere a riprodurre lo stesso scenario per verificare che la
-funzione \texttt{tracker\_init} si comporti correttamente dopo le mitigazioni.
+Dopo aver applicato le mitigazioni, la porzione di codice interessata è stata
+nuovamente sottoposta ai test già utilizzati nell'analisi dinamica, al fine di verificare
+il corretto funzionamento della funzione \texttt{tracker\_init}.
 
-Eseguendo quindi gli stessi comandi utilizzati in precedenza, sia per AddressSanitizer
-che per Valgrind, si ottiene un risultato simile per entrambi gli analizzatori: non
-vengono rilevate anomalie nell'esecuzione del programma e, grazie ai controlli
-implementati, il programma termina correttamente in modo controllato, senza
-bloccarsi.
+Ripetendo gli stessi comandi con AddressSanitizer e Valgrind, entrambi gli strumenti
+non segnalano più anomalie: il programma si comporta come previsto e, grazie ai nuovi
+controlli, eventuali errori vengono gestiti in modo sicuro, consentendo la terminazione
+controllata dell'esecuzione senza blocchi o comportamenti imprevisti.
 
 \subsection*{Confronto tra le due soluzioni}
 \label{sec:comparison-case-study}
 
-Dopo aver applicato le mitigazioni, è possibile confrontare le due soluzioni per
-valutare i pro e i contro di ciascun approccio.
+Dopo aver applicato le due soluzioni al codice, è possibile confrontarle per valutare
+i pro e i contro di ciascun approccio.
 
-Partendo dalle best practice, un aspetto sicuramente positivo è il fatto che permette
-di mantenere il codice sotto il pieno controllo dello sviluppatore. Inoltre, questo
-approccio non richiedel'integrazione di componenti esterni, rendendo il progetto
-più leggero, facilmente portabile e privo di dipendenze aggiuntive. D'altra
-parte, richiede però una maggiore attenzione e competenza da parte dello sviluppatore,
-poiché è facile introdurre errori anche banali. Un altro aspetto negativo riguarda
-la manutenzione: essa può risultare più onerosa nel tempo, soprattutto se non esistono
-linee guida interne chiare e consolidate.
+Partendo dalle best practice, un aspetto sicuramente positivo è il fatto che
+permette di mantenere il codice sotto il pieno controllo dello sviluppatore. Inoltre,
+questo approccio non richiede l'integrazione di componenti esterni, rendendo il progetto
+più leggero, facilmente portabile e privo di dipendenze aggiuntive. D'altra parte,
+richiede però una maggiore attenzione e competenza da parte dello sviluppatore, poiché
+è facile introdurre errori anche banali. Un altro aspetto negativo riguarda la
+manutenzione: essa può risultare più onerosa nel tempo, soprattutto se non
+esistono linee guida interne chiare e consolidate.
 
-Al contrario, l'utilizzo di librerie esterne introduce una forma di astrazione: molte
-delle operazioni a rischio sono delegate a componenti progettati appositamente per
-gestirle in sicurezza. Questo comporta diversi vantaggi, tra cui una maggiore robustezza
-e un minor rischio di vulnerabilità dovute a errori umani. Di contro, può aumentare
-la complessità, sia in fase di sviluppo (configurazione, compilazione) sia di manutenzione,
-in quanto le librerie possono evolversi e richiedere aggiornamenti o modifiche
-al codice.
+Al contrario, l'utilizzo di librerie esterne introduce una forma di astrazione:
+molte delle operazioni a rischio sono delegate a componenti progettati
+appositamente per gestirle in sicurezza. Questo comporta diversi vantaggi, tra
+cui una maggiore robustezza e un minor rischio di vulnerabilità dovute a errori
+umani. Di contro, può aumentare la complessità, sia in fase di sviluppo (configurazione,
+compilazione) sia di manutenzione, in quanto le librerie possono evolversi e richiedere
+aggiornamenti o modifiche al codice.
 
-In sintesi, l'approccio basato su best practice è più adatto per progetti piccoli
-o per sviluppatori esperti che desiderano un controllo completo sul codice,
-mentre l'utilizzo di librerie esterne è preferibile in contesti dove la
-sicurezza, la manutenibilità e la rapidità di sviluppo sono prioritarie. In
-altri ambienti invece, com'è stato evidenziato più volte in questa tesi,
-potrebbe essere vantaggioso un approccio ibrido che combini le due strategie in
-modo tale da massimizzare i benefici e minimizzare i rischi.
+In sintesi, l'approccio basato su best practice è più adatto per progetti
+piccoli o per sviluppatori esperti che desiderano un controllo completo sul
+codice, mentre l'utilizzo di librerie esterne è preferibile in contesti dove la sicurezza,
+la manutenibilità e la rapidità di sviluppo sono prioritarie. In altri ambienti invece,
+com'è stato evidenziato più volte in questa tesi, potrebbe essere vantaggioso un
+approccio ibrido che combini le due strategie in modo tale da massimizzare i benefici
+e minimizzare i rischi.

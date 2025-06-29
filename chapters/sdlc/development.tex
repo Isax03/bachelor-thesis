@@ -10,7 +10,7 @@ Viene inoltre esaminata l'importanza di utilizzare librerie che implementano fun
 e metodi per rafforzare la memory safety anche in linguaggi considerati generalmente
 non memory safe.
 
-Infine, viene trattata l'analisi statica del codice, una tecnica che permette di
+Infine, viene trattata l'analisi statica, una tecnica che permette di
 rilevare vulnerabilità e problemi di qualità del codice senza la necessità di eseguire
 il programma.
 
@@ -33,7 +33,7 @@ focalizzata su vari aspetti della sicurezza del software, tra cui la gestione
 della memoria.
 
 Di seguito si riportano alcune delle principali best practice relative alla
-sicurezza della memoria:
+memory safety:
 
 \begin{itemize}
   \item \textbf{Validare input e output da fonti non affidabili}: tutti i dati esterni
@@ -197,7 +197,7 @@ e la manutenzione.
 #include <string.h>
 void copy_string(const char *input) {
   char buffer[64];
-  if (strlen(input) < sizeof(buffer)){
+  if (strlen(input) < sizeof(buffer)-1){
     strcpy(buffer, input); // Sicuro: controllato prima
   }
 }

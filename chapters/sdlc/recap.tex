@@ -1,15 +1,15 @@
 \section{Riepilogo delle mitigazioni}
 \label{sec:recap}
 
-Le mitigazioni per la memory safety presentate in questo capitolo sono numerose e
-variegate, ciascuna con specifiche caratteristiche di applicabilità e efficacia.
-In un contesto reale, la scelta e l'implementazione di queste mitigazioni deve
-essere guidata dalla fase del ciclo di vita del software in cui ci si trova, dalle
-risorse disponibili e dalle specifiche esigenze del progetto. La~\autoref{tab:recap_table}
-fornisce un riepilogo strutturato e una checklist pratica che offre una
-panoramica immediata delle mitigazioni disponibili per ciascuna fase del
-Software Development Life Cycle, facilitando la valutazione e la selezione delle
-strategie più appropriate per ogni contesto specifico.
+Le mitigazioni per la memory safety presentate in questo~\autoref{cha:sdlc} sono numerose
+e variegate, ciascuna con specifiche caratteristiche di applicabilità e
+efficacia. In un contesto reale, la scelta e l'implementazione di queste
+mitigazioni deve essere guidata dalla fase del ciclo di vita del software in cui
+ci si trova, dalle risorse disponibili e dalle specifiche esigenze del progetto.
+La~\autoref{tab:recap_table} fornisce un riepilogo strutturato e una checklist
+pratica che offre una panoramica immediata delle mitigazioni disponibili per
+ciascuna fase del Software Development Life Cycle, facilitando la valutazione e la
+selezione delle strategie più appropriate per ogni contesto specifico.
 
 È importante considerare lo stato attuale del progetto quando si valutano queste
 mitigazioni: ogni software si trova in un momento specifico del suo ciclo di
@@ -21,7 +21,7 @@ pratiche, dei vincoli temporali e delle risorse disponibili.
 \begin{table}[htbp]
   \centering
   \footnotesize
-  
+
   \renewcommand{\arraystretch}{1.2}
   \begin{tabular}{|p{2.5cm}|p{2.25cm}|p{8.25cm}|p{2.8cm}|}
     \hline
@@ -37,7 +37,7 @@ pratiche, dei vincoli temporali e delle risorse disponibili.
     \multirow{2}{2.5cm}{\centering\arraybackslash Testing}                    & Analisi Dinamica                       & Essenziale per rilevare errori a runtime (es. out-of-bounds). L'overhead la rende più adatta agli ambienti di test e staging.                                                              & \autoref{sec:analisi-dinamica}        \\
     \cline{2-4}                                                               & Fuzzing                                & Efficace su codice che processa input esterni. Richiede risorse computazionali ma è eccellente per scovare vulnerabilità. La configurazione può risultare complessa.                       & \autoref{sec:fuzzing}                 \\
     \hline % --- Riga Distribuzione ---
-    \multirow{3}{2.5cm}{\centering\arraybackslash Distribuzione e Esecuzione} & Protezioni a livello di memoria        & Abilitare di default le protezioni di compilatore e OS (es. ASLR, DEP). Rappresentano una difesa di base a basso costo.                                                                    & \autoref{sec:memory-protection}       \\
+    \multirow{3}{2.5cm}{\centering\arraybackslash Distribuzione ed Esecuzione} & Protezioni a livello di memoria        & Abilitare di default le protezioni di compilatore e OS (es. ASLR, DEP). Rappresentano una difesa di base a basso costo.                                                                    & \autoref{sec:memory-protection}       \\
     \cline{2-4}                                                               & Controlli di integrità dell'esecuzione & Mitigazione avanzata (es. CFI) contro attacchi control-flow. Valutare il supporto del compilatore e il possibile overhead in caso di requisiti di performance.                             & \autoref{sec:execution-integrity}     \\
     \cline{2-4}                                                               & Isolamento del software                & Adottare sandboxing o container per confinare i processi e limitare i danni di un attacco. In casi più critici ricorrere a macchine virtuali (VM).                                         & \autoref{sec:isolation}               \\
     \hline % --- Riga Mantenimento ---

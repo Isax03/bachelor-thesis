@@ -24,8 +24,7 @@ come buffer overflow, use after free o corruzione dello stack, agendo sulla disp
 i permessi e l'integrità delle aree di memoria durante l'esecuzione.
 
 Queste mitigazioni, implementate sia a livello di compilatore che di sistema operativo,
-rappresentano una prima linea di difesa essenziale contro molte classi di
-attacchi.
+rappresentano una linea di difesa essenziale contro molte classi di attacchi.
 
 I paragrafi seguenti illustrano le principali tecniche implementate in questo
 ambito: ASLR, DEP e Stack Canary. Viene fornita una panoramica del funzionamento
@@ -39,58 +38,55 @@ al fine di ostacolare attacchi che si basano su indirizzi statici, e quindi prev
 
 Nonostante introduca entropia a ogni avvio del processo, la sua efficacia
 risulta limitata sulle architetture a 32 bit. Lo studio di Shacham et al.~\cite{aslr_effectiveness}
-dimostra che in questi sistemi l'aleatorietà degli indirizzi per alcune regioni di
-memoria può ridursi a soli 16 bit, rendendo possibili attacchi \textit{brute-force}
+dimostra che in questi sistemi l'aleatorietà degli indirizzi per alcune regioni
+di memoria può ridursi a soli 16 bit, rendendo possibili attacchi \textit{brute-force}
 in grado di compromettere le difese in pochi minuti.
 
 Per questo motivo, è cruciale valutare l'architettura target del software: l'ASLR
 offre protezione più robusta sui sistemi a 64 bit, dove lo spazio d'indirizzamento
-più ampio consente una dispersione significativa delle aree memorizzate. La tecnica
-rimane comunque raccomandata come misura fondamentale, specialmente se integrata
+più ampio consente una dispersione significativa delle aree memorizzate. La
+tecnica rimane comunque raccomandata come misura fondamentale, specialmente se integrata
 con altre contromisure discusse in questa sezione, per aumentare sostanzialmente
 la resilienza contro exploit noti.
 
 \paragraph{Data Execution Prevention (DEP)\protect\footnote{Fonte: \url{https://www.datasunrise.com/knowledge-center/dep-data-execution-prevention/},
 ultimo accesso: 27 maggio 2025}}
 La DEP è una misura di sicurezza che consiste nel contrassegnare specifiche aree
-di memoria, come non eseguibili. L'obiettivo è impedire l'esecuzione di codice
-arbitrario iniettato in regioni di memoria destinate esclusivamente alla
-conservazione di dati.
+di memoria, come non eseguibili. L'obiettivo è impedire l'esecuzione di codice arbitrario
+iniettato in regioni di memoria destinate esclusivamente alla conservazione di dati.
 
-Questa protezione è particolarmente efficace contro attacchi come i buffer
-overflow, nei quali un attaccante tenta di sovrascrivere l'indirizzo di ritorno di
-una funzione per eseguire codice malevolo. Se la memoria che ospita tale codice
-è marcata come non eseguibile, il tentativo di esecuzione fallisce, riducendo
-significativamente il rischio di exploit.
+Questa protezione è particolarmente efficace contro attacchi come i buffer overflow,
+nei quali un attaccante tenta di sovrascrivere l'indirizzo di ritorno di una
+funzione per eseguire codice malevolo. Se la memoria che ospita tale codice è marcata
+come non eseguibile, il tentativo di esecuzione fallisce, riducendo significativamente
+il rischio di exploit.
 
-Tuttavia, analogamente all'ASLR, anche la Data Execution Prevention è stata
-aggirata nel tempo tramite tecniche avanzate come il Return Oriented Programming
-(ROP) e il Jump Oriented Programming (JOP). Queste strategie non richiedono l'esecuzione
-di codice iniettato, ma riutilizzano frammenti di codice legittimo già presenti
-in memoria per comporre un payload malevolo. Di conseguenza, la DEP deve essere
-considerata come una misura di sicurezza complementare, efficace solo se integrata
-in una strategia difensiva più ampia.
+Tuttavia, analogamente all'ASLR, anche la Data Execution Prevention è stata aggirata
+nel tempo tramite tecniche avanzate come il Return Oriented Programming (ROP) e il
+Jump Oriented Programming (JOP). Queste strategie non richiedono l'esecuzione di
+codice iniettato, ma riutilizzano frammenti di codice legittimo già presenti in memoria
+per comporre un payload malevolo. Di conseguenza, la DEP deve essere considerata
+come una misura di sicurezza complementare, efficace solo se integrata in una
+strategia difensiva più ampia.
 
 \paragraph{Stack canary}
-Gli stack canary sono una tecnica di protezione software mirata a prevenire gli
-attacchi basati sullo stack buffer overflow. Il nome deriva dall'analogia con i canarini
+Gli stack canary sono una tecnica di protezione software mirata a prevenire gli attacchi
+basati sullo stack buffer overflow. Il nome deriva dall'analogia con i canarini
 nelle miniere di carbone, utilizzati come sentinelle per rilevare gas pericolosi:
-in questo caso, i canary sono valori speciali (con valore fisso o casuale)
-inseriti tra le variabili locali e l'indirizzo di ritorno nella struttura dello
-stack.
+in questo caso, i canary sono valori speciali (con valore fisso o casuale) inseriti
+tra le variabili locali e l'indirizzo di ritorno nella struttura dello stack.
 
-Durante l'esecuzione, prima di effettuare il ritorno da una funzione, il
-programma verifica che il valore del canary non sia stato modificato. Se il valore
-è stato alterato, indice di un probabile overflow dello stack, il processo viene
-terminato o vengono attivate contromisure, impedendo così che un attaccante
-possa modificare l'indirizzo di ritorno e quindi controllare il flusso di
-esecuzione.
+Durante l'esecuzione, prima di effettuare il ritorno da una funzione, il programma
+verifica che il valore del canary non sia stato modificato. Se il valore è stato
+alterato, indice di un probabile overflow dello stack, il processo viene
+terminato o vengono attivate contromisure, impedendo così che un attaccante possa
+modificare l'indirizzo di ritorno e quindi controllare il flusso di esecuzione.
 
-Questa protezione è efficace nel mitigare un'ampia classe di vulnerabilità
-legate allo stack overflow, ma presenta alcune limitazioni: non protegge infatti
-da overflow su heap o da altre forme di corruzione della memoria, né è efficace contro
-attacchi che sfruttano tecniche più sofisticate come il ROP, che non modificano
-direttamente il canary ma riutilizzano codice legittimo~\cite{stack_canaries}.
+Questa protezione è efficace nel mitigare un'ampia classe di vulnerabilità legate
+allo stack overflow, ma presenta alcune limitazioni: non protegge infatti da overflow
+su heap o da altre forme di corruzione della memoria, né è efficace contro
+attacchi che sfruttano tecniche più sofisticate come il ROP, che non modificano direttamente
+il canary ma riutilizzano codice legittimo~\cite{stack_canaries}.
 
 \subsection{Controlli di integrità dell'esecuzione}
 \label{sec:execution-integrity} Le tecniche presentate in questa sezione mirano a
@@ -134,14 +130,14 @@ di sicurezza efficace contro molte classi di attacchi~\cite{control_flow_integri
 \paragraph{Memory Tagging Extension (MTE)\protect\footnote{https://developer.arm.com/documentation/108035/0100/Introduction-to-the-Memory-Tagging-Extension}}
 Questa è la prima delle due funzionalità di sicurezza \textit{``architecture-dependent''}
 presenti in questa sezione. La MTE infatti, è una feature hardware introdotta da
-Google e ARM (v8.5+) che mira a rilevare e prevenire errori di accesso alla
-memoria, come buffer overflow e use after free, attraverso l'uso di \textit{tag
-di memoria}.
+Google e ARM (v8.5+) che mira a rilevare e prevenire errori di accesso alla memoria,
+come buffer overflow e use after free, attraverso l'uso di \textit{tag di
+memoria}.
 
-A livello concettuale, la MTE associa un tag (etichetta) a ogni area di memoria
-allocata. Questi tag sono utilizzati per identificare la proprietà e la validità
-dell'area di memoria. Quando un programma tenta di accedere a un'area di memoria,
-il processore verifica se il tag associato all'area corrisponde al tag previsto per
+A livello concettuale, la MTE associa un tag (etichetta) a ogni area di memoria allocata.
+Questi tag sono utilizzati per identificare la proprietà e la validità dell'area
+di memoria. Quando un programma tenta di accedere a un'area di memoria, il
+processore verifica se il tag associato all'area corrisponde al tag previsto per
 quell'operazione. Se i tag non corrispondono, il processore genera un'eccezione,
 impedendo l'accesso non autorizzato e riducendo il rischio di exploit.
 
@@ -166,17 +162,16 @@ La MTE può lavorare in tre modalità differenti:
 \end{itemize}
 
 \paragraph{Pointer Authentication Code (PAC)\protect\footnote{https://developer.arm.com/documentation/109576/0100/Pointer-Authentication-Code/Introduction-to-PAC}}
-L'altra funzionalità di sicurezza \textit{``architecture-dependent''} presente
-in questa sezione è il PAC. Anche essa sviluppata da ARM (v8.3-A+), PAC è una
-tecnologia nata per prevenire in modo efficace attacchi di tipo ROP o buffer
-overflow.
+L'altra funzionalità di sicurezza \textit{``architecture-dependent''} presente in
+questa sezione è il PAC. Anche essa sviluppata da ARM (v8.3-A+), PAC è una tecnologia
+nata per prevenire in modo efficace attacchi di tipo ROP o buffer overflow.
 
-PAC si basa sull'idea di associare una firma crittografica a ogni puntatore
-utilizzato nel programma. Questa firma viene calcolata in modo tale che qualsiasi
-modifica al puntatore stesso o alla memoria a cui punta, renda impossibile
-verificare la firma. In questo modo, se un attaccante tenta di manipolare un
-puntatore per eseguire codice malevolo, la firma non corrisponderà più e il processore
-genererà un'eccezione, impedendo l'esecuzione del codice non autorizzato.
+PAC si basa sull'idea di associare una firma crittografica a ogni puntatore utilizzato
+nel programma. Questa firma viene calcolata in modo tale che qualsiasi modifica
+al puntatore stesso o alla memoria a cui punta, renda impossibile verificare la firma.
+In questo modo, se un attaccante tenta di manipolare un puntatore per eseguire codice
+malevolo, la firma non corrisponderà più e il processore genererà un'eccezione, impedendo
+l'esecuzione del codice non autorizzato.
 
 PAC presenta due fasi principali:
 \begin{itemize}
@@ -201,14 +196,14 @@ quindi non sempre disponibili come mitigazioni per rafforzare la memory safety.
 \subsection{Isolamento del software}
 \label{sec:isolation}
 
-Il concetto di \textbf{isolamento} si riferisce alla separazione tra componenti
-software con l'obiettivo di limitare l'impatto di eventuali compromissioni. L'idea
-alla base è quella di confinare il danno in un'area ben definita, impedendo che
-un exploit possa propagarsi ad altri componenti del sistema.
+Il concetto di \textbf{isolamento} si riferisce alla separazione tra componenti software
+con l'obiettivo di limitare l'impatto di eventuali compromissioni. L'idea alla
+base è quella di confinare il danno in un'area ben definita, impedendo che un exploit
+possa propagarsi ad altri componenti del sistema.
 
-In ambito memory safety, l'isolamento rappresenta una misura efficace per mitigare
-vulnerabilità che, pur essendo presenti, non riescono a compromettere l'intero sistema
-grazie all'introduzione di barriere architetturali o software.
+In ambito memory safety, l'isolamento rappresenta una misura efficace per
+mitigare vulnerabilità che, pur essendo presenti, non riescono a compromettere l'intero
+sistema grazie all'introduzione di barriere architetturali o software.
 
 Le principali tecniche di isolamento includono:
 \begin{itemize}
@@ -232,10 +227,10 @@ Le principali tecniche di isolamento includono:
 \end{itemize}
 
 Un esempio concreto dell'efficacia dell'isolamento lo troviamo nel caso reale di
-WebAudio in Google Chrome, in cui uno use after free premetteva l'esecuzione
-remota di codice. Tuttavia, l'uso della sandbox del browser impediva all'attaccante
-di ottenere l'accesso completo al sistema, confinando l'esecuzione di codice arbitrario
-all'interno dell'ambiente ``sandboxed''~\cite{webaudio_uaf}.
+WebAudio in Google Chrome, in cui uno use after free premetteva l'esecuzione remota
+di codice. Tuttavia, l'uso della sandbox del browser impediva all'attaccante di ottenere
+l'accesso completo al sistema, confinando l'esecuzione di codice arbitrario all'interno
+dell'ambiente ``sandboxed''~\cite{webaudio_uaf}.
 
 È importante sottolineare che queste tecnologie non sono state progettate
 specificamente per garantire la memory safety, ma la loro architettura consente di

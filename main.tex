@@ -1,4 +1,4 @@
-% \documentclass[a4paper, 11pt, titlepage, twoside, openany]{book}
+% \documentclass[a4paper, 11pt, titlepage, twoside, openany, hidelinks]{book}
 \documentclass[a4paper, 11pt, titlepage, oneside, hidelinks]{book}
 \usepackage{plain}
 \usepackage{setspace}
@@ -148,7 +148,7 @@ morecomment=[l]{\#}, morestring=[b]", morestring=[b]' }
   % Attachments
   \titleformat{\chapter} {\normalfont\Huge\bfseries}{Appendice \thechapter}{1em}{}
   \appendix
+  \input{attachments/sei_cert_example.tex}
   \input{attachments/prompt.tex}
   \input{attachments/asan_output.tex}
-  \input{attachments/sei_cert_example.tex}
 \end{document}
